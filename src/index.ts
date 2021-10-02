@@ -1,2 +1,1 @@
-export class RIFWallet {
-}
+export { Wallet } from './Wallet'

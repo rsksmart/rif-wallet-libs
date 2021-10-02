@@ -43,5 +43,8 @@
     "ts-loader": "^9.1.2",
     "typescript": "^4.2.4",
     "webpack-cli": "^4.7.0"
+  },
+  "dependencies": {
+    "@rsksmart/rif-id-mnemonic": "^0.1.0"
   }
 }
