@@ -1,4 +1,6 @@
-import { generateMnemonic } from '@rsksmart/rif-id-mnemonic'
+import { generateMnemonic, mnemonicToSeedSync } from '@rsksmart/rif-id-mnemonic'
+import { fromSeed } from 'bip32' // TOD): add method to @rsksmart/rif-id-mnemonic
+import { Account } from './Account'
 
 export class Wallet {
   mnemonic: string
@@ -13,5 +15,12 @@ export class Wallet {
     const mnemonic = generateMnemonic(24)
     const wallet = new Wallet({ mnemonic })
     return wallet
+  }
+
+  getAccount(index: number) {
+    const seed = mnemonicToSeedSync(this.mnemonic)
+    const hdKey = fromSeed(seed).derivePath(`m/44'/37310'/0'/0`)
+    const privateKey = hdKey.derive(index).privateKey!.toString('hex')
+    return new Account({ privateKey })
   }
 }
