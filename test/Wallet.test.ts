@@ -1,9 +1,5 @@
 import { Wallet } from '../src/Wallet'
-
-// test case - do not reuse
-const mnemonic = 'stock potato vanish horn pattern piece decade tent month decrease mansion only pond enough bar boy lemon select depart bleak diagram creek maximum neglect'
-const private_key_testnet_0 = '66863843044406245f2352e8bd93e5cd6304c5c6f14909b65249b186af1b9deb'
-const private_key_testnet_1 = 'b87803c196f7dd8fc506304de3f8d172fc26055d3b67671d8f623d780b70af21'
+import { mnemonic, private_key_testnet_0, private_key_testnet_1 } from './test-case'
 
 describe('RIFWallet', () => {
   describe('create a wallet', () => {

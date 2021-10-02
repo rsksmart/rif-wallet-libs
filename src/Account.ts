@@ -1,7 +1,17 @@
+import { Wallet } from 'ethers'
+
 export class Account {
-  privateKey: string
+  wallet: Wallet
+
+  get privateKey() {
+    return this.wallet.privateKey
+  }
+
+  get address() {
+    return this.wallet.address
+  }
 
   constructor({ privateKey }: { privateKey: string }) {
-    this.privateKey = privateKey
+    this.wallet = new Wallet(privateKey)
   }
 }

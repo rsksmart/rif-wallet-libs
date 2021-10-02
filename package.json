@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@rsksmart/rif-id-mnemonic": "^0.1.0",
-    "bip32": "^2.0.6"
+    "bip32": "^2.0.6",
+    "ethers": "^5.4.7"
   }
 }
