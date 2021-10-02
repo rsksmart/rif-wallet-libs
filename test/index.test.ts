@@ -1,8 +1,8 @@
-import { Template } from '../src'
+import { RIFWallet } from '../src'
 
-describe('hello', () => {
-  test('hello', () => {
-    const template = new Template()
-    expect(template.hello()).toBe('RIF Web SDK Template')
+describe('RIFWallet', () => {
+  test('RIFWallet', () => {
+    const template = new RIFWallet()
+    expect(template).toBeDefined()
   })
 })

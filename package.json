@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "test": "npx jest",
+    "test:watch": "npx jest --watch",
     "test:coverage": "npx jest --coverage",
     "lint": "npx eslint . src/ test/ --ext .js,.ts",
     "lint:fix": "npx eslint . src/ test/ --ext .js,.ts --fix",
