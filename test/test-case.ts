@@ -7,6 +7,5 @@ export const private_key_testnet_1 = '0xb87803c196f7dd8fc506304de3f8d172fc26055d
 export const address_testnet_0 = '0xf0c9322e8830f76b51f43751c8927be0e5f64bea'
 export const address_testnet_1 = '0x55ef3895938174a8cbeb3610a509b9ba35afa9e3'
 
-
 export const message = 'rif wallet'
 export const sig_testnet_0 = '0x6fc710e13a87bd69a67c0bca261cbb224585fdb10a700ca99bde3d2d5f5aeab2482f4e54b7b47e1bb5421b752be4bd3039c331053ea5c0c7b8c38393fe22ecfe1b'
