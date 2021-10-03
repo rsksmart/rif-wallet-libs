@@ -1,8 +1,17 @@
 import { Wallet, Signer, Bytes } from 'ethers'
 import { Provider, TransactionRequest } from "@ethersproject/abstract-provider"
 
+type QueuedTransaction = {
+  id: number
+  transactionRequest: TransactionRequest
+  confirm: () => void
+}
+
 export class Account extends Signer {
   wallet: Wallet
+
+  idCount: number
+  queuedTransactions: QueuedTransaction[]
 
   get privateKey() {
     return this.wallet.privateKey
@@ -15,6 +24,9 @@ export class Account extends Signer {
   constructor({ privateKey }: { privateKey: string }) {
     super()
     this.wallet = new Wallet(privateKey)
+
+    this.idCount = 0
+    this.queuedTransactions = []
   }
 
   getAddress(): Promise<string> {
@@ -32,19 +44,31 @@ export class Account extends Signer {
     return this.wallet.signMessage(message)
   }
 
+  nextTransaction(): QueuedTransaction {
+    if (this.queuedTransactions.length === 0) throw new Error()
+    return this.queuedTransactions[0]
+  }
+
   // Signs a transaxction and returns the fully serialized, signed transaction.
   // The EXACT transaction MUST be signed, and NO additional properties to be added.
   // - This MAY throw if signing transactions is not supports, but if
   //   it does, sentTransaction MUST be overridden.
-  signTransaction(transaction: TransactionRequest): Promise<string> {
-    throw new Error()
+  async signTransaction(transactionRequest: TransactionRequest): Promise<string> {
     // here we queue the transaction
-    // we should now wait for its semaphore
-    // ux happens here
-    // const signedTransaction = this.wallet.signTransaction(transaction)
-    // remove from queue
-    // release locks
-    // return signedTransaction
+    const id = this.idCount++
+    await new Promise((resolve: (reason?: any) => void) => {
+      const queuedTransaction = { id, transactionRequest, confirm: () => resolve() }
+      this.queuedTransactions.push(queuedTransaction)
+      // ux happens here
+    })
+
+    // assumes the transactions are confirmed in order
+    // because the confirm() is only found using nextTransaction()
+    this.queuedTransactions.shift()
+
+    const signedTransaction = this.wallet.signTransaction(transactionRequest)
+
+    return signedTransaction
   }
 
   // Returns a new instance of the Signer, connected to provider.
