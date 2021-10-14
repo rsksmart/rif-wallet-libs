@@ -1,17 +1,17 @@
-import { KeyManagementSystem } from "./KeyManagementSystem"
+import { KeyManagementSystem } from '../src/v2/KeyManagementSystem'
 import { mnemonic, private_key_testnet_0, private_key_testnet_1, private_key_mainnet_0 } from './test-case'
 
 describe('KeyManagementSystem', () => {
   test('derives private keys given a mneomnic', () => {
     const kms = new KeyManagementSystem({ mnemonic })
 
-    const privateKey0 = kms.derivePrivateKey(31, 0)
-    const privateKey1 = kms.derivePrivateKey(31, 1)
-    const privateKeyMainnet0 = kms.derivePrivateKey(30, 0)
+    const wallet0 = kms.deriveWallet(31, 0)
+    const wallet1 = kms.deriveWallet(31, 1)
+    const walletMainnet0 = kms.deriveWallet(30, 0)
 
-    expect(privateKey0).toEqual(private_key_testnet_0)
-    expect(privateKey1).toEqual(private_key_testnet_1)
-    expect(privateKeyMainnet0).toEqual(private_key_mainnet_0)
+    expect(wallet0.privateKey).toEqual(private_key_testnet_0)
+    expect(wallet1.privateKey).toEqual(private_key_testnet_1)
+    expect(walletMainnet0.privateKey).toEqual(private_key_mainnet_0)
   })
 
   test('creates new mnemonics', () => {

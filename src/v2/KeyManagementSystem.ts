@@ -1,3 +1,4 @@
+import { Wallet } from '@ethersproject/wallet'
 import { generateMnemonic, mnemonicToSeedSync } from '@rsksmart/rif-id-mnemonic'
 import { getDPathByChainId } from '@rsksmart/rlogin-dpath'
 import { fromSeed } from 'bip32' // TOD): add method to @rsksmart/rif-id-mnemonic
@@ -22,13 +23,14 @@ export class KeyManagementSystem {
   }
 
   /**
-   * Get the derived private key given an index. It will pick the base derivation
+   * Get the derived Wallet for a network given an index. It will pick the base derivation
    * path given the chain id and index the address based on BIP-44
    * @param chainId EIP-155 chain Id
-   * @param index use it to  derive different accounts based on SLIP-44
-   * @returns the private key for the given index in the given network
+   * @param index use it to derive different accounts based on SLIP-44
+   * @returns An ethers Wallet with the private key derived for the given index in
+   * the given network
    */
-  derivePrivateKey (chainId: number, index: number) {
+  deriveWallet (chainId: number, index: number): Wallet {
     // Create the seed - ref: BIP-39
     const seed = mnemonicToSeedSync(this.mnemonic)
 
@@ -36,6 +38,8 @@ export class KeyManagementSystem {
     const dpath = getDPathByChainId(chainId, index)
     const hdKey = fromSeed(seed).derivePath(dpath)
 
-    return hdKey.privateKey!.toString('hex')
+    const privateKey = hdKey.privateKey!.toString('hex')
+
+    return new Wallet(privateKey)
   }
 }
