@@ -42,4 +42,12 @@ export class KeyManagementSystem {
 
     return new Wallet(privateKey)
   }
+
+  serialize (): string {
+    return JSON.stringify({ mnemonic: this.mnemonic })
+  }
+
+  static fromSerialize (serialized: string): KeyManagementSystem {
+    return new KeyManagementSystem(JSON.parse(serialized))
+  }
 }

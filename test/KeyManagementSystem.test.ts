@@ -58,4 +58,11 @@ describe('KeyManagementSystem', () => {
       expect(actualBalance).toEqual(value)
     })
   })
+
+  test('serialize', () => {
+    const kms = new KeyManagementSystem({ mnemonic: testCase.mnemonic })
+    const serialized = kms.serialize()
+    const kmsFromSerialized = KeyManagementSystem.fromSerialize(serialized)
+    expect(kmsFromSerialized.mnemonic).toEqual(testCase.mnemonic)
+  })
 })
