@@ -1,4 +1,4 @@
-import { Wallet, Signer, Bytes } from 'ethers'
+import { Wallet, Signer, Bytes, providers } from 'ethers'
 import { Provider, TransactionRequest } from '@ethersproject/abstract-provider'
 
 type QueuedTransaction = {
@@ -21,9 +21,9 @@ export class Account extends Signer {
     return this.wallet.address.toLowerCase()
   }
 
-  constructor ({ privateKey }: { privateKey: string }) {
+  constructor ({ privateKey, provider }: { privateKey: string, provider?: Provider }) {
     super()
-    this.wallet = new Wallet(privateKey)
+    this.wallet = provider ? new Wallet(privateKey).connect(provider) : new Wallet(privateKey)
 
     this.idCount = 0
     this.queuedTransactions = []

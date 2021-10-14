@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "npx jest",
+    "test": "npx jest --collect-coverage",
     "test:watch": "npx jest --watch",
     "test:coverage": "npx jest --coverage",
     "lint": "npx eslint . src/ test/ --ext .js,.ts",
@@ -38,6 +38,7 @@
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
+    "ganache-cli": "^6.12.2",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.6",
     "ts-loader": "^9.1.2",
@@ -46,6 +47,7 @@
   },
   "dependencies": {
     "@rsksmart/rif-id-mnemonic": "^0.1.0",
+    "@rsksmart/rlogin-dpath": "^1.0.1",
     "bip32": "^2.0.6",
     "ethers": "^5.4.7"
   }
