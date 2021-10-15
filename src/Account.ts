@@ -1,4 +1,4 @@
-import { Wallet, Signer, Bytes, providers } from 'ethers'
+import { Wallet, Signer, Bytes } from 'ethers'
 import { Provider, TransactionRequest } from '@ethersproject/abstract-provider'
 
 type QueuedTransaction = {

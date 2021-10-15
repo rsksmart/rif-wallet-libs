@@ -1,4 +1,4 @@
-import { providers, Wallet } from 'ethers'
+import { Wallet } from 'ethers'
 import { KeyManagementSystem } from '../src/v2/KeyManagementSystem'
 import { jsonRpcProvider } from './testRpcProvider'
 import * as testCase from './test-case'
@@ -62,7 +62,7 @@ describe('KeyManagementSystem', () => {
   test('serialize', () => {
     const kms = new KeyManagementSystem({ mnemonic: testCase.mnemonic })
     const serialized = kms.serialize()
-    const kmsFromSerialized = KeyManagementSystem.fromSerialize(serialized)
+    const kmsFromSerialized = KeyManagementSystem.fromSerialized(serialized)
     expect(kmsFromSerialized.mnemonic).toEqual(testCase.mnemonic)
   })
 })

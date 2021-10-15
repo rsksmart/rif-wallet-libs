@@ -13,16 +13,6 @@ export class KeyManagementSystem {
   }
 
   /**
-   * Factory method: creates a mnemonic and initialized the
-   * Key Management System
-   * @returns a new Key Management System with a new mnemonic
-   */
-  static create (): KeyManagementSystem {
-    const mnemonic = generateMnemonic(24)
-    return new KeyManagementSystem({ mnemonic })
-  }
-
-  /**
    * Get the derived Wallet for a network given an index. It will pick the base derivation
    * path given the chain id and index the address based on BIP-44
    * @param chainId EIP-155 chain Id
@@ -43,11 +33,30 @@ export class KeyManagementSystem {
     return new Wallet(privateKey)
   }
 
+  /**
+   * Use this method to get a string to be stored and recovered
+   * @returns a serialized wallet
+   */
   serialize (): string {
     return JSON.stringify({ mnemonic: this.mnemonic })
   }
 
-  static fromSerialize (serialized: string): KeyManagementSystem {
+  /**
+   * Use this method to recover a stored serialized wallet
+   * @param serialized the serialized string
+   * @returns the KeyManagementSystem that was serialized
+   */
+  static fromSerialized (serialized: string): KeyManagementSystem {
     return new KeyManagementSystem(JSON.parse(serialized))
+  }
+
+  /**
+   * Factory method: creates a mnemonic and initialized the
+   * Key Management System
+   * @returns a new Key Management System with a new mnemonic
+   */
+  static create (): KeyManagementSystem {
+    const mnemonic = generateMnemonic(24)
+    return new KeyManagementSystem({ mnemonic })
   }
 }
