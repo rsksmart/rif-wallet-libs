@@ -1,4 +1,4 @@
-import { Wallet, Contract, Overrides, ContractTransaction } from "ethers"
+import { Wallet, Contract, BytesLike, ContractTransaction } from "ethers"
 import SmartWalletABI from './SmartWalletABI.json'
 
 const createSmartWalletContract = (address: string) => {
@@ -7,6 +7,18 @@ const createSmartWalletContract = (address: string) => {
 
 export class SmartWallet {
   smartWalletContract: Contract
+
+  get wallet(): Wallet {
+    return this.smartWalletContract.signer as Wallet
+  }
+
+  get address(): string {
+    return this.wallet.address
+  }
+
+  get smartWalletAddress(): string {
+    return this.smartWalletContract.address
+  }
 
   private constructor(smartWalletContract: Contract) {
     this.smartWalletContract = smartWalletContract
@@ -17,8 +29,5 @@ export class SmartWallet {
     return new SmartWallet(smartWalletContract)
   }
 
-  getAddress = (): Promise<string> => Promise.resolve((this.smartWalletContract.signer as Wallet).address)
-  getSmartWalletAddress = (): Promise<string> => Promise.resolve(this.smartWalletContract.address)
-
-  directExecute = (to: string, data: string): Promise<ContractTransaction> => this.smartWalletContract.directExecute(to, data)
+  directExecute = (to: string, data: BytesLike, ...args: any): Promise<ContractTransaction> => this.smartWalletContract.directExecute(to, data, ...args)
 }

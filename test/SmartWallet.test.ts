@@ -21,8 +21,8 @@ describe('SmartWallet', function (this: {
   })
 
   test('addresses', async () => {
-    expect(await this.smartWallet.getAddress()).toEqual(this.wallet.address)
-    expect(await this.smartWallet.getSmartWalletAddress()).toEqual(this.smartWalletAddress)
+    expect(await this.smartWallet.address).toEqual(this.wallet.address)
+    expect(await this.smartWallet.smartWalletAddress).toEqual(this.smartWalletAddress)
   })
 
   test('direct send', async () => {
