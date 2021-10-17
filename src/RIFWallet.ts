@@ -9,8 +9,18 @@ const filterTxOptions = (transactionRequest: TransactionRequest) => Object.keys(
     return obj
   }, {})
 
+type Request = {
+  type: 'sendTransaction'
+  payload: {
+    transactionRequest: TransactionRequest
+  }
+  confirm: (value?: any) => void
+  reject: (reason?: any) => void
+}
+
 export class RIFWallet extends Signer {
   smartWallet: SmartWallet
+  pendingRequest?: Request
 
   constructor (smartWallet: SmartWallet) {
     super()
@@ -31,6 +41,7 @@ export class RIFWallet extends Signer {
   }
 
   getAddress = (): Promise<string> => Promise.resolve(this.smartWallet.smartWalletAddress)
+
   signMessage = (message: string | Bytes): Promise<string> => this.smartWallet.wallet.signMessage(message)
   signTransaction = (transaction: TransactionRequest): Promise<string> => this.smartWallet.wallet.signTransaction(transaction)
 
@@ -44,11 +55,36 @@ export class RIFWallet extends Signer {
     return this.smartWallet.wallet.call(transaction)
   }
 
-  sendTransaction (transactionRequest: TransactionRequest): Promise<TransactionResponse> {
-    return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, filterTxOptions(transactionRequest))
+  async sendTransaction (transactionRequest: TransactionRequest): Promise<TransactionResponse> {
+    if (!!this.pendingRequest) throw new Error('Pending transaction')
+
+    // queues the transaction
+    await new Promise((resolve, reject) => {
+      this.pendingRequest = {
+        type: 'sendTransaction',
+        payload: {
+          transactionRequest
+        },
+        confirm: (value?: any) => {
+          delete this.pendingRequest
+          resolve(value)
+        },
+        reject: (reason?: any) => {
+          delete this.pendingRequest
+          reject(new Error('Rejected'))
+        }
+      }
+    })
+
+    return await this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, filterTxOptions(transactionRequest))
+  }
+
+  nextRequest(): Request {
+    if (!this.pendingRequest) throw new Error('No next request')
+    return this.pendingRequest
   }
 
   connect = (provider: Provider): Signer => {
-    throw new Error('Method not implemented.')
+    throw new Error('Method not implemented')
   }
 }

@@ -1,8 +1,13 @@
-import { deploySmartWalletFactory, sendAndWait, createNewTestWallet } from './utils'
+import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, testJsonRpcProvider } from './utils'
 import { SmartWalletFactory } from '../src/SmartWalletFactory'
 import { RIFWallet } from '../src/RIFWallet'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
+
+const txRequest = {
+  to: '0x0000000000111111111122222222223333333333',
+  data: '0xabcd'
+}
 
 describe('RIFWallet', function (this: {
   rifWallet: RIFWallet
@@ -21,17 +26,15 @@ describe('RIFWallet', function (this: {
   })
 
   test('uses smart address', async () => {
+    expect(this.rifWallet.address).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
     expect(await this.rifWallet.getAddress()).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
   })
 
   describe('send transaction', () => {
     test('uses direct send', async () => {
-      const txRequest = {
-        to: '0x0000000000111111111122222222223333333333',
-        data: '0xabcd'
-      }
-
-      const tx = await this.rifWallet.sendTransaction(txRequest)
+      const txPromise = this.rifWallet.sendTransaction(txRequest)
+      this.rifWallet.nextRequest().confirm()
+      const tx = await txPromise
       await tx.wait()
 
       expect(tx.to).toEqual(this.rifWallet.smartWalletAddress)
@@ -43,18 +46,57 @@ describe('RIFWallet', function (this: {
       const gasPrice = BigNumber.from('100')
       const gasLimit = BigNumber.from('600000')
 
-      const txRequest: TransactionRequest = {
-        to: '0x0000000000111111111122222222223333333333',
-        data: '0xabcd',
+      const overriddenTxRequest: TransactionRequest = {
+        ...txRequest,
         gasPrice,
         gasLimit
       }
 
-      const tx = await this.rifWallet.sendTransaction(txRequest)
+      const txPromise = this.rifWallet.sendTransaction(overriddenTxRequest)
+      this.rifWallet.nextRequest().confirm()
+      const tx = await txPromise
       await tx.wait()
 
       expect(tx.gasPrice).toEqual(gasPrice)
       expect(tx.gasLimit).toEqual(gasLimit)
+    })
+  })
+
+  describe('queue', () => {
+    test('is initially mepty', () => {
+      expect(() => this.rifWallet.nextRequest()).toThrow()
+    })
+
+    test('queues a transaction', async () => {
+      this.rifWallet.sendTransaction(txRequest)
+
+      expect(this.rifWallet.nextRequest().type).toEqual('sendTransaction')
+    })
+
+    test('cannot send a transaction when another is pending (for now, this should be a queue)', async () => {
+      this.rifWallet.sendTransaction(txRequest)
+
+      expect(this.rifWallet.sendTransaction(txRequest)).rejects.toThrow()
+    })
+
+    test('can reject a tx', async () => {
+      const txPrommise = this.rifWallet.sendTransaction(txRequest)
+
+      this.rifWallet.nextRequest().reject()
+
+      await expect(txPrommise).rejects.toThrow()
+    })
+
+    test('can confirm a tx', async () => {
+      const txPrommise = this.rifWallet.sendTransaction(txRequest)
+
+      this.rifWallet.nextRequest().confirm()
+
+      const tx = await txPrommise
+      await tx.wait()
+
+      // first is the deploy, second this tx
+      expect(await testJsonRpcProvider.getTransactionCount(this.rifWallet.smartWallet.wallet.address)).toEqual(2)
     })
   })
 })
