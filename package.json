@@ -7,6 +7,7 @@
     "dist"
   ],
   "scripts": {
+    "ganache": "npx ganache-cli",
     "test": "npx jest --collect-coverage",
     "test:watch": "npx jest --watch",
     "test:coverage": "npx jest --coverage",
