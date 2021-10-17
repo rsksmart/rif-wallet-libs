@@ -1,7 +1,6 @@
-import { deploySmartWalletFactory, sendAndWait } from "./utils"
-import { KeyManagementSystem } from "../src/KeyManagementSystem"
-import { SmartWalletFactory } from "../src/SmartWalletFactory"
-import { fundAccount, testJsonRpcProvider } from "./utils"
+import { deploySmartWalletFactory, sendAndWait, fundAccount, testJsonRpcProvider } from './utils'
+import { KeyManagementSystem } from '../src/KeyManagementSystem'
+import { SmartWalletFactory } from '../src/SmartWalletFactory'
 
 describe('e2e', () => {
   test('local account', async () => {

@@ -66,7 +66,7 @@ export class KeyManagementSystem implements IKeyManagementSystem {
    * Key Management System
    * @returns a new Key Management System with a new mnemonic
    */
-   static create (): KeyManagementSystem {
+  static create (): KeyManagementSystem {
     const mnemonic = generateMnemonic(24)
     return new KeyManagementSystem(mnemonic, createInitialState())
   }

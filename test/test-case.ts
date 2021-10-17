@@ -13,7 +13,7 @@ export const address_testnet_2 = '0xe5A9Bc41Fe8A1e5BAf72d8d2dA0a2e252FdF2748'.to
 export const address_mainnet_0 = '0xa7faFCe9122beb7f0023C55B2fDE5E06fFc3a43A'.toLowerCase()
 export const address_mainnet_1 = '0x304f9C90B459154e6951CEBcb93c1E857700F237'.toLowerCase()
 
-export const custom_account_dpath = `m/44'/141414'/0'/0/0`
+export const custom_account_dpath = 'm/44\'/141414\'/0\'/0/0'
 export const custom_account_address = '0xB64D8389B94646Bc63A39EF1aaE5A7244B58f928'.toLowerCase()
 
 export const message = 'rif wallet'

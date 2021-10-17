@@ -1,9 +1,8 @@
-import { deploySmartWalletFactory, sendAndWait, createNewTestWallet } from "./utils";
-import { Wallet } from "@ethersproject/wallet";
-import { SmartWalletFactory } from "../src/SmartWalletFactory";
+import { deploySmartWalletFactory, sendAndWait, createNewTestWallet } from './utils'
+import { SmartWalletFactory } from '../src/SmartWalletFactory'
 import { RIFWallet } from '../src/RIFWallet'
-import { BigNumber } from "@ethersproject/bignumber";
-import { TransactionRequest } from "@ethersproject/abstract-provider";
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionRequest } from '@ethersproject/abstract-provider'
 
 describe('RIFWallet', function (this: {
   rifWallet: RIFWallet
@@ -56,7 +55,6 @@ describe('RIFWallet', function (this: {
 
       expect(tx.gasPrice).toEqual(gasPrice)
       expect(tx.gasLimit).toEqual(gasLimit)
-
     })
   })
 })
