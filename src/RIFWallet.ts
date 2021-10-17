@@ -28,7 +28,7 @@ export class RIFWallet extends Signer {
   }
 
   get address (): string {
-    return this.smartWallet.address
+    return this.smartWallet.smartWalletAddress
   }
 
   get smartWalletAddress (): string {

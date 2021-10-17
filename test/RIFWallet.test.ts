@@ -80,23 +80,41 @@ describe('RIFWallet', function (this: {
     })
 
     test('can reject a tx', async () => {
-      const txPrommise = this.rifWallet.sendTransaction(txRequest)
+      const txPromise = this.rifWallet.sendTransaction(txRequest)
 
       this.rifWallet.nextRequest().reject()
 
-      await expect(txPrommise).rejects.toThrow()
+      await expect(txPromise).rejects.toThrow()
     })
 
     test('can confirm a tx', async () => {
-      const txPrommise = this.rifWallet.sendTransaction(txRequest)
+      const txPromise = this.rifWallet.sendTransaction(txRequest)
 
       this.rifWallet.nextRequest().confirm()
 
-      const tx = await txPrommise
+      const tx = await txPromise
       await tx.wait()
 
       // first is the deploy, second this tx
       expect(await testJsonRpcProvider.getTransactionCount(this.rifWallet.smartWallet.wallet.address)).toEqual(2)
+    })
+
+    test('can modify tx params', async () => {
+      const gasPrice = BigNumber.from('100')
+      const gasLimit = BigNumber.from('600000')
+
+      const txPromise = this.rifWallet.sendTransaction(txRequest)
+
+      const nextRequest = this.rifWallet.nextRequest()
+      nextRequest.payload.transactionRequest.gasPrice = gasPrice
+      nextRequest.payload.transactionRequest.gasLimit = gasLimit
+      nextRequest.confirm()
+
+      const tx = await txPromise
+      await tx.wait()
+
+      expect(tx.gasPrice).toEqual(gasPrice)
+      expect(tx.gasLimit).toEqual(gasLimit)
     })
   })
 })
