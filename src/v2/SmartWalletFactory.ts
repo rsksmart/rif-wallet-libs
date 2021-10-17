@@ -1,7 +1,7 @@
 import {  Wallet, Contract, constants, ContractTransaction } from 'ethers'
 import SmartWalletFactoryABI from './SmartWalletFactoryABI.json'
 
-interface ISmartWallet extends Wallet {
+interface ISmartWalletFactory {
   getSmartAddress(): Promise<string>
 
   isDeployed(): Promise<boolean>
@@ -15,7 +15,7 @@ const createSmartWalletFactoryContract = (address: string) => {
 /**
  * This is a Smart Wallet Factory contract helper for a given Wallet
  */
-export class SmartWalletFactory {
+export class SmartWalletFactory implements ISmartWalletFactory {
   smartAddress: string
   smartWalletFactoryContract: Contract
 
@@ -41,11 +41,9 @@ export class SmartWalletFactory {
   // deployment
   getSmartAddress = async (): Promise<string> => this.smartAddress
 
-  isDeployed = async () => this.smartWalletFactoryContract.signer.provider!.getCode(
-    await this.smartAddress,
-  ).then(code => code !== '0x')
+  isDeployed = (): Promise<boolean> => this.smartWalletFactoryContract.signer.provider!.getCode(this.smartAddress).then(code => code !== '0x')
 
-  deploy = () => this.smartWalletFactoryContract.selfCreateUserSmartWallet(
+  deploy = (): Promise<ContractTransaction> => this.smartWalletFactoryContract.selfCreateUserSmartWallet(
     constants.AddressZero,
     constants.Zero,
   )

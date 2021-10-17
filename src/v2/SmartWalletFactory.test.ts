@@ -2,19 +2,19 @@ import { Wallet } from 'ethers'
 import { deploySmartWalletFactory } from './deploySmartWalletFactory'
 import { SmartWalletFactory } from './SmartWalletFactory'
 import * as testCase from './test-case'
-import { fundAccount, testJsonRpcProvider } from './testRpcProvider'
+import { fundAccount, testAccount, testJsonRpcProvider } from './testRpcProvider'
 
 describe('SmartWalletFactory', function (this: {
   smartWalletFactory: SmartWalletFactory
 }) {
   beforeEach(async () => {
     const wallet = new Wallet(testCase.private_key_testnet_0, testJsonRpcProvider)
-    const smartWalletFactoryContract = await deploySmartWalletFactory()
+    const smartWalletFactoryContract = await deploySmartWalletFactory(testAccount)
     this.smartWalletFactory = await SmartWalletFactory.create(wallet, smartWalletFactoryContract.address)
   })
 
-  test('has a smart address', () => {
-    expect(this.smartWalletFactory.smartAddress).toBeDefined()
+  test('has a smart address', async () => {
+    expect(await this.smartWalletFactory.getSmartAddress()).toBeDefined()
   })
 
   test('initially should be not deployed', async () => {
