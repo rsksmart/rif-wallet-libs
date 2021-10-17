@@ -38,6 +38,20 @@ interface IKeyManagementSystem {
   removeWallet (derivationPath: string): void
 }
 
+/**
+ * The Key Management System will derive accounts for a given mnemonic. It allows
+ * two type of derivations:
+ * - By chain id (nextWallet): it will use an incremental account_index based on BIP-44
+ * - Arbitrary derivation paths (addWallet): it will derive the account for the given
+ *   path, affecting the accounts by chain id. If an account of a chain is
+ *   added, it will be skiped when adding by chain id
+ * Both methods will return a { derivationPath, wallet, save } object that can be used
+ * to deffer saving the account in the KMS. This can be used to show the user the account
+ * before storing it.
+ * Use removeWallet to remove it from the KMS. It can be added back by adding as and
+ * arbitrary accounts
+ * Use serialize/fromSerialized to store the KMS
+ */
 export class KeyManagementSystem implements IKeyManagementSystem {
   state: KeyManagementSystemState
   mnemonic: Mnemonic
@@ -100,11 +114,9 @@ export class KeyManagementSystem implements IKeyManagementSystem {
   }
 
   /**
-   * Get the derived Wallet for a network given an index. It will pick the base derivation
-   * path given the chain id and index the address based on BIP-44
+   * Get the next wallet for the given chainId
    * @param chainId EIP-155 chain Id
-   * @returns An ethers Wallet with the private key derived for the given index in
-   * the given network
+   * @returns a savable account
    */
   nextWallet (chainId: number): SaveableWallet {
     // Get the next derivation path for the address - ref: BIP-44
@@ -131,6 +143,11 @@ export class KeyManagementSystem implements IKeyManagementSystem {
     }
   }
 
+  /**
+   * Get tehe account for an arbitrary derivation path
+   * @param derivationPath an arbitrary derivation path
+   * @returns a savable wallet
+   */
   addWallet (derivationPath: string): SaveableWallet {
     if (this.state.derivedPaths[derivationPath]) throw new Error('Existent wallet')
 
@@ -145,6 +162,10 @@ export class KeyManagementSystem implements IKeyManagementSystem {
     }
   }
 
+  /**
+   * Remove a wallet from the Key Management System
+   * @param derivationPath the derivation path of the wallet to be removed
+   */
   removeWallet (derivationPath: string): void {
     if (!this.state.derivedPaths[derivationPath]) throw new Error('Inexistent wallet')
 
