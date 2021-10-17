@@ -1,4 +1,4 @@
-import { KeyManagementSystem } from "./KeyManagementSystem"
+import { KeyManagementSystem } from "../src/KeyManagementSystem"
 import * as testCase from './test-case'
 
 describe('KeyManagementSystem', () => {
