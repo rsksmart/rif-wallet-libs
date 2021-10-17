@@ -56,7 +56,7 @@ export class RIFWallet extends Signer {
   }
 
   async sendTransaction (transactionRequest: TransactionRequest): Promise<TransactionResponse> {
-    if (!!this.pendingRequest) throw new Error('Pending transaction')
+    if (this.pendingRequest) throw new Error('Pending transaction')
 
     // queues the transaction
     await new Promise((resolve, reject) => {
@@ -79,7 +79,7 @@ export class RIFWallet extends Signer {
     return await this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, filterTxOptions(transactionRequest))
   }
 
-  nextRequest(): Request {
+  nextRequest (): Request {
     if (!this.pendingRequest) throw new Error('No next request')
     return this.pendingRequest
   }

@@ -9,12 +9,13 @@ describe('e2e', () => {
 
     const kms = KeyManagementSystem.create()
     const walletRequest = kms.nextWallet(31)
-    walletRequest.save()
-    const wallet = walletRequest.wallet.connect(testJsonRpcProvider)
 
+    walletRequest.save()
+
+    const wallet = walletRequest.wallet.connect(testJsonRpcProvider)
     await sendAndWait(fundAccount(wallet.address))
 
-    const smartWalletFactory = await SmartWalletFactory.create(wallet.connect(testJsonRpcProvider), smartWalletFactoryContract.address)
+    const smartWalletFactory = await SmartWalletFactory.create(wallet, smartWalletFactoryContract.address)
     await sendAndWait(smartWalletFactory.deploy())
 
     const smartWalletAddress = await smartWalletFactory.getSmartWalletAddress()
