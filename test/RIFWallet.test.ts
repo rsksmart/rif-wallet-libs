@@ -99,6 +99,25 @@ describe('RIFWallet', function (this: {
       expect(await testJsonRpcProvider.getTransactionCount(this.rifWallet.smartWallet.wallet.address)).toEqual(2)
     })
 
+    test('can do more than one tx', async () => {
+      const txPromise = this.rifWallet.sendTransaction(txRequest)
+
+      this.rifWallet.nextRequest().confirm()
+
+      const tx = await txPromise
+      await tx.wait()
+
+      const txPromise2 = this.rifWallet.sendTransaction(txRequest)
+
+      this.rifWallet.nextRequest().confirm()
+
+      const tx2 = await txPromise2
+      await tx2.wait()
+
+      // first is the deploy, second this tx
+      expect(await testJsonRpcProvider.getTransactionCount(this.rifWallet.smartWallet.wallet.address)).toEqual(3)
+    })
+
     test('can modify tx params', async () => {
       const gasPrice = BigNumber.from('100')
       const gasLimit = BigNumber.from('600000')
