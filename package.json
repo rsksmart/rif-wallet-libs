@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "ganache": "npx ganache-cli",
-    "test": "npx jest --collect-coverage",
+    "test": "npx jest --collect-coverage --verbose",
     "test:watch": "npx jest --watch",
     "test:coverage": "npx jest --coverage",
     "lint": "npx eslint . src/ test/ --ext .js,.ts",

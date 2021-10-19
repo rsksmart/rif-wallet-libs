@@ -1,6 +1,6 @@
 import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, testJsonRpcProvider } from './utils'
 import { SmartWalletFactory } from '../src/SmartWalletFactory'
-import { RIFWallet } from '../src/RIFWallet'
+import { Request, RIFWallet } from '../src/RIFWallet'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 
@@ -11,6 +11,7 @@ const txRequest = {
 
 describe('RIFWallet', function (this: {
   rifWallet: RIFWallet
+  onRequest: ReturnType<typeof jest.fn>
 }) {
   beforeEach(async () => {
     const wallet = await createNewTestWallet()
@@ -22,7 +23,8 @@ describe('RIFWallet', function (this: {
 
     const smartWalletAddress = await smartWalletFactory.getSmartWalletAddress()
 
-    this.rifWallet = await RIFWallet.create(wallet, smartWalletAddress)
+    this.onRequest = jest.fn()
+    this.rifWallet = await RIFWallet.create(wallet, smartWalletAddress, this.onRequest)
   })
 
   test('uses smart address', async () => {
@@ -134,6 +136,30 @@ describe('RIFWallet', function (this: {
 
       expect(tx.gasPrice).toEqual(gasPrice)
       expect(tx.gasLimit).toEqual(gasLimit)
+    })
+
+    test('cannot edit the next request, only the params of the payload', async () => {
+      const txPromise = this.rifWallet.sendTransaction(txRequest)
+
+      const nextRequest = this.rifWallet.nextRequest()
+      expect(() => { nextRequest.confirm = (v) => {} }).toThrow()
+      expect(() => { nextRequest.reject = (v) => {} }).toThrow()
+      expect(() => { nextRequest.type = 'sendTransaction' }).toThrow()
+      expect(() => { nextRequest.payload = {} as any }).toThrow()
+
+      this.rifWallet.nextRequest().reject() // close handle
+      await expect(txPromise).rejects.toThrow()
+    })
+  })
+
+  describe('onRequest', () => {
+    test('is called with a new sendTransaction', async () => {
+      const txPromise = this.rifWallet.sendTransaction(txRequest)
+
+      expect(this.onRequest).toHaveBeenCalledWith(this.rifWallet.nextRequest())
+
+      this.rifWallet.nextRequest().reject() // close handle
+      await expect(txPromise).rejects.toThrow()
     })
   })
 })

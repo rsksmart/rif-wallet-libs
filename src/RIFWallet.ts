@@ -1,6 +1,7 @@
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { Bytes, Signer, Wallet, BigNumber } from 'ethers'
 import { SmartWallet } from './SmartWallet'
+import { EventEmitter } from 'events'
 
 const filterTxOptions = (transactionRequest: TransactionRequest) => Object.keys(transactionRequest)
   .filter(key => !['to', 'data'].includes(key))
@@ -9,7 +10,7 @@ const filterTxOptions = (transactionRequest: TransactionRequest) => Object.keys(
     return obj
   }, {})
 
-type Request = {
+export type Request = {
   type: 'sendTransaction'
   payload: {
     transactionRequest: TransactionRequest
@@ -18,13 +19,17 @@ type Request = {
   reject: (reason?: any) => void
 }
 
+type OnRequest = (request: Request) => void
+
 export class RIFWallet extends Signer {
   smartWallet: SmartWallet
   pendingRequest?: Request
+  onRequest: OnRequest
 
-  constructor (smartWallet: SmartWallet) {
+  private constructor (smartWallet: SmartWallet, onRequest: OnRequest) {
     super()
     this.smartWallet = smartWallet
+    this.onRequest = onRequest
   }
 
   get address (): string {
@@ -35,9 +40,9 @@ export class RIFWallet extends Signer {
     return this.smartWallet.smartWalletAddress
   }
 
-  static create (wallet: Wallet, smartWalletAddress: string) {
+  static create (wallet: Wallet, smartWalletAddress: string, onRequest: OnRequest) {
     const smartWallet = SmartWallet.create(wallet, smartWalletAddress)
-    return new RIFWallet(smartWallet)
+    return new RIFWallet(smartWallet, onRequest)
   }
 
   getAddress = (): Promise<string> => Promise.resolve(this.smartWallet.smartWalletAddress)
@@ -60,7 +65,7 @@ export class RIFWallet extends Signer {
 
     // queues the transaction
     await new Promise((resolve, reject) => {
-      this.pendingRequest = {
+      this.pendingRequest = Object.freeze({
         type: 'sendTransaction',
         payload: {
           transactionRequest
@@ -73,7 +78,9 @@ export class RIFWallet extends Signer {
           delete this.pendingRequest
           reject(new Error('Rejected'))
         }
-      }
+      })
+
+      this.onRequest(this.pendingRequest)
     })
 
     return await this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, filterTxOptions(transactionRequest))
