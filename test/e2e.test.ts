@@ -29,7 +29,6 @@ describe('e2e', () => {
     // user that changes transaction params
     const gasPrice = BigNumber.from('100000')
     const onRequest = (nextRequest: Request) => {
-
       nextRequest.payload.transactionRequest.gasPrice = gasPrice
     }
 

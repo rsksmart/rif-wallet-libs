@@ -1,7 +1,6 @@
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { Bytes, Signer, Wallet, BigNumber } from 'ethers'
 import { SmartWallet } from './SmartWallet'
-import { EventEmitter } from 'events'
 
 const filterTxOptions = (transactionRequest: TransactionRequest) => Object.keys(transactionRequest)
   .filter(key => !['to', 'data'].includes(key))

@@ -1,6 +1,6 @@
 import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, testJsonRpcProvider } from './utils'
 import { SmartWalletFactory } from '../src/SmartWalletFactory'
-import { Request, RIFWallet } from '../src/RIFWallet'
+import { RIFWallet } from '../src/RIFWallet'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 
