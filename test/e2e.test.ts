@@ -1,6 +1,5 @@
 import { deploySmartWalletFactory, sendAndWait, fundAccount, testJsonRpcProvider } from './utils'
 import { KeyManagementSystem } from '../src/KeyManagementSystem'
-import { SmartWalletFactory } from '../src/SmartWalletFactory'
 import { Request, RIFWallet } from '../src/RIFWallet'
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -20,20 +19,15 @@ describe('e2e', () => {
     const wallet = walletRequest.wallet.connect(testJsonRpcProvider)
     await sendAndWait(fundAccount(wallet.address))
 
-    // smart wallet contract creation
-    const smartWalletFactory = await SmartWalletFactory.create(wallet, smartWalletFactoryContract.address)
-    await sendAndWait(smartWalletFactory.deploy())
-
-    // rif wallet sdk
-
     // user that changes transaction params
     const gasPrice = BigNumber.from('100000')
     const onRequest = (nextRequest: Request) => {
       nextRequest.payload.transactionRequest.gasPrice = gasPrice
     }
 
-    const smartWalletAddress = await smartWalletFactory.getSmartWalletAddress()
-    const rifWallet = RIFWallet.create(wallet, smartWalletAddress, onRequest)
+    const rifWallet = await RIFWallet.create(wallet, smartWalletFactoryContract.address, onRequest)
+
+    await sendAndWait(rifWallet.smartWalletFactory.deploy())
 
     // send transaction
     const txRequest = {

@@ -18,13 +18,10 @@ describe('RIFWallet', function (this: {
 
     const smartWalletFactoryContract = await deploySmartWalletFactory()
 
-    const smartWalletFactory = await SmartWalletFactory.create(wallet, smartWalletFactoryContract.address)
-    await sendAndWait(smartWalletFactory.deploy())
-
-    const smartWalletAddress = await smartWalletFactory.getSmartWalletAddress()
-
     this.onRequest = jest.fn()
-    this.rifWallet = await RIFWallet.create(wallet, smartWalletAddress, this.onRequest)
+    this.rifWallet = await RIFWallet.create(wallet, smartWalletFactoryContract.address, this.onRequest)
+
+    await sendAndWait(this.rifWallet.smartWalletFactory.deploy())
   })
 
   test('uses smart address', async () => {
