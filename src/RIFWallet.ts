@@ -42,6 +42,10 @@ export class RIFWallet extends Signer {
     return this.smartWallet.smartWalletAddress
   }
 
+  get wallet(): Wallet {
+    return this.smartWallet.wallet
+  }
+
   static async create (wallet: Wallet, smartWalletFactoryAddress: string, onRequest: OnRequest) {
     const smartWalletFactory = await SmartWalletFactory.create(wallet, smartWalletFactoryAddress)
     const smartWalletAddress = await smartWalletFactory.getSmartWalletAddress()
