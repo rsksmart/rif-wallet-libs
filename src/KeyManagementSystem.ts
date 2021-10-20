@@ -178,6 +178,6 @@ export class KeyManagementSystem implements IKeyManagementSystem {
   removeWallet (derivationPath: string): void {
     if (!this.state.derivedPaths[derivationPath]) throw new Error('Inexistent wallet')
 
-    this.state.derivedPaths[derivationPath] = false
+    delete this.state.derivedPaths[derivationPath]
   }
 }
