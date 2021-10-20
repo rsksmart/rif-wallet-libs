@@ -21,12 +21,12 @@ const createInitialState = (): KeyManagementSystemState => ({
   derivedPaths: {}
 })
 
-type KeyManagemenetSystemSerialization = {
+type KeyManagementSystemSerialization = {
   mnemonic: Mnemonic
   state: KeyManagementSystemState
 }
 
-type SaveableWallet = {
+export type SaveableWallet = {
   derivationPath: string
   wallet: Wallet
   save(): void
@@ -87,9 +87,18 @@ export class KeyManagementSystem implements IKeyManagementSystem {
    * @param serialized the serialized string
    * @returns the KeyManagementSystem that was serialized
    */
-  static fromSerialized (serialized: string): KeyManagementSystem {
-    const { mnemonic, state }: KeyManagemenetSystemSerialization = JSON.parse(serialized)
-    return new KeyManagementSystem(mnemonic, state)
+  static fromSerialized (serialized: string): { kms: KeyManagementSystem, wallets: Wallet[] } {
+    const { mnemonic, state }: KeyManagementSystemSerialization = JSON.parse(serialized)
+
+    const kms = new KeyManagementSystem(mnemonic, state)
+    const wallets = Object.keys(state.derivedPaths)
+      .filter(derivedPath => state.derivedPaths[derivedPath])
+      .map(derivedPath => kms.deriveWallet(derivedPath))
+
+    return {
+      kms,
+      wallets
+    }
   }
 
   /**
@@ -97,7 +106,7 @@ export class KeyManagementSystem implements IKeyManagementSystem {
    * @returns a serialized wallet
    */
   serialize (): string {
-    const serialization: KeyManagemenetSystemSerialization = {
+    const serialization: KeyManagementSystemSerialization = {
       mnemonic: this.mnemonic,
       state: this.state
     }

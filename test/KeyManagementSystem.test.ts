@@ -1,4 +1,5 @@
-import { KeyManagementSystem } from '../src/KeyManagementSystem'
+import { Wallet } from '@ethersproject/wallet'
+import { KeyManagementSystem, SaveableWallet } from '../src/KeyManagementSystem'
 import * as testCase from './test-case'
 
 describe('KeyManagementSystem', () => {
@@ -128,17 +129,35 @@ describe('KeyManagementSystem', () => {
 
   describe('serialization', function (this: {
     kms: KeyManagementSystem
+    addWallet: (saveableWallet: SaveableWallet) => void
+    removeWallet: (saveableWallet: SaveableWallet) => void
+    wallets: Wallet[]
   }) {
     beforeEach(() => {
       this.kms = KeyManagementSystem.create()
+      this.wallets = []
+      this.addWallet = (saveableWallet: SaveableWallet) => {
+        this.wallets.push(saveableWallet.wallet)
+        saveableWallet.save()
+      }
+      this.removeWallet = (saveableWallet: SaveableWallet) => {
+        this.wallets = this.wallets.filter(wallet => wallet.address !== saveableWallet.wallet.address)
+        this.kms.removeWallet(saveableWallet.derivationPath)
+      }
     })
 
     afterEach(() => {
       const serialization = this.kms.serialize()
-      const fromSerialized = KeyManagementSystem.fromSerialized(serialization)
+      const { kms, wallets } = KeyManagementSystem.fromSerialized(serialization)
 
-      expect(fromSerialized!.mnemonic).toEqual(this.kms.mnemonic)
-      expect(fromSerialized!.state).toEqual(this.kms.state)
+      expect(kms.mnemonic).toEqual(this.kms.mnemonic)
+      expect(kms.state).toEqual(this.kms.state)
+
+      for (const wallet of wallets) {
+        expect(this.wallets.find(w => w.address === wallet.address)).toBeDefined()
+      }
+
+      expect(wallets.length).toEqual(this.wallets.length)
     })
 
     test('emtpy', () => {
@@ -146,27 +165,37 @@ describe('KeyManagementSystem', () => {
     })
 
     test('with one account', () => {
-      this.kms.nextWallet(31).save()
+      this.addWallet(this.kms.nextWallet(31))
     })
 
     test('with many accounts', () => {
-      this.kms.nextWallet(31).save()
-      this.kms.nextWallet(31).save()
+      this.addWallet(this.kms.nextWallet(31))
+      this.addWallet(this.kms.nextWallet(31))
     })
 
     test('with many accounts and networks', () => {
-      this.kms.nextWallet(31).save()
-      this.kms.nextWallet(31).save()
-      this.kms.nextWallet(30).save()
-      this.kms.nextWallet(30).save()
+      this.addWallet(this.kms.nextWallet(31))
+      this.addWallet(this.kms.nextWallet(31))
+      this.addWallet(this.kms.nextWallet(30))
+      this.addWallet(this.kms.nextWallet(30))
     })
 
     test('with many accounts, networks, and custom wallets', () => {
-      this.kms.nextWallet(31).save()
-      this.kms.nextWallet(31).save()
-      this.kms.nextWallet(30).save()
-      this.kms.nextWallet(30).save()
-      this.kms.addWallet(testCase.custom_account_dpath).save()
+      this.addWallet(this.kms.nextWallet(31))
+      this.addWallet(this.kms.nextWallet(31))
+      this.addWallet(this.kms.nextWallet(30))
+      this.addWallet(this.kms.nextWallet(30))
+      this.addWallet(this.kms.addWallet(testCase.custom_account_dpath))
+    })
+
+    test('with many accounts, networks, custom wallets, and removing', () => {
+      const saveableWallet = this.kms.nextWallet(31)
+      this.addWallet(saveableWallet)
+      this.addWallet(this.kms.nextWallet(31))
+      this.addWallet(this.kms.nextWallet(30))
+      this.addWallet(this.kms.nextWallet(30))
+      this.addWallet(this.kms.addWallet(testCase.custom_account_dpath))
+      this.removeWallet(saveableWallet)
     })
   })
 })
