@@ -1,5 +1,5 @@
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
-import { Bytes, Signer, Wallet, BigNumber } from 'ethers'
+import { Bytes, Signer, Wallet } from 'ethers'
 import { SmartWalletFactory } from './SmartWalletFactory'
 import { SmartWallet } from './SmartWallet'
 

@@ -71,12 +71,12 @@ export const wasteGasContractFactory = new ContractFactory([
 
 export const revertsContractFactory = new ContractFactory([
   {
-    "constant": true,
-    "inputs": [],
-    "name": "makeRevert",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "pure",
-    "type": "function"
+    constant: true,
+    inputs: [],
+    name: 'makeRevert',
+    outputs: [],
+    payable: false,
+    stateMutability: 'pure',
+    type: 'function'
   }
 ], '0x6080604052348015600f57600080fd5b50606f80601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80632517ecb114602d575b600080fd5b60336035565b005b600080fdfea265627a7a72315820286f44ff552edf0267399dc5e456c57805042b05cfc57c516263aaef546d4f2e64736f6c63430005100032', rpcAccount)
