@@ -31,5 +31,9 @@ export class SmartWallet {
 
   directExecute = (to: string, data: BytesLike, ...args: any): Promise<ContractTransaction> => this.smartWalletContract.directExecute(to, data, ...args)
   estimateDirectExecute = (to: string, data: BytesLike, ...args: any): Promise<BigNumber> => this.smartWalletContract.estimateGas.directExecute(to, data, ...args)
-  callStaticDirectExecute = (to: string, data: BytesLike, ...args: any): Promise<any> => this.smartWalletContract.callStatic.directExecute(to, data, ...args)
+  callStaticDirectExecute = async (to: string, data: BytesLike, ...args: any): Promise<any> => {
+    const { success, ret }: { success: boolean, ret: string } = await this.smartWalletContract.callStatic.directExecute(to, data, ...args)
+    if (!success) throw new Error(ret)
+    return ret
+  }
 }

@@ -10,7 +10,7 @@ const nodeUrl = 'http://localhost:8545'
 
 export const testJsonRpcProvider = new providers.JsonRpcProvider(nodeUrl)
 
-const rpcAccount = testJsonRpcProvider.getSigner(0)
+export const rpcAccount = testJsonRpcProvider.getSigner(0)
 
 export const sendAndWait = async (tx: Promise<ContractTransaction>): Promise<ContractReceipt> => {
   return await (await tx).wait()
@@ -68,3 +68,15 @@ export const wasteGasContractFactory = new ContractFactory([
     type: 'function'
   }
 ], '0x608060405260008055348015601357600080fd5b506096806100226000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80633b6a02f614602d575b600080fd5b60336035565b005b60008090505b60c8811015605e578060008082825401925050819055508080600101915050603b565b5056fea265627a7a72315820dc4943905a3c2af2a2fdba0c68218f4ff91bf1f1441be84cdf23a88ba1d01b9764736f6c63430005100032', rpcAccount)
+
+export const revertsContractFactory = new ContractFactory([
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "makeRevert",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function"
+  }
+], '0x6080604052348015600f57600080fd5b50606f80601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80632517ecb114602d575b600080fd5b60336035565b005b600080fdfea265627a7a72315820286f44ff552edf0267399dc5e456c57805042b05cfc57c516263aaef546d4f2e64736f6c63430005100032', rpcAccount)

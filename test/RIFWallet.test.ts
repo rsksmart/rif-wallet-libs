@@ -1,5 +1,5 @@
-import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, testJsonRpcProvider } from './utils'
-import { RIFWallet } from '../src/RIFWallet'
+import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, testJsonRpcProvider, returnSenderContractFactory, wasteGasContractFactory } from './utils'
+import { Request, RIFWallet } from '../src/RIFWallet'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 
@@ -156,6 +156,55 @@ describe('RIFWallet', function (this: {
 
       this.rifWallet.nextRequest().reject() // close handle
       await expect(txPromise).rejects.toThrow()
+    })
+  })
+
+  describe('contracts', () => {
+    test('calls via smart wallet', async () => {
+      const returnSenderContract = await returnSenderContractFactory.deploy()
+      await returnSenderContract.deployTransaction.wait()
+
+      const connected = returnSenderContract.connect(this.rifWallet)
+
+      const sender = await connected.getSender()
+
+      expect(sender).toEqual(this.rifWallet.smartWalletAddress)
+    })
+
+    test('passes blockTag', async () => {
+      const returnSenderContract = await returnSenderContractFactory.deploy()
+      await returnSenderContract.deployTransaction.wait()
+
+      const connected = returnSenderContract.connect(this.rifWallet)
+
+      await expect(
+        connected.getSender({ blockTag: BigNumber.from('0') }) // contract was not created at this moment
+      ).rejects.toThrow()
+    })
+
+    test('sends via smart wallet', async () => {
+      const wasteGasContract = await wasteGasContractFactory.deploy()
+      await wasteGasContract.deployTransaction.wait()
+
+      const onRequest = (nextRequest: Request) => {
+        expect(nextRequest.payload.transactionRequest.to).toEqual(wasteGasContract.address)
+        expect(nextRequest.payload.transactionRequest.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
+
+        nextRequest.confirm()
+      }
+
+      const rifWallet = await RIFWallet.create(this.rifWallet.wallet, this.rifWallet.smartWalletFactory.smartWalletFactoryContract.address, onRequest)
+
+      const connected = wasteGasContract.connect(rifWallet)
+
+      const tx = await connected.wasteGas()
+      await tx.wait()
+
+      expect(tx.to).toEqual(rifWallet.smartWalletAddress)
+
+      const smartTx = rifWallet.smartWallet.smartWalletContract.interface.decodeFunctionData('directExecute', tx.data)
+      expect(smartTx.to).toEqual(wasteGasContract.address)
+      expect(smartTx.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
     })
   })
 })

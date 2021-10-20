@@ -1,4 +1,4 @@
-import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, returnSenderContractFactory } from './utils'
+import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, returnSenderContractFactory, revertsContractFactory } from './utils'
 import { SmartWallet } from '../src/SmartWallet'
 import { SmartWalletFactory } from '../src/SmartWalletFactory'
 import { Wallet } from '@ethersproject/wallet'
@@ -40,14 +40,25 @@ describe('SmartWallet', function (this: {
     expect(await this.smartWallet.wallet.getTransactionCount()).toEqual(2)
   })
 
-  test('call via direct send', async () => {
-    const returnSenderContract = await returnSenderContractFactory.deploy()
-    await returnSenderContract.deployTransaction.wait()
+  describe('call', () => {
+    test('successful', async () => {
+      const returnSenderContract = await returnSenderContractFactory.deploy()
+      await returnSenderContract.deployTransaction.wait()
 
-    const to = returnSenderContract.address
-    const data = returnSenderContract.interface.encodeFunctionData('getSender')
-    const returnData = await this.smartWallet.callStaticDirectExecute(to, data)
-    const sender = returnSenderContract.interface.decodeFunctionResult('getSender', returnData[1])[0]
-    expect(sender).toEqual(this.smartWallet.smartWalletAddress)
+      const to = returnSenderContract.address
+      const data = returnSenderContract.interface.encodeFunctionData('getSender')
+      const calldata = await this.smartWallet.callStaticDirectExecute(to, data)
+      const sender = returnSenderContract.interface.decodeFunctionResult('getSender', calldata)[0]
+      expect(sender).toEqual(this.smartWallet.smartWalletAddress)
+    })
+
+    test('reverting', async () => {
+      const revertsContract = await revertsContractFactory.deploy()
+      await revertsContract.deployTransaction.wait()
+
+      const to = revertsContract.address
+      const data = revertsContract.interface.encodeFunctionData('makeRevert')
+      await expect(this.smartWallet.callStaticDirectExecute(to, data)).rejects.toThrow()
+    })
   })
 })
