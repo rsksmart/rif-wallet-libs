@@ -42,7 +42,7 @@ export class RIFWallet extends Signer {
     return this.smartWallet.smartWalletAddress
   }
 
-  get wallet(): Wallet {
+  get wallet (): Wallet {
     return this.smartWallet.wallet
   }
 
