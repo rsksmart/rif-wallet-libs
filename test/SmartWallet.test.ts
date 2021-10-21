@@ -1,7 +1,8 @@
-import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, returnSenderContractFactory, revertsContractFactory } from './utils'
+import { Wallet } from 'ethers'
 import { SmartWallet } from '../src/SmartWallet'
 import { SmartWalletFactory } from '../src/SmartWalletFactory'
-import { Wallet } from '@ethersproject/wallet'
+import { sendAndWait, createNewTestWallet } from './utils'
+import { deploySmartWalletFactory, returnSenderContractFactory, revertsContractFactory } from './contracts'
 
 describe('SmartWallet', function (this: {
   wallet: Wallet

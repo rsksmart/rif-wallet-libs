@@ -1,6 +1,6 @@
-import { Wallet } from '@ethersproject/wallet'
+import { Wallet } from 'ethers'
 import { KeyManagementSystem, SaveableWallet } from '../src/KeyManagementSystem'
-import * as testCase from './test-case'
+import * as testCase from './testCase'
 
 describe('KeyManagementSystem', () => {
   describe('creation', () => {

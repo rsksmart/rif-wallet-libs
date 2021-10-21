@@ -1,12 +1,8 @@
-import { deploySmartWalletFactory, sendAndWait, fundAccount, testJsonRpcProvider, rpcAccount } from './utils'
-import { KeyManagementSystem } from '../src/KeyManagementSystem'
-import { Request, RIFWallet, OnRequest } from '../src/RIFWallet'
-import { BigNumber } from '@ethersproject/bignumber'
-import { Contract, ContractFactory } from '@ethersproject/contracts'
-import { Wallet } from '@ethersproject/wallet'
+import { Wallet, Contract, BigNumber } from 'ethers'
+import { KeyManagementSystem, RIFWallet, Request, OnRequest } from '../src'
 
-import ERC677ABI from './ERC677ABI.json'
-import ERC677Bytecode from './ERC677Bytecode.json'
+import { sendAndWait, fundAccount, testJsonRpcProvider } from './utils'
+import { deploySmartWalletFactory, erc677ContractFactory } from './contracts'
 
 describe('e2e', function (this: {
   smartWalletFactoryContract: Contract
@@ -63,8 +59,6 @@ describe('e2e', function (this: {
     const rifWallet = await RIFWallet.create(this.wallet, this.smartWalletFactoryContract.address, onRequest)
 
     await sendAndWait(rifWallet.smartWalletFactory.deploy())
-
-    const erc677ContractFactory = new ContractFactory(ERC677ABI, ERC677Bytecode, rpcAccount)
 
     const initialBalance = BigNumber.from('10000000000000000000') // 10 RIF
 

@@ -1,5 +1,6 @@
-import { deploySmartWalletFactory, createNewTestWallet } from './utils'
 import { SmartWalletFactory } from '../src/SmartWalletFactory'
+import { createNewTestWallet } from './utils'
+import { deploySmartWalletFactory } from './contracts'
 
 describe('SmartWalletFactory', function (this: {
   smartWalletFactory: SmartWalletFactory

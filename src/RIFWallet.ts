@@ -1,15 +1,9 @@
-import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { Bytes, Signer, Wallet } from 'ethers'
+import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
+import { defineReadOnly } from '@ethersproject/properties'
 import { SmartWalletFactory } from './SmartWalletFactory'
 import { SmartWallet } from './SmartWallet'
-import { defineReadOnly } from '@ethersproject/properties'
-
-const filterTxOptions = (transactionRequest: TransactionRequest) => Object.keys(transactionRequest)
-  .filter(key => !['from', 'to', 'data'].includes(key))
-  .reduce((obj: any, key: any) => {
-    obj[key] = (transactionRequest as any)[key]
-    return obj
-  }, {})
+import { filterTxOptions } from './filterTxOptions'
 
 export type Request = {
   type: 'sendTransaction'
