@@ -1,7 +1,6 @@
 import { Wallet } from 'ethers'
-import { generateMnemonic, mnemonicToSeedSync } from '@rsksmart/rif-id-mnemonic'
+import { generateMnemonic, mnemonicToSeedSync, fromSeed } from '@rsksmart/rif-id-mnemonic'
 import { getDPathByChainId } from '@rsksmart/rlogin-dpath'
-import { fromSeed } from 'bip32' // TOD): add method to @rsksmart/rif-id-mnemonic
 
 type Mnemonic = string
 
