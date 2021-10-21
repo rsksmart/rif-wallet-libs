@@ -2,6 +2,7 @@ import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@et
 import { Bytes, Signer, Wallet } from 'ethers'
 import { SmartWalletFactory } from './SmartWalletFactory'
 import { SmartWallet } from './SmartWallet'
+import { defineReadOnly } from '@ethersproject/properties'
 
 const filterTxOptions = (transactionRequest: TransactionRequest) => Object.keys(transactionRequest)
   .filter(key => !['from', 'to', 'data'].includes(key))
@@ -32,6 +33,7 @@ export class RIFWallet extends Signer {
     this.smartWalletFactory = smartWalletFactory
     this.smartWallet = smartWallet
     this.onRequest = onRequest
+    defineReadOnly(this, 'provider', this.smartWallet.wallet.provider)
   }
 
   get address (): string {

@@ -207,4 +207,12 @@ describe('RIFWallet', function (this: {
       expect(smartTx.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
     })
   })
+
+  describe('other methods', () => {
+    test('chain id', async () => {
+      const chainId = await this.rifWallet.getChainId()
+
+      expect(chainId).toEqual(1337)
+    })
+  })
 })
