@@ -1,185 +1,179 @@
-import { deploySmartWalletFactory, sendAndWait, createNewTestWallet, testJsonRpcProvider, returnSenderContractFactory, wasteGasContractFactory } from './utils'
-import { Request, RIFWallet } from '../src/RIFWallet'
+import { deploySmartWalletFactory, createNewTestWallet, returnSenderContractFactory, wasteGasContractFactory } from './utils'
+import { OnRequest, Request, RIFWallet } from '../src/RIFWallet'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 
-const txRequest = {
+const txRequest: TransactionRequest = {
   to: '0x0000000000111111111122222222223333333333',
   data: '0xabcd'
 }
 
+const voidOnRequest = () => {}
+
+const confirmOnRequest = (nextRequest: Request) => {
+  nextRequest.confirm()
+}
+
+const rejectOnRequestError = 'Rejected'
+const rejectOnRequest = (nextRequest: Request) => {
+  nextRequest.reject(rejectOnRequestError)
+}
+
 describe('RIFWallet', function (this: {
+  createRIFWallet: (onRequest: OnRequest) => Promise<RIFWallet>
   rifWallet: RIFWallet
-  onRequest: ReturnType<typeof jest.fn>
 }) {
   beforeEach(async () => {
     const wallet = await createNewTestWallet()
 
     const smartWalletFactoryContract = await deploySmartWalletFactory()
 
-    this.onRequest = jest.fn()
-    this.rifWallet = await RIFWallet.create(wallet, smartWalletFactoryContract.address, this.onRequest)
-
-    await sendAndWait(this.rifWallet.smartWalletFactory.deploy())
+    this.createRIFWallet = async (onRequest: OnRequest) => {
+      const rifWallet = await RIFWallet.create(wallet, smartWalletFactoryContract.address, onRequest)
+      const tx = await rifWallet.smartWalletFactory.deploy()
+      await tx.wait()
+      return rifWallet
+    }
   })
 
-  test('uses smart address', async () => {
-    expect(this.rifWallet.address).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
-    expect(await this.rifWallet.getAddress()).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
-  })
-
-  describe('send transaction', () => {
-    test('uses direct send', async () => {
-      const txPromise = this.rifWallet.sendTransaction(txRequest)
-      this.rifWallet.nextRequest().confirm()
-      const tx = await txPromise
-      await tx.wait()
-
-      expect(tx.to).toEqual(this.rifWallet.smartWalletAddress)
-      expect(tx.data).toContain('0000000000111111111122222222223333333333')
-      expect(tx.data).toContain('abcd')
+  describe('setup', () => {
+    beforeEach(async () => {
+      this.rifWallet = await this.createRIFWallet(voidOnRequest)
     })
 
-    test('allows to override params', async () => {
-      const gasPrice = BigNumber.from('100')
-      const gasLimit = BigNumber.from('600000')
-
-      const overriddenTxRequest: TransactionRequest = {
-        ...txRequest,
-        gasPrice,
-        gasLimit
-      }
-
-      const txPromise = this.rifWallet.sendTransaction(overriddenTxRequest)
-      this.rifWallet.nextRequest().confirm()
-      const tx = await txPromise
-      await tx.wait()
-
-      expect(tx.gasPrice).toEqual(gasPrice)
-      expect(tx.gasLimit).toEqual(gasLimit)
-    })
-  })
-
-  describe('queue', () => {
-    test('is initially mepty', () => {
-      expect(() => this.rifWallet.nextRequest()).toThrow()
+    test('uses smart address', async () => {
+      expect(this.rifWallet.address).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
+      expect(await this.rifWallet.getAddress()).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
     })
 
-    test('queues a transaction', async () => {
-      this.rifWallet.sendTransaction(txRequest)
+    test('sets provider prop', async () => {
+      const chainId = await this.rifWallet.getChainId()
 
-      expect(this.rifWallet.nextRequest().type).toEqual('sendTransaction')
+      expect(chainId).toEqual(1337)
     })
 
-    test('cannot send a transaction when another is pending (for now, this should be a queue)', async () => {
-      this.rifWallet.sendTransaction(txRequest)
-
-      expect(this.rifWallet.sendTransaction(txRequest)).rejects.toThrow()
-    })
-
-    test('can reject a tx', async () => {
-      const txPromise = this.rifWallet.sendTransaction(txRequest)
-
-      this.rifWallet.nextRequest().reject()
-
-      await expect(txPromise).rejects.toThrow()
-    })
-
-    test('can confirm a tx', async () => {
-      const txPromise = this.rifWallet.sendTransaction(txRequest)
-
-      this.rifWallet.nextRequest().confirm()
-
-      const tx = await txPromise
-      await tx.wait()
-
-      // first is the deploy, second this tx
-      expect(await testJsonRpcProvider.getTransactionCount(this.rifWallet.smartWallet.wallet.address)).toEqual(2)
-    })
-
-    test('can do more than one tx', async () => {
-      const txPromise = this.rifWallet.sendTransaction(txRequest)
-
-      this.rifWallet.nextRequest().confirm()
-
-      const tx = await txPromise
-      await tx.wait()
-
-      const txPromise2 = this.rifWallet.sendTransaction(txRequest)
-
-      this.rifWallet.nextRequest().confirm()
-
-      const tx2 = await txPromise2
-      await tx2.wait()
-
-      // first is the deploy, second this tx
-      expect(await testJsonRpcProvider.getTransactionCount(this.rifWallet.smartWallet.wallet.address)).toEqual(3)
-    })
-
-    test('can modify tx params', async () => {
-      const gasPrice = BigNumber.from('100')
-      const gasLimit = BigNumber.from('600000')
-
-      const txPromise = this.rifWallet.sendTransaction(txRequest)
-
-      const nextRequest = this.rifWallet.nextRequest()
-      nextRequest.payload.transactionRequest.gasPrice = gasPrice
-      nextRequest.payload.transactionRequest.gasLimit = gasLimit
-      nextRequest.confirm()
-
-      const tx = await txPromise
-      await tx.wait()
-
-      expect(tx.gasPrice).toEqual(gasPrice)
-      expect(tx.gasLimit).toEqual(gasLimit)
-    })
-
-    test('cannot edit the next request, only the params of the payload', async () => {
-      const txPromise = this.rifWallet.sendTransaction(txRequest)
-
-      const nextRequest = this.rifWallet.nextRequest()
-      expect(() => { nextRequest.confirm = (v) => {} }).toThrow()
-      expect(() => { nextRequest.reject = (v) => {} }).toThrow()
-      expect(() => { nextRequest.type = 'sendTransaction' }).toThrow()
-      expect(() => { nextRequest.payload = {} as any }).toThrow()
-
-      this.rifWallet.nextRequest().reject() // close handle
-      await expect(txPromise).rejects.toThrow()
+    test('cannot connect a new provider', () => {
+      expect(() => this.rifWallet.connect({} as any)).toThrow()
     })
   })
 
   describe('onRequest', () => {
-    test('is called with a new sendTransaction', async () => {
-      const txPromise = this.rifWallet.sendTransaction(txRequest)
+    test('gets tx params', async (done) => {
+      const onRequest = (nextRequest: Request) => {
+        expect(nextRequest.payload.transactionRequest.to).toEqual(txRequest.to)
+        expect(nextRequest.payload.transactionRequest.data).toEqual(txRequest.data)
 
-      expect(this.onRequest).toHaveBeenCalledWith(this.rifWallet.nextRequest())
+        done()
+      }
 
-      this.rifWallet.nextRequest().reject() // close handle
-      await expect(txPromise).rejects.toThrow()
+      const rifWallet = await this.createRIFWallet(onRequest)
+
+      await rifWallet.sendTransaction(txRequest)
+    })
+
+    test('has type \'sendTransaction\'', async (done) => {
+      const onRequest = (nextRequest: Request) => {
+        expect(nextRequest.type).toEqual('sendTransaction')
+        done()
+      }
+
+      const rifWallet = await this.createRIFWallet(onRequest)
+
+      await rifWallet.sendTransaction(txRequest)
+    })
+
+    test('can confirm', async () => {
+      const rifWallet = await this.createRIFWallet(confirmOnRequest)
+
+      const tx = await rifWallet.sendTransaction(txRequest)
+
+      const receipt = await tx.wait()
+
+      expect(receipt.status).toEqual(1)
+    })
+
+    test('can reject with given reason', async () => {
+      const rifWallet = await this.createRIFWallet(rejectOnRequest)
+
+      await expect(rifWallet.sendTransaction(txRequest)).rejects.toThrowError(rejectOnRequestError)
+    })
+
+    test('cannot edit the request', async (done) => {
+      const onRequest = (nextRequest: Request) => {
+        expect(() => { nextRequest.confirm = (v) => {} }).toThrow()
+        expect(() => { nextRequest.reject = (v) => {} }).toThrow()
+        expect(() => { nextRequest.type = 'sendTransaction' }).toThrow()
+        expect(() => { nextRequest.payload = {} as any }).toThrow()
+
+        done()
+      }
+
+      const rifWallet = await this.createRIFWallet(onRequest)
+
+      await rifWallet.sendTransaction(txRequest)
+    })
+  })
+
+  describe('send transaction', () => {
+    test('uses direct send', async () => {
+      const rifWallet = await this.createRIFWallet(confirmOnRequest)
+      const tx = await rifWallet.sendTransaction(txRequest)
+      await tx.wait()
+
+      expect(tx.to).toEqual(rifWallet.smartWalletAddress)
+
+      const smartTx = rifWallet.smartWallet.smartWalletContract.interface.decodeFunctionData('directExecute', tx.data)
+      expect(smartTx.to).toEqual(txRequest.to)
+      expect(smartTx.data).toEqual(txRequest.data)
+    })
+
+    test('can edit tx params', async () => {
+      const gasPrice = BigNumber.from('100')
+      const gasLimit = BigNumber.from('600000')
+
+      const onRequest = (nextRequest: Request) => {
+        nextRequest.payload.transactionRequest.gasPrice = gasPrice
+        nextRequest.payload.transactionRequest.gasLimit = gasLimit
+        nextRequest.confirm()
+      }
+
+      const rifWallet = await this.createRIFWallet(onRequest)
+
+      const tx = await rifWallet.sendTransaction(txRequest)
+      await tx.wait()
+
+      expect(tx.gasPrice).toEqual(gasPrice)
+      expect(tx.gasLimit).toEqual(gasLimit)
     })
   })
 
   describe('contracts', () => {
-    test('calls via smart wallet', async () => {
-      const returnSenderContract = await returnSenderContractFactory.deploy()
-      await returnSenderContract.deployTransaction.wait()
+    describe('call', () => {
+      beforeEach(async () => {
+        this.rifWallet = await this.createRIFWallet(voidOnRequest)
+      })
 
-      const connected = returnSenderContract.connect(this.rifWallet)
+      test('calls via smart wallet', async () => {
+        const returnSenderContract = await returnSenderContractFactory.deploy()
+        await returnSenderContract.deployTransaction.wait()
 
-      const sender = await connected.getSender()
+        const connected = returnSenderContract.connect(this.rifWallet)
 
-      expect(sender).toEqual(this.rifWallet.smartWalletAddress)
-    })
+        const sender = await connected.getSender()
 
-    test('passes blockTag', async () => {
-      const returnSenderContract = await returnSenderContractFactory.deploy()
-      await returnSenderContract.deployTransaction.wait()
+        expect(sender).toEqual(this.rifWallet.smartWalletAddress)
+      })
 
-      const connected = returnSenderContract.connect(this.rifWallet)
+      test('passes blockTag', async () => {
+        const returnSenderContract = await returnSenderContractFactory.deploy()
+        await returnSenderContract.deployTransaction.wait()
 
-      await expect(
-        connected.getSender({ blockTag: BigNumber.from('0') }) // contract was not created at this moment
-      ).rejects.toThrow()
+        const connected = returnSenderContract.connect(this.rifWallet)
+
+        await expect(
+          connected.getSender({ blockTag: BigNumber.from('0') }) // contract was not created at this moment
+        ).rejects.toThrow()
+      })
     })
 
     test('sends via smart wallet', async () => {
@@ -205,14 +199,6 @@ describe('RIFWallet', function (this: {
       const smartTx = rifWallet.smartWallet.smartWalletContract.interface.decodeFunctionData('directExecute', tx.data)
       expect(smartTx.to).toEqual(wasteGasContract.address)
       expect(smartTx.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
-    })
-  })
-
-  describe('other methods', () => {
-    test('chain id', async () => {
-      const chainId = await this.rifWallet.getChainId()
-
-      expect(chainId).toEqual(1337)
     })
   })
 })

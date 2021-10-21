@@ -14,6 +14,7 @@ const filterTxOptions = (transactionRequest: TransactionRequest) => Object.keys(
 export type Request = {
   type: 'sendTransaction'
   payload: {
+    // needs refactor: payload can be transactionRequest, not an object of transactionRequest
     transactionRequest: TransactionRequest
   }
   confirm: (value?: any) => void
@@ -25,7 +26,6 @@ export type OnRequest = (request: Request) => void
 export class RIFWallet extends Signer {
   smartWallet: SmartWallet
   smartWalletFactory: SmartWalletFactory
-  pendingRequest?: Request
   onRequest: OnRequest
 
   private constructor (smartWalletFactory: SmartWalletFactory, smartWallet: SmartWallet, onRequest: OnRequest) {
@@ -33,7 +33,8 @@ export class RIFWallet extends Signer {
     this.smartWalletFactory = smartWalletFactory
     this.smartWallet = smartWallet
     this.onRequest = onRequest
-    defineReadOnly(this, 'provider', this.smartWallet.wallet.provider)
+
+    defineReadOnly(this, 'provider', this.smartWallet.wallet.provider) // ref: https://github.com/ethers-io/ethers.js/blob/b1458989761c11bf626591706aa4ce98dae2d6a9/packages/abstract-signer/src.ts/index.ts#L130
   }
 
   get address (): string {
@@ -60,40 +61,33 @@ export class RIFWallet extends Signer {
   signMessage = (message: string | Bytes): Promise<string> => this.smartWallet.wallet.signMessage(message)
   signTransaction = (transaction: TransactionRequest): Promise<string> => this.smartWallet.wallet.signTransaction(transaction)
 
-  // should override calling via directExecute
+  // calls via smart wallet
   call (transactionRequest: TransactionRequest, blockTag?: BlockTag): Promise<any> {
     return this.smartWallet.callStaticDirectExecute(transactionRequest.to!, transactionRequest.data!, { ...filterTxOptions(transactionRequest), blockTag })
   }
 
   async sendTransaction (transactionRequest: TransactionRequest): Promise<TransactionResponse> {
-    if (this.pendingRequest) throw new Error('Pending transaction')
-
-    // queues the transaction
+    // waits for confirm()
     await new Promise((resolve, reject) => {
-      this.pendingRequest = Object.freeze({
+      const nextRequest = Object.freeze<Request>({
         type: 'sendTransaction',
         payload: {
           transactionRequest
         },
-        confirm: (value?: any) => {
-          delete this.pendingRequest
-          resolve(value)
+        confirm: () => {
+          resolve(undefined)
         },
         reject: (reason?: any) => {
-          delete this.pendingRequest
-          reject(new Error('Rejected'))
+          reject(new Error(reason))
         }
       })
 
-      this.onRequest(this.pendingRequest)
+      // emits onRequest with reference to the transactionRequest
+      this.onRequest(nextRequest)
     })
 
+    // sends via smart wallet
     return await this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, filterTxOptions(transactionRequest))
-  }
-
-  nextRequest (): Request {
-    if (!this.pendingRequest) throw new Error('No next request')
-    return this.pendingRequest
   }
 
   connect = (provider: Provider): Signer => {
