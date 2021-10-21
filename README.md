@@ -20,24 +20,6 @@
   </a>
 </p>
 
-Creating accounts:
-
-```typescript
-import { Wallet, Account } from '@rsksmart/rif-wallet'
-
-const wallet = Wallet.create()
-wallet.mnemonic
-// pool random door ...
-
-const account: Account = wallet.getAccount(0)
-```
-
-Using queued transactions:
-
-```typescript
-import { ethers } from 'ethers'
-```
-
 ## Run for development
 
 Install dependencies:
