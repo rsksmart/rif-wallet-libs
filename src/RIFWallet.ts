@@ -1,9 +1,14 @@
-import { Bytes, Signer, Wallet } from 'ethers'
+import { Bytes, Signer, Wallet, BigNumberish } from 'ethers'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { defineReadOnly } from '@ethersproject/properties'
 import { SmartWalletFactory } from './SmartWalletFactory'
 import { SmartWallet } from './SmartWallet'
 import { filterTxOptions } from './filterTxOptions'
+
+export type OverriddableTransactionOptions = {
+  gasLimit: BigNumberish,
+  gasPrice: BigNumberish,
+}
 
 export type Request = {
   type: 'sendTransaction'
@@ -11,7 +16,7 @@ export type Request = {
     // needs refactor: payload can be transactionRequest, not an object of transactionRequest
     transactionRequest: TransactionRequest
   }
-  confirm: (value?: any) => void
+  confirm: (value?: Partial<OverriddableTransactionOptions>) => void
   reject: (reason?: any) => void
 }
 
@@ -62,14 +67,19 @@ export class RIFWallet extends Signer {
 
   async sendTransaction (transactionRequest: TransactionRequest): Promise<TransactionResponse> {
     // waits for confirm()
-    await new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       const nextRequest = Object.freeze<Request>({
         type: 'sendTransaction',
         payload: {
           transactionRequest
         },
-        confirm: () => {
-          resolve(undefined)
+        confirm: async (overriddenOptions?: Partial<OverriddableTransactionOptions>) => {
+          const txOptions = {
+            ...filterTxOptions(transactionRequest),
+            ...overriddenOptions || {}
+          }
+
+          resolve(await this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, txOptions))
         },
         reject: (reason?: any) => {
           reject(new Error(reason))
@@ -79,9 +89,6 @@ export class RIFWallet extends Signer {
       // emits onRequest with reference to the transactionRequest
       this.onRequest(nextRequest)
     })
-
-    // sends via smart wallet
-    return await this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, filterTxOptions(transactionRequest))
   }
 
   connect = (provider: Provider): Signer => {

@@ -133,9 +133,7 @@ describe('RIFWallet', function (this: {
       const gasLimit = BigNumber.from('600000')
 
       const onRequest = (nextRequest: Request) => {
-        nextRequest.payload.transactionRequest.gasPrice = gasPrice
-        nextRequest.payload.transactionRequest.gasLimit = gasLimit
-        nextRequest.confirm()
+        nextRequest.confirm({ gasPrice, gasLimit })
       }
 
       const rifWallet = await this.createRIFWallet(onRequest)

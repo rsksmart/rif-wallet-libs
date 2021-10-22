@@ -29,10 +29,7 @@ describe('e2e', function (this: {
     const gasPrice = BigNumber.from('100000')
 
     const onRequest = (nextRequest: Request) => {
-      expect(nextRequest.type).toEqual('sendTransaction')
-      nextRequest.payload.transactionRequest.gasPrice = gasPrice
-
-      nextRequest.confirm()
+      nextRequest.confirm({ gasPrice })
     }
 
     const rifWallet = await RIFWallet.create(this.wallet, this.smartWalletFactoryContract.address, onRequest)
