@@ -68,8 +68,8 @@ export class RIFWallet extends Signer {
 
   getAddress = (): Promise<string> => Promise.resolve(this.smartWallet.smartWalletAddress)
 
-  signMessage = async (message: string | Bytes): Promise<string> =>
-    await new Promise((resolve, reject) => {
+  async signMessage (message: string | Bytes): Promise<string> {
+    return await new Promise((resolve, reject) => {
       const nextRequest = Object.freeze<SignMessageRequest>({
         type: 'signMessage',
         payload: message,
@@ -80,6 +80,7 @@ export class RIFWallet extends Signer {
       // emits onRequest
       this.onRequest(nextRequest)
     })
+  }
 
   signTransaction = (transaction: TransactionRequest): Promise<string> => this.smartWallet.wallet.signTransaction(transaction)
 
