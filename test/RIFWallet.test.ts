@@ -1,8 +1,9 @@
 import { BigNumber } from 'ethers'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
-import { OnRequest, Request, RIFWallet } from '../src/RIFWallet'
+import { OnRequest, Request, RIFWallet, SendTransactionRequest } from '../src/RIFWallet'
 import { createNewTestWallet } from './utils'
 import { returnSenderContractFactory, wasteGasContractFactory, deploySmartWalletFactory } from './contracts'
+import { verifyMessage } from 'ethers/lib/utils'
 
 const txRequest: TransactionRequest = {
   to: '0x0000000000111111111122222222223333333333',
@@ -61,8 +62,9 @@ describe('RIFWallet', function (this: {
   describe('onRequest', () => {
     test('gets tx params', async (done) => {
       const onRequest = (nextRequest: Request) => {
-        expect(nextRequest.payload.transactionRequest.to).toEqual(txRequest.to)
-        expect(nextRequest.payload.transactionRequest.data).toEqual(txRequest.data)
+        const request = nextRequest as SendTransactionRequest
+        expect(request.payload.transactionRequest.to).toEqual(txRequest.to)
+        expect(request.payload.transactionRequest.data).toEqual(txRequest.data)
 
         done()
       }
@@ -146,6 +148,23 @@ describe('RIFWallet', function (this: {
     })
   })
 
+  describe('sign message', () => {
+    test('can sign message', async () => {
+      const rifWallet = await this.createRIFWallet(confirmOnRequest)
+      const signature = await rifWallet.signMessage('hello world')
+
+      const expectedAddress = await rifWallet.smartWallet.wallet.getAddress()
+      const address = verifyMessage('hello world', signature)
+
+      expect(address).toBe(expectedAddress)
+    })
+
+    test('reject sign message', async () => {
+      const rifWallet = await this.createRIFWallet(rejectOnRequest)
+      await expect(rifWallet.signMessage('hello world')).rejects.toThrowError(rejectOnRequestError)
+    })
+  })
+
   describe('contracts', () => {
     describe('call', () => {
       beforeEach(async () => {
@@ -180,8 +199,9 @@ describe('RIFWallet', function (this: {
       await wasteGasContract.deployTransaction.wait()
 
       const onRequest = (nextRequest: Request) => {
-        expect(nextRequest.payload.transactionRequest.to).toEqual(wasteGasContract.address)
-        expect(nextRequest.payload.transactionRequest.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
+        const request = nextRequest as SendTransactionRequest
+        expect(request.payload.transactionRequest.to).toEqual(wasteGasContract.address)
+        expect(request.payload.transactionRequest.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
 
         nextRequest.confirm()
       }
