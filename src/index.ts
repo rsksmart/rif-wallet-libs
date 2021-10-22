@@ -1,1 +1,2 @@
-export { Wallet } from './Wallet'
+export * from './KeyManagementSystem'
+export * from './RIFWallet'
