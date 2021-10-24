@@ -18,7 +18,7 @@ const confirmOnRequest = (nextRequest: Request) => {
 
 const rejectOnRequestError = 'Rejected'
 const rejectOnRequest = (nextRequest: Request) => {
-  nextRequest.reject(rejectOnRequestError)
+  throw new Error(rejectOnRequestError)
 }
 
 describe('RIFWallet', function (this: {
@@ -63,8 +63,8 @@ describe('RIFWallet', function (this: {
     test('gets tx params', async (done) => {
       const onRequest = (nextRequest: Request) => {
         const request = nextRequest as SendTransactionRequest
-        expect(request.payload.transactionRequest.to).toEqual(txRequest.to)
-        expect(request.payload.transactionRequest.data).toEqual(txRequest.data)
+        expect(request.payload.to).toEqual(txRequest.to)
+        expect(request.payload.data).toEqual(txRequest.data)
 
         done()
       }
@@ -103,7 +103,7 @@ describe('RIFWallet', function (this: {
 
     test('cannot edit the request', async (done) => {
       const onRequest = (nextRequest: Request) => {
-        expect(() => { nextRequest.confirm = (v) => {} }).toThrow()
+        expect(() => { nextRequest.confirm = ((v: any) => {}) as any }).toThrow()
         expect(() => { nextRequest.reject = (v) => {} }).toThrow()
         expect(() => { nextRequest.type = 'sendTransaction' }).toThrow()
         expect(() => { nextRequest.payload = {} as any }).toThrow()
@@ -134,9 +134,9 @@ describe('RIFWallet', function (this: {
       const gasPrice = BigNumber.from('100')
       const gasLimit = BigNumber.from('600000')
 
-      const onRequest = (nextRequest: Request) => {
+      const onRequest = ((nextRequest: SendTransactionRequest) => {
         nextRequest.confirm({ gasPrice, gasLimit })
-      }
+      }) as OnRequest
 
       const rifWallet = await this.createRIFWallet(onRequest)
 
@@ -200,8 +200,8 @@ describe('RIFWallet', function (this: {
 
       const onRequest = (nextRequest: Request) => {
         const request = nextRequest as SendTransactionRequest
-        expect(request.payload.transactionRequest.to).toEqual(wasteGasContract.address)
-        expect(request.payload.transactionRequest.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
+        expect(request.payload.to).toEqual(wasteGasContract.address)
+        expect(request.payload.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
 
         nextRequest.confirm()
       }
