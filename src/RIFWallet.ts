@@ -49,7 +49,6 @@ type CreateDoRequest = (
   onConfirm: CreateDoRequestOnConfirm
 ) => (payload: RequestPayload) => Promise<RequestReturnType>
 
-
 export class RIFWallet extends Signer {
   smartWallet: SmartWallet
   smartWalletFactory: SmartWalletFactory
@@ -117,7 +116,6 @@ export class RIFWallet extends Signer {
       return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, txOptions)
     }) as CreateDoRequestOnConfirm
   ) as (transactionRequest: TransactionRequest) => Promise<TransactionResponse>
-
 
   signMessage = this.createDoRequest(
     'signMessage',
