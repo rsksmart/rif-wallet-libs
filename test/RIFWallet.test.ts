@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
+import {  } from '@ethersproject/wallet'
 import { OnRequest, Request, RIFWallet, SendTransactionRequest } from '../src/RIFWallet'
 import { createNewTestWallet } from './utils'
 import { returnSenderContractFactory, wasteGasContractFactory, deploySmartWalletFactory } from './contracts'
@@ -46,6 +47,10 @@ describe('RIFWallet', function (this: {
     test('uses smart address', async () => {
       expect(this.rifWallet.address).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
       expect(await this.rifWallet.getAddress()).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
+    })
+
+    test('signs with the smart wallet owner', async () => {
+      expect(await this.rifWallet.signTransaction(txRequest)).toEqual(await this.rifWallet.wallet.signTransaction(txRequest))
     })
 
     test('sets provider prop', async () => {

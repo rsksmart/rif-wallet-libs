@@ -11,6 +11,7 @@
     "test": "npx jest --collect-coverage --verbose",
     "test:watch": "npx jest --watch",
     "test:coverage": "npx jest --coverage",
+    "test:ci": "npx jest --coverage --verbose",
     "lint": "npx eslint . src/ test/ --ext .js,.ts",
     "lint:fix": "npx eslint . src/ test/ --ext .js,.ts --fix",
     "build": "npx webpack"
