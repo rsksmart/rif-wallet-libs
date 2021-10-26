@@ -1,6 +1,5 @@
 import { BigNumber } from 'ethers'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
-import {  } from '@ethersproject/wallet'
 import { OnRequest, Request, RIFWallet, SendTransactionRequest } from '../src/RIFWallet'
 import { createNewTestWallet } from './utils'
 import { returnSenderContractFactory, wasteGasContractFactory, deploySmartWalletFactory } from './contracts'
