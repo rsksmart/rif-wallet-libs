@@ -1,5 +1,5 @@
 import { Wallet, Contract, BigNumber } from 'ethers'
-import { KeyManagementSystem, RIFWallet, Request, OnRequest } from '../src'
+import { KeyManagementSystem, RIFWallet, Request, OnRequest, SendTransactionRequest } from '../src'
 
 import { sendAndWait, fundAccount, testJsonRpcProvider } from './utils'
 import { deploySmartWalletFactory, erc677ContractFactory } from './contracts'
@@ -28,9 +28,9 @@ describe('e2e', function (this: {
     // user that changes transaction params
     const gasPrice = BigNumber.from('100000')
 
-    const onRequest = (nextRequest: Request) => {
+    const onRequest = ((nextRequest: SendTransactionRequest) => {
       nextRequest.confirm({ gasPrice })
-    }
+    }) as OnRequest
 
     const rifWallet = await RIFWallet.create(this.wallet, this.smartWalletFactoryContract.address, onRequest)
 

@@ -1,8 +1,9 @@
 import { BigNumber } from 'ethers'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
-import { OnRequest, Request, RIFWallet } from '../src/RIFWallet'
+import { OnRequest, Request, RIFWallet, SendTransactionRequest } from '../src/RIFWallet'
 import { createNewTestWallet } from './utils'
 import { returnSenderContractFactory, wasteGasContractFactory, deploySmartWalletFactory } from './contracts'
+import { verifyMessage } from 'ethers/lib/utils'
 
 const txRequest: TransactionRequest = {
   to: '0x0000000000111111111122222222223333333333',
@@ -17,7 +18,7 @@ const confirmOnRequest = (nextRequest: Request) => {
 
 const rejectOnRequestError = 'Rejected'
 const rejectOnRequest = (nextRequest: Request) => {
-  nextRequest.reject(rejectOnRequestError)
+  throw new Error(rejectOnRequestError)
 }
 
 describe('RIFWallet', function (this: {
@@ -61,8 +62,9 @@ describe('RIFWallet', function (this: {
   describe('onRequest', () => {
     test('gets tx params', async (done) => {
       const onRequest = (nextRequest: Request) => {
-        expect(nextRequest.payload.transactionRequest.to).toEqual(txRequest.to)
-        expect(nextRequest.payload.transactionRequest.data).toEqual(txRequest.data)
+        const request = nextRequest as SendTransactionRequest
+        expect(request.payload.to).toEqual(txRequest.to)
+        expect(request.payload.data).toEqual(txRequest.data)
 
         done()
       }
@@ -101,7 +103,7 @@ describe('RIFWallet', function (this: {
 
     test('cannot edit the request', async (done) => {
       const onRequest = (nextRequest: Request) => {
-        expect(() => { nextRequest.confirm = (v) => {} }).toThrow()
+        expect(() => { nextRequest.confirm = ((v: any) => {}) as any }).toThrow()
         expect(() => { nextRequest.reject = (v) => {} }).toThrow()
         expect(() => { nextRequest.type = 'sendTransaction' }).toThrow()
         expect(() => { nextRequest.payload = {} as any }).toThrow()
@@ -132,9 +134,9 @@ describe('RIFWallet', function (this: {
       const gasPrice = BigNumber.from('100')
       const gasLimit = BigNumber.from('600000')
 
-      const onRequest = (nextRequest: Request) => {
+      const onRequest = ((nextRequest: SendTransactionRequest) => {
         nextRequest.confirm({ gasPrice, gasLimit })
-      }
+      }) as OnRequest
 
       const rifWallet = await this.createRIFWallet(onRequest)
 
@@ -143,6 +145,23 @@ describe('RIFWallet', function (this: {
 
       expect(tx.gasPrice).toEqual(gasPrice)
       expect(tx.gasLimit).toEqual(gasLimit)
+    })
+  })
+
+  describe('sign message', () => {
+    test('can sign message', async () => {
+      const rifWallet = await this.createRIFWallet(confirmOnRequest)
+      const signature = await rifWallet.signMessage('hello world')
+
+      const expectedAddress = await rifWallet.smartWallet.wallet.getAddress()
+      const address = verifyMessage('hello world', signature)
+
+      expect(address).toBe(expectedAddress)
+    })
+
+    test('reject sign message', async () => {
+      const rifWallet = await this.createRIFWallet(rejectOnRequest)
+      await expect(rifWallet.signMessage('hello world')).rejects.toThrowError(rejectOnRequestError)
     })
   })
 
@@ -180,8 +199,9 @@ describe('RIFWallet', function (this: {
       await wasteGasContract.deployTransaction.wait()
 
       const onRequest = (nextRequest: Request) => {
-        expect(nextRequest.payload.transactionRequest.to).toEqual(wasteGasContract.address)
-        expect(nextRequest.payload.transactionRequest.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
+        const request = nextRequest as SendTransactionRequest
+        expect(request.payload.to).toEqual(wasteGasContract.address)
+        expect(request.payload.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
 
         nextRequest.confirm()
       }

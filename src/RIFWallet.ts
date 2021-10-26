@@ -1,26 +1,53 @@
-import { Bytes, Signer, Wallet, BigNumberish } from 'ethers'
+import { Signer, Wallet, BigNumberish, BytesLike } from 'ethers'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { defineReadOnly } from '@ethersproject/properties'
 import { SmartWalletFactory } from './SmartWalletFactory'
 import { SmartWallet } from './SmartWallet'
 import { filterTxOptions } from './filterTxOptions'
 
+type IRequest<Type, Payload, ReturnType, ConfirmArgs> = {
+  type: Type,
+  payload: Payload
+  returnType: ReturnType
+  confirm: (args?: ConfirmArgs) => Promise<void>
+  reject: (reason?: any) => void
+}
+
 export type OverriddableTransactionOptions = {
   gasLimit: BigNumberish,
   gasPrice: BigNumberish,
 }
 
-export type Request = {
-  type: 'sendTransaction'
-  payload: {
-    // needs refactor: payload can be transactionRequest, not an object of transactionRequest
-    transactionRequest: TransactionRequest
-  }
-  confirm: (value?: Partial<OverriddableTransactionOptions>) => void
-  reject: (reason?: any) => void
-}
+export type SendTransactionRequest = IRequest<
+  'sendTransaction',
+  TransactionRequest,
+  TransactionResponse,
+  Partial<OverriddableTransactionOptions>
+>
 
+export type SignMessageRequest = IRequest<
+  'signMessage',
+  BytesLike,
+  string,
+  void
+>
+
+export type Request = SendTransactionRequest | SignMessageRequest
 export type OnRequest = (request: Request) => void
+
+type RequestType = Request['type']
+type RequestPayload = Request['payload']
+type RequestReturnType = Request['returnType']
+type RequestConfirm = Request['confirm']
+
+type RequestConfirmOverrides = Parameters<RequestConfirm>[0]
+
+type CreateDoRequestOnConfirm = (payload: RequestPayload, overrides: RequestConfirmOverrides) => Promise<RequestReturnType>
+
+type CreateDoRequest = (
+  type: RequestType,
+  onConfirm: CreateDoRequestOnConfirm
+) => (payload: RequestPayload) => Promise<RequestReturnType>
 
 export class RIFWallet extends Signer {
   smartWallet: SmartWallet
@@ -57,7 +84,6 @@ export class RIFWallet extends Signer {
 
   getAddress = (): Promise<string> => Promise.resolve(this.smartWallet.smartWalletAddress)
 
-  signMessage = (message: string | Bytes): Promise<string> => this.smartWallet.wallet.signMessage(message)
   signTransaction = (transaction: TransactionRequest): Promise<string> => this.smartWallet.wallet.signTransaction(transaction)
 
   // calls via smart wallet
@@ -65,31 +91,36 @@ export class RIFWallet extends Signer {
     return this.smartWallet.callStaticDirectExecute(transactionRequest.to!, transactionRequest.data!, { ...filterTxOptions(transactionRequest), blockTag })
   }
 
-  async sendTransaction (transactionRequest: TransactionRequest): Promise<TransactionResponse> {
-    // waits for confirm()
-    return await new Promise((resolve, reject) => {
-      const nextRequest = Object.freeze<Request>({
-        type: 'sendTransaction',
-        payload: {
-          transactionRequest
-        },
-        confirm: async (overriddenOptions?: Partial<OverriddableTransactionOptions>) => {
-          const txOptions = {
-            ...filterTxOptions(transactionRequest),
-            ...overriddenOptions || {}
-          }
-
-          resolve(await this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, txOptions))
-        },
-        reject: (reason?: any) => {
-          reject(new Error(reason))
-        }
+  createDoRequest: CreateDoRequest = (type, onConfirm) => {
+    return (payload) => new Promise((resolve, reject) => {
+      const nextRequest = Object.freeze({
+        type,
+        payload,
+        confirm: (args?: RequestConfirmOverrides) => resolve(onConfirm(payload, args)),
+        reject
       })
 
-      // emits onRequest with reference to the transactionRequest
-      this.onRequest(nextRequest)
+      // emits onRequest
+      this.onRequest(nextRequest as Request)
     })
   }
+
+  sendTransaction = this.createDoRequest(
+    'sendTransaction',
+    ((transactionRequest: TransactionRequest, overriddenOptions?: Partial<OverriddableTransactionOptions>) => {
+      const txOptions = {
+        ...filterTxOptions(transactionRequest),
+        ...overriddenOptions || {}
+      }
+
+      return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, txOptions)
+    }) as CreateDoRequestOnConfirm
+  ) as (transactionRequest: TransactionRequest) => Promise<TransactionResponse>
+
+  signMessage = this.createDoRequest(
+    'signMessage',
+    ((message: BytesLike) => this.smartWallet.wallet.signMessage(message)) as CreateDoRequestOnConfirm
+  ) as (message: BytesLike) => Promise<string>
 
   connect = (provider: Provider): Signer => {
     throw new Error('Method not implemented')
