@@ -33,6 +33,13 @@ describe('SmartWallet', function (this: {
     expect(await this.smartWallet.wallet.getTransactionCount()).toEqual(2)
   })
 
+  test('direct send with undefined data', async () => {
+    const to = '0x0000000000111111111122222222223333333333'
+    const data = undefined
+    await sendAndWait(this.smartWallet.directExecute(to, data))
+    expect(await this.smartWallet.wallet.getTransactionCount()).toEqual(2)
+  })
+
   test('estimate direct send', async () => {
     const to = '0x0000000000111111111122222222223333333333'
     const data = '0xabcd'
