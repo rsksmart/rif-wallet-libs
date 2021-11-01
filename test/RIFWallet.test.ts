@@ -3,7 +3,7 @@ import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { OnRequest, Request, RIFWallet, SendTransactionRequest } from '../src/RIFWallet'
 import { createNewTestWallet } from './utils'
 import { returnSenderContractFactory, wasteGasContractFactory, deploySmartWalletFactory } from './contracts'
-import { verifyMessage } from 'ethers/lib/utils'
+import { verifyMessage, verifyTypedData } from 'ethers/lib/utils'
 
 const txRequest: TransactionRequest = {
   to: '0x0000000000111111111122222222223333333333',
@@ -67,8 +67,8 @@ describe('RIFWallet', function (this: {
     test('gets tx params', async (done) => {
       const onRequest = (nextRequest: Request) => {
         const request = nextRequest as SendTransactionRequest
-        expect(request.payload.to).toEqual(txRequest.to)
-        expect(request.payload.data).toEqual(txRequest.data)
+        expect(request.payload[0].to).toEqual(txRequest.to)
+        expect(request.payload[0].data).toEqual(txRequest.data)
 
         done()
       }
@@ -169,6 +169,56 @@ describe('RIFWallet', function (this: {
     })
   })
 
+  describe('sign typed data', () => {
+    const domain = {
+      name: 'Ether Mail',
+      version: '1',
+      chainId: 1,
+      verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
+    };
+
+    // The named list of all type definitions
+    const types = {
+      Person: [
+        { name: 'name', type: 'string' },
+        { name: 'wallet', type: 'address' }
+      ],
+      Mail: [
+        { name: 'from', type: 'Person' },
+        { name: 'to', type: 'Person' },
+        { name: 'contents', type: 'string' }
+      ]
+    };
+
+    // The data to sign
+    const value = {
+      from: {
+        name: 'Cow',
+        wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826'
+      },
+      to: {
+        name: 'Bob',
+        wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB'
+      },
+      contents: 'Hello, Bob!'
+    };
+
+    test('can sign message', async () => {
+      const rifWallet = await this.createRIFWallet(confirmOnRequest)
+      const signature = await rifWallet._signTypedData(domain, types, value)
+
+      const expectedAddress = await rifWallet.smartWallet.wallet.getAddress()
+      const address = verifyTypedData(domain, types, value, signature)
+
+      expect(address).toBe(expectedAddress)
+    })
+
+    test('reject sign message', async () => {
+      const rifWallet = await this.createRIFWallet(rejectOnRequest)
+      await expect(rifWallet._signTypedData(domain, types, value)).rejects.toThrowError(rejectOnRequestError)
+    })
+  })
+
   describe('contracts', () => {
     describe('call', () => {
       beforeEach(async () => {
@@ -204,8 +254,8 @@ describe('RIFWallet', function (this: {
 
       const onRequest = (nextRequest: Request) => {
         const request = nextRequest as SendTransactionRequest
-        expect(request.payload.to).toEqual(wasteGasContract.address)
-        expect(request.payload.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
+        expect(request.payload[0].to).toEqual(wasteGasContract.address)
+        expect(request.payload[0].data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
 
         nextRequest.confirm()
       }
