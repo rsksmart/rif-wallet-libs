@@ -175,7 +175,7 @@ describe('RIFWallet', function (this: {
       version: '1',
       chainId: 1,
       verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
-    };
+    }
 
     // The named list of all type definitions
     const types = {
@@ -188,7 +188,7 @@ describe('RIFWallet', function (this: {
         { name: 'to', type: 'Person' },
         { name: 'contents', type: 'string' }
       ]
-    };
+    }
 
     // The data to sign
     const value = {
@@ -201,7 +201,7 @@ describe('RIFWallet', function (this: {
         wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB'
       },
       contents: 'Hello, Bob!'
-    };
+    }
 
     test('can sign message', async () => {
       const rifWallet = await this.createRIFWallet(confirmOnRequest)
