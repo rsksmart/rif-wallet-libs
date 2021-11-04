@@ -134,6 +134,18 @@ describe('RIFWallet', function (this: {
       expect(smartTx.data).toEqual(txRequest.data)
     })
 
+    test('uses direct send without data', async () => {
+      const rifWallet = await this.createRIFWallet(confirmOnRequest)
+      const tx = await rifWallet.sendTransaction({ ...txRequest, data: undefined })
+      await tx.wait()
+
+      expect(tx.to).toEqual(rifWallet.smartWalletAddress)
+
+      const smartTx = rifWallet.smartWallet.smartWalletContract.interface.decodeFunctionData('directExecute', tx.data)
+      expect(smartTx.to).toEqual(txRequest.to)
+      expect(smartTx.data).toEqual('0x0000000000000000000000000000000000000000000000000000000000000000')
+    })
+
     test('can edit tx params', async () => {
       const gasPrice = BigNumber.from('100')
       const gasLimit = BigNumber.from('600000')
