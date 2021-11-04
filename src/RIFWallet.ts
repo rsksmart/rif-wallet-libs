@@ -1,5 +1,6 @@
 import { Signer, Wallet, BigNumberish, BytesLike } from 'ethers'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
+import { TypedDataSigner } from '@ethersproject/abstract-signer'
 import { defineReadOnly } from '@ethersproject/properties'
 import { SmartWalletFactory } from './SmartWalletFactory'
 import { SmartWallet } from './SmartWallet'
@@ -20,19 +21,28 @@ export type OverriddableTransactionOptions = {
 
 export type SendTransactionRequest = IRequest<
   'sendTransaction',
-  TransactionRequest,
+  [transactionRequest: TransactionRequest],
   TransactionResponse,
   Partial<OverriddableTransactionOptions>
 >
 
 export type SignMessageRequest = IRequest<
   'signMessage',
-  BytesLike,
+  [message: BytesLike],
   string,
   void
 >
 
-export type Request = SendTransactionRequest | SignMessageRequest
+type SignTypedDataArgs = Parameters<TypedDataSigner['_signTypedData']>
+
+export type SignTypedDataRequest = IRequest<
+  'signTypedData',
+  SignTypedDataArgs,
+  string,
+  void
+>
+
+export type Request = SendTransactionRequest | SignMessageRequest | SignTypedDataRequest
 export type OnRequest = (request: Request) => void
 
 type RequestType = Request['type']
@@ -47,9 +57,9 @@ type CreateDoRequestOnConfirm = (payload: RequestPayload, overrides: RequestConf
 type CreateDoRequest = (
   type: RequestType,
   onConfirm: CreateDoRequestOnConfirm
-) => (payload: RequestPayload) => Promise<RequestReturnType>
+) => (...payload: RequestPayload) => Promise<RequestReturnType>
 
-export class RIFWallet extends Signer {
+export class RIFWallet extends Signer implements TypedDataSigner {
   smartWallet: SmartWallet
   smartWalletFactory: SmartWalletFactory
   onRequest: OnRequest
@@ -92,7 +102,7 @@ export class RIFWallet extends Signer {
   }
 
   createDoRequest: CreateDoRequest = (type, onConfirm) => {
-    return (payload) => new Promise((resolve, reject) => {
+    return (...payload) => new Promise((resolve, reject) => {
       const nextRequest = Object.freeze({
         type,
         payload,
@@ -107,7 +117,7 @@ export class RIFWallet extends Signer {
 
   sendTransaction = this.createDoRequest(
     'sendTransaction',
-    ((transactionRequest: TransactionRequest, overriddenOptions?: Partial<OverriddableTransactionOptions>) => {
+    (([transactionRequest]: [TransactionRequest], overriddenOptions?: Partial<OverriddableTransactionOptions>) => {
       const txOptions = {
         ...filterTxOptions(transactionRequest),
         ...overriddenOptions || {}
@@ -119,8 +129,13 @@ export class RIFWallet extends Signer {
 
   signMessage = this.createDoRequest(
     'signMessage',
-    ((message: BytesLike) => this.smartWallet.wallet.signMessage(message)) as CreateDoRequestOnConfirm
+    (([message]: [BytesLike]) => this.smartWallet.wallet.signMessage(message)) as CreateDoRequestOnConfirm
   ) as (message: BytesLike) => Promise<string>
+
+  _signTypedData = this.createDoRequest(
+    'signTypedData',
+    ((args: SignTypedDataArgs) => this.smartWallet.wallet._signTypedData(...args)) as CreateDoRequestOnConfirm
+  ) as (...args: SignTypedDataArgs) => Promise<string>
 
   connect = (provider: Provider): Signer => {
     throw new Error('Method not implemented')
