@@ -30,7 +30,7 @@ describe('SmartWallet', function (this: {
     const to = '0x0000000000111111111122222222223333333333'
     const data = '0xabcd'
     await sendAndWait(this.smartWallet.directExecute(to, data))
-    expect(await this.smartWallet.wallet.getTransactionCount()).toEqual(2)
+    expect(await this.smartWallet.signer.getTransactionCount()).toEqual(2)
   })
 
   test('estimate direct send', async () => {
@@ -38,7 +38,7 @@ describe('SmartWallet', function (this: {
     const data = '0xabcd'
     const gasLimit = await this.smartWallet.estimateDirectExecute(to, data)
     await sendAndWait(this.smartWallet.directExecute(to, data, { gasLimit }))
-    expect(await this.smartWallet.wallet.getTransactionCount()).toEqual(2)
+    expect(await this.smartWallet.signer.getTransactionCount()).toEqual(2)
   })
 
   describe('call', () => {
