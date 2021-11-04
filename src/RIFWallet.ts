@@ -1,4 +1,4 @@
-import { Signer, Wallet, BigNumberish, BytesLike } from 'ethers'
+import { Signer, Wallet, BigNumberish, BytesLike, constants } from 'ethers'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { TypedDataSigner } from '@ethersproject/abstract-signer'
 import { defineReadOnly } from '@ethersproject/properties'
@@ -123,7 +123,7 @@ export class RIFWallet extends Signer implements TypedDataSigner {
         ...overriddenOptions || {}
       }
 
-      return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data!, txOptions)
+      return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data ?? constants.HashZero, txOptions)
     }) as CreateDoRequestOnConfirm
   ) as (transactionRequest: TransactionRequest) => Promise<TransactionResponse>
 
