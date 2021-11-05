@@ -283,5 +283,15 @@ describe('RIFWallet', function (this: {
       expect(smartTx.to).toEqual(wasteGasContract.address)
       expect(smartTx.data).toEqual(wasteGasContract.interface.encodeFunctionData('wasteGas'))
     })
+
+    test('it estimates gas', async () => {
+      const rifWallet = await this.createRIFWallet(confirmOnRequest)
+
+      const result = await rifWallet.estimateGas(txRequest)
+      expect(result.toString()).toBe('27318') // 0x6ab6
+
+      const expected = await rifWallet.estimateGas(txRequest)
+      expect(result).toEqual(expected)
+    })
   })
 })

@@ -1,7 +1,8 @@
-import { Signer, BigNumberish, BytesLike, constants } from 'ethers'
+import { Signer, BigNumberish, BytesLike, constants, BigNumber } from 'ethers'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { TypedDataSigner } from '@ethersproject/abstract-signer'
 import { defineReadOnly } from '@ethersproject/properties'
+import { resolveProperties } from 'ethers/lib/utils'
 import { SmartWalletFactory } from './SmartWalletFactory'
 import { SmartWallet } from './SmartWallet'
 import { filterTxOptions } from './filterTxOptions'
@@ -132,6 +133,15 @@ export class RIFWallet extends Signer implements TypedDataSigner {
     'signTypedData',
     ((args: SignTypedDataArgs) => (this.smartWallet.signer as any as TypedDataSigner)._signTypedData(...args)) as CreateDoRequestOnConfirm
   ) as (...args: SignTypedDataArgs) => Promise<string>
+
+  estimateGas (transaction: TransactionRequest): Promise<BigNumber> {
+    return resolveProperties(this.checkTransaction(transaction))
+      .then((tx: TransactionRequest) => this.smartWallet.estimateDirectExecute(
+        tx.to || constants.AddressZero,
+        tx.data || constants.HashZero,
+        filterTxOptions(tx)
+      ))
+  }
 
   connect = (provider: Provider): Signer => {
     throw new Error('Method not implemented')
