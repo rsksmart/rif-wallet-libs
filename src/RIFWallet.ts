@@ -1,4 +1,4 @@
-import { Signer, Wallet, BigNumberish, BytesLike, constants } from 'ethers'
+import { Signer, BigNumberish, BytesLike, constants } from 'ethers'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { TypedDataSigner } from '@ethersproject/abstract-signer'
 import { defineReadOnly } from '@ethersproject/properties'
@@ -70,31 +70,27 @@ export class RIFWallet extends Signer implements TypedDataSigner {
     this.smartWallet = smartWallet
     this.onRequest = onRequest
 
-    defineReadOnly(this, 'provider', this.smartWallet.wallet.provider) // ref: https://github.com/ethers-io/ethers.js/blob/b1458989761c11bf626591706aa4ce98dae2d6a9/packages/abstract-signer/src.ts/index.ts#L130
+    defineReadOnly(this, 'provider', this.smartWallet.signer.provider) // ref: https://github.com/ethers-io/ethers.js/blob/b1458989761c11bf626591706aa4ce98dae2d6a9/packages/abstract-signer/src.ts/index.ts#L130
   }
 
   get address (): string {
-    return this.smartWallet.smartWalletAddress
+    return this.smartWallet.address
   }
 
   get smartWalletAddress (): string {
     return this.smartWallet.smartWalletAddress
   }
 
-  get wallet (): Wallet {
-    return this.smartWallet.wallet
-  }
-
-  static async create (wallet: Wallet, smartWalletFactoryAddress: string, onRequest: OnRequest) {
-    const smartWalletFactory = await SmartWalletFactory.create(wallet, smartWalletFactoryAddress)
+  static async create (signer: Signer, smartWalletFactoryAddress: string, onRequest: OnRequest) {
+    const smartWalletFactory = await SmartWalletFactory.create(signer, smartWalletFactoryAddress)
     const smartWalletAddress = await smartWalletFactory.getSmartWalletAddress()
-    const smartWallet = SmartWallet.create(wallet, smartWalletAddress)
+    const smartWallet = await SmartWallet.create(signer, smartWalletAddress)
     return new RIFWallet(smartWalletFactory, smartWallet, onRequest)
   }
 
   getAddress = (): Promise<string> => Promise.resolve(this.smartWallet.smartWalletAddress)
 
-  signTransaction = (transaction: TransactionRequest): Promise<string> => this.smartWallet.wallet.signTransaction(transaction)
+  signTransaction = (transaction: TransactionRequest): Promise<string> => this.smartWallet.signer.signTransaction(transaction)
 
   // calls via smart wallet
   call (transactionRequest: TransactionRequest, blockTag?: BlockTag): Promise<any> {
@@ -129,12 +125,12 @@ export class RIFWallet extends Signer implements TypedDataSigner {
 
   signMessage = this.createDoRequest(
     'signMessage',
-    (([message]: [BytesLike]) => this.smartWallet.wallet.signMessage(message)) as CreateDoRequestOnConfirm
+    (([message]: [BytesLike]) => this.smartWallet.signer.signMessage(message)) as CreateDoRequestOnConfirm
   ) as (message: BytesLike) => Promise<string>
 
   _signTypedData = this.createDoRequest(
     'signTypedData',
-    ((args: SignTypedDataArgs) => this.smartWallet.wallet._signTypedData(...args)) as CreateDoRequestOnConfirm
+    ((args: SignTypedDataArgs) => (this.smartWallet.signer as any as TypedDataSigner)._signTypedData(...args)) as CreateDoRequestOnConfirm
   ) as (...args: SignTypedDataArgs) => Promise<string>
 
   connect = (provider: Provider): Signer => {

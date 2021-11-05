@@ -44,12 +44,12 @@ describe('RIFWallet', function (this: {
     })
 
     test('uses smart address', async () => {
-      expect(this.rifWallet.address).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
+      expect(this.rifWallet.address).toEqual(this.rifWallet.smartWallet.address)
       expect(await this.rifWallet.getAddress()).toEqual(this.rifWallet.smartWallet.smartWalletAddress)
     })
 
     test('signs with the smart wallet owner', async () => {
-      expect(await this.rifWallet.signTransaction(txRequest)).toEqual(await this.rifWallet.wallet.signTransaction(txRequest))
+      expect(await this.rifWallet.signTransaction(txRequest)).toEqual(await this.rifWallet.smartWallet.signer.signTransaction(txRequest))
     })
 
     test('sets provider prop', async () => {
@@ -169,10 +169,9 @@ describe('RIFWallet', function (this: {
       const rifWallet = await this.createRIFWallet(confirmOnRequest)
       const signature = await rifWallet.signMessage('hello world')
 
-      const expectedAddress = await rifWallet.smartWallet.wallet.getAddress()
       const address = verifyMessage('hello world', signature)
 
-      expect(address).toBe(expectedAddress)
+      expect(address).toBe(rifWallet.address)
     })
 
     test('reject sign message', async () => {
@@ -219,10 +218,9 @@ describe('RIFWallet', function (this: {
       const rifWallet = await this.createRIFWallet(confirmOnRequest)
       const signature = await rifWallet._signTypedData(domain, types, value)
 
-      const expectedAddress = await rifWallet.smartWallet.wallet.getAddress()
       const address = verifyTypedData(domain, types, value, signature)
 
-      expect(address).toBe(expectedAddress)
+      expect(address).toBe(rifWallet.address)
     })
 
     test('reject sign message', async () => {
@@ -272,7 +270,7 @@ describe('RIFWallet', function (this: {
         nextRequest.confirm()
       }
 
-      const rifWallet = await RIFWallet.create(this.rifWallet.wallet, this.rifWallet.smartWalletFactory.smartWalletFactoryContract.address, onRequest)
+      const rifWallet = await RIFWallet.create(this.rifWallet.smartWallet.signer, this.rifWallet.smartWalletFactory.smartWalletFactoryContract.address, onRequest)
 
       const connected = wasteGasContract.connect(rifWallet)
 
