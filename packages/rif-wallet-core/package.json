@@ -1,0 +1,28 @@
+{
+  "name": "@rsksmart/rif-wallet-core",
+  "version": "1.0.0",
+  "description": "RIF Wallet Core",
+  "main": "dist/bundle.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+  },
+  "keywords": [
+    "rsk",
+    "rif"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rsksmart/rif-wallet/issues"
+  },
+  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "dependencies": {
+    "@rsksmart/rif-id-mnemonic": "^0.1.1",
+    "@rsksmart/rlogin-dpath": "^1.0.1",
+    "ethers": "^5.4.7"
+  }
+}

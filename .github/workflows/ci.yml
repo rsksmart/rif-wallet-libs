@@ -19,7 +19,7 @@ jobs:
         node-version: 10.x
     - run: npm i
     - run: npx ganache-cli &
-    - run: npm run test:ci
+    - run: npm run test
     - run: npm run lint
     - name: Coveralls
       uses: coverallsapp/github-action@master

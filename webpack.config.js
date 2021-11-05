@@ -2,7 +2,9 @@ const path = require('path')
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: {
+    'rif-wallet-core': './packages/rif-wallet-core/src/index.ts'
+  },
   module: {
     rules: [
       {
