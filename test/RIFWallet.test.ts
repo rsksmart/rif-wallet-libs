@@ -290,7 +290,7 @@ describe('RIFWallet', function (this: {
       const result = await rifWallet.estimateGas(txRequest)
       expect(result.toString()).toBe('27318') // 0x6ab6
 
-      const expected = await rifWallet.smartWallet.estimateDirectExecute(txRequest.to, txRequest.data)
+      const expected = await rifWallet.estimateGas(txRequest)
       expect(result).toEqual(expected)
     })
   })
