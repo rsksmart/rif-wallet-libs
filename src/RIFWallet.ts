@@ -1,4 +1,4 @@
-import { Signer, Wallet, BigNumberish, BytesLike, constants } from 'ethers'
+import { Signer, BigNumberish, BytesLike, constants } from 'ethers'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
 import { TypedDataSigner } from '@ethersproject/abstract-signer'
 import { defineReadOnly } from '@ethersproject/properties'

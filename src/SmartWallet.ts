@@ -1,4 +1,4 @@
-import { Wallet, Contract, BytesLike, ContractTransaction, BigNumber, Signer } from 'ethers'
+import { Contract, BytesLike, ContractTransaction, BigNumber, Signer } from 'ethers'
 import SmartWalletABI from './SmartWalletABI.json'
 
 const createSmartWalletContract = (address: string) => {
