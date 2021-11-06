@@ -1,10 +1,11 @@
 {
   "name": "rif-wallet",
   "scripts": {
+    "setup": "npx lerna bootstrap",
+    "build": "npx lerna exec tsc",
     "ganache": "npx ganache-cli",
     "test": "npx jest --collect-coverage --verbose",
-    "lint": "npx eslint . --ext .js,.ts",
-    "build": "npx webpack"
+    "lint": "npx eslint . --ext .js,.ts"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
