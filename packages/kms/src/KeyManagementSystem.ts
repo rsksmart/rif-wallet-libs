@@ -20,11 +20,6 @@ const createInitialState = (): KeyManagementSystemState => ({
   derivedPaths: {}
 })
 
-type KeyManagementSystemSerialization = {
-  mnemonic: Mnemonic
-  state: KeyManagementSystemState
-}
-
 type KeyManagementSystemSerialized = {
   mnemonic: string
   state: string
