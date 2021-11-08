@@ -1,9 +1,7 @@
-import { BigNumber } from 'ethers'
-import { TransactionRequest } from '@ethersproject/abstract-provider'
+import { BigNumber, utils } from 'ethers'
 import { createNewTestWallet, returnSenderContractFactory, wasteGasContractFactory, deploySmartWalletFactory } from '@rsksmart/rif-wallet-test-lib'
-import { verifyMessage, verifyTypedData } from 'ethers/lib/utils'
 
-import { OnRequest, Request, RIFWallet, SendTransactionRequest } from '../src/RIFWallet'
+import { OnRequest, Request, RIFWallet, SendTransactionRequest, TransactionRequest } from '../src/RIFWallet'
 
 const txRequest: TransactionRequest = {
   to: '0x0000000000111111111122222222223333333333',
@@ -169,7 +167,7 @@ describe('RIFWallet', function (this: {
       const rifWallet = await this.createRIFWallet(confirmOnRequest)
       const signature = await rifWallet.signMessage('hello world')
 
-      const address = verifyMessage('hello world', signature)
+      const address = utils.verifyMessage('hello world', signature)
 
       expect(address).toBe(rifWallet.address)
     })
@@ -218,7 +216,7 @@ describe('RIFWallet', function (this: {
       const rifWallet = await this.createRIFWallet(confirmOnRequest)
       const signature = await rifWallet._signTypedData(domain, types, value)
 
-      const address = verifyTypedData(domain, types, value, signature)
+      const address = utils.verifyTypedData(domain, types, value, signature)
 
       expect(address).toBe(rifWallet.address)
     })

@@ -6,6 +6,7 @@
   "devDependencies": {
     "ethers": "^5.4.7",
     "@rsksmart/rif-wallet-core": "^1.0.0",
+    "@rsksmart/rif-wallet-kms": "^1.0.0",
     "@rsksmart/rif-wallet-test-lib": "^1.0.0"
   }
 }

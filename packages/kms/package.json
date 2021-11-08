@@ -1,7 +1,7 @@
 {
-  "name": "@rsksmart/rif-wallet-core",
+  "name": "@rsksmart/rif-wallet-kms",
   "version": "1.0.0",
-  "description": "RIF Wallet Core",
+  "description": "RIF Wallet Key Management System",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/rsksmart/rif-wallet#readme",
   "dependencies": {
+    "@rsksmart/rif-id-mnemonic": "^0.1.1",
+    "@rsksmart/rlogin-dpath": "^1.0.1",
     "ethers": "^5.4.7"
   },
   "devDependencies": {
