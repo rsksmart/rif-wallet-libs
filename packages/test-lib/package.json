@@ -1,7 +1,7 @@
 {
-  "name": "@rsksmart/rif-wallet-core",
+  "name": "@rsksmart/rif-wallet-test-lib",
   "version": "1.0.0",
-  "description": "RIF Wallet Core",
+  "description": "RIF Wallet Test Lib",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -22,11 +22,6 @@
   },
   "homepage": "https://github.com/rsksmart/rif-wallet#readme",
   "dependencies": {
-    "@rsksmart/rif-id-mnemonic": "^0.1.1",
-    "@rsksmart/rlogin-dpath": "^1.0.1",
     "ethers": "^5.4.7"
-  },
-  "devDependencies": {
-    "@rsksmart/rif-wallet-test-lib": "^1.0.0"
   }
 }

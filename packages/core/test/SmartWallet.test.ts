@@ -1,8 +1,8 @@
 import { Wallet } from 'ethers'
+import { deploySmartWalletFactory, returnSenderContractFactory, revertsContractFactory, sendAndWait, createNewTestWallet } from '@rsksmart/rif-wallet-test-lib'
+
 import { SmartWallet } from '../src/SmartWallet'
 import { SmartWalletFactory } from '../src/SmartWalletFactory'
-import { sendAndWait, createNewTestWallet } from './utils'
-import { deploySmartWalletFactory, returnSenderContractFactory, revertsContractFactory } from './contracts'
 
 describe('SmartWallet', function (this: {
   wallet: Wallet

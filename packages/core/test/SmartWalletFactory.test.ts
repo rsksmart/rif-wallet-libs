@@ -1,6 +1,6 @@
+import { createNewTestWallet, deploySmartWalletFactory } from '@rsksmart/rif-wallet-test-lib'
+
 import { SmartWalletFactory } from '../src/SmartWalletFactory'
-import { createNewTestWallet } from './utils'
-import { deploySmartWalletFactory } from './contracts'
 
 describe('SmartWalletFactory', function (this: {
   smartWalletFactory: SmartWalletFactory
