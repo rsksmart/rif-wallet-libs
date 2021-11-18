@@ -20,22 +20,42 @@
   </a>
 </p>
 
+## Pacakges
+
+- `@rsksmart/rif-wallet-kms` - Key Management System
+- `@rsksmart/rif-wallet-core` - RIF Relay + `onRequest` integration
+- `@rsksmart/rif-wallet-test-lib` - testing library
+- `@rsksmart/rif-wallet-e2e` (not published) - some e2e tests
+
 ## Run for development
 
-Install dependencies:
+Install dev dependencies:
 
 ```
 npm i
 ```
 
-### Run unit tests
+Install peer dependencies:
+
+```
+npm run setup
+```
+
+### Run tests
+
+Run a local Ganache blockahin in a different terminal with:
+
+```
+npm run ganache
+```
+
+Then, run tests with
 
 ```
 npm test
 ```
 
 Watch mode:
-
 
 ```
 npm run test:watch
