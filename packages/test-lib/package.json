@@ -1,0 +1,27 @@
+{
+  "name": "@rsksmart/rif-wallet-test-lib",
+  "version": "1.0.0",
+  "description": "RIF Wallet Test Lib",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+  },
+  "keywords": [
+    "rsk",
+    "rif"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rsksmart/rif-wallet/issues"
+  },
+  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "dependencies": {
+    "ethers": "^5.4.7"
+  }
+}

@@ -147,3 +147,5 @@ export class RIFWallet extends Signer implements TypedDataSigner {
     throw new Error('Method not implemented')
   }
 }
+
+export { TransactionRequest }
