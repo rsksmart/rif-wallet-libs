@@ -178,6 +178,21 @@ describe('RIFWallet', function (this: {
     })
   })
 
+  describe('personal sign', () => {
+    test('can sign personal', async () => {
+      const rifWallet = await this.createRIFWallet(confirmOnRequest)
+      const signature = await rifWallet.personalSign('0x1234567890')
+
+      const address = utils.verifyMessage('0x1234567890', signature)
+      expect(address).toBe(rifWallet.address)
+    })
+
+    test('reject personal sign message', async () => {
+      const rifWallet = await this.createRIFWallet(rejectOnRequest)
+      await expect(rifWallet.personalSign('0x1234567890')).rejects.toThrowError(rejectOnRequestError)
+    })
+  })
+
   describe('sign typed data', () => {
     const domain = {
       name: 'Ether Mail',
