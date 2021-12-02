@@ -34,7 +34,7 @@ export type SignMessageRequest = IRequest<
   void
 >
 
-export type PersonSignRequest = IRequest<
+export type PersonalSignRequest = IRequest<
   'personalSign',
   [message: BytesLike],
   string,
@@ -50,7 +50,7 @@ export type SignTypedDataRequest = IRequest<
   void
 >
 
-export type Request = SendTransactionRequest | SignMessageRequest | SignTypedDataRequest | PersonSignRequest
+export type Request = SendTransactionRequest | SignMessageRequest | SignTypedDataRequest | PersonalSignRequest
 export type OnRequest = (request: Request) => void
 
 type RequestType = Request['type']
