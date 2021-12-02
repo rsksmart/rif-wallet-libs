@@ -34,8 +34,8 @@ export type SignMessageRequest = IRequest<
   void
 >
 
-export type PersonalSignRequest = IRequest<
-  'personalSign',
+export type EthSignRequest = IRequest<
+  'ethSign',
   [message: BytesLike],
   string,
   void
@@ -50,7 +50,7 @@ export type SignTypedDataRequest = IRequest<
   void
 >
 
-export type Request = SendTransactionRequest | SignMessageRequest | SignTypedDataRequest | PersonalSignRequest
+export type Request = SendTransactionRequest | SignMessageRequest | SignTypedDataRequest | EthSignRequest
 export type OnRequest = (request: Request) => void
 
 type RequestType = Request['type']
@@ -141,8 +141,8 @@ export class RIFWallet extends Signer implements TypedDataSigner {
     ((args: SignTypedDataArgs) => (this.smartWallet.signer as any as TypedDataSigner)._signTypedData(...args)) as CreateDoRequestOnConfirm
   ) as (...args: SignTypedDataArgs) => Promise<string>
 
-  personalSign = this.createDoRequest(
-    'personalSign',
+  ethSign = this.createDoRequest(
+    'ethSign',
     (([message]: [BytesLike]) => this.smartWallet.signer.signMessage(message)) as CreateDoRequestOnConfirm
   ) as (message: BytesLike) => Promise<string>
 

@@ -178,18 +178,18 @@ describe('RIFWallet', function (this: {
     })
   })
 
-  describe('personal sign', () => {
+  describe('eth sign', () => {
     test('can sign personal', async () => {
       const rifWallet = await this.createRIFWallet(confirmOnRequest)
-      const signature = await rifWallet.personalSign('0x1234567890')
+      const signature = await rifWallet.ethSign('0x1234567890')
 
       const address = utils.verifyMessage('0x1234567890', signature)
       expect(address).toBe(rifWallet.address)
     })
 
-    test('reject personal sign message', async () => {
+    test('reject eth sign message', async () => {
       const rifWallet = await this.createRIFWallet(rejectOnRequest)
-      await expect(rifWallet.personalSign('0x1234567890')).rejects.toThrowError(rejectOnRequestError)
+      await expect(rifWallet.ethSign('0x1234567890')).rejects.toThrowError(rejectOnRequestError)
     })
   })
 
