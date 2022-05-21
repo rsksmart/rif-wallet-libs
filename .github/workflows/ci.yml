@@ -1,33 +1,32 @@
 name: ci
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
+      - uses: actions/checkout@v2
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
 
-    - run: npm i
-    - run: npm run setup
-    - run: npm run build
+      - run: npm i
+      - run: npm run setup
+      - run: npm run build
 
-    - run: npx ganache-cli &
-    - run: npm test
+      - run: npx ganache-cli &
+      - run: npm test
 
-    - run: npm run lint
+      - name: Check Linter bugs
+        run: npm run lint
 
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fix Linter bugs
+        run: npm run lint:fix
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
