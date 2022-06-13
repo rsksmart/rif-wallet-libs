@@ -22,9 +22,17 @@
   },
   "homepage": "https://github.com/rsksmart/rif-wallet#readme",
   "dependencies": {
-    "ethers": "^5.4.7"
+    "ethers": "^5.4.7",
+    "socket.io-client": "^4.4.1",
+    "@rsksmart/rlogin-dpath": "^1.0.1",
+    "@rsksmart/rif-id-mnemonic": "^0.1.1",
+    "react-native-config": "^1.4.5",
+    "react-i18next": "^11.13.0",
+    "axios": "^0.24.0"
   },
   "devDependencies": {
-    "@rsksmart/rif-wallet-test-lib": "^1.0.0"
+    "@rsksmart/rif-wallet-test-lib": "^1.0.0",
+    "react-test-renderer": "17.0.2",
+    "@types/react-test-renderer": "^17.0.1"
   }
 }
