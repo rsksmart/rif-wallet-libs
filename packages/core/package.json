@@ -26,8 +26,7 @@
     "@rsksmart/rlogin-dpath": "^1.0.1",
     "@rsksmart/rif-id-mnemonic": "^0.1.1",
     "react-native-config": "^1.4.5",
-    "react-i18next": "^11.13.0",
-    "axios": "^0.24.0"
+    "react-i18next": "^11.13.0"
   },
   "devDependencies": {
     "@rsksmart/rif-wallet-test-lib": "^1.0.0",
