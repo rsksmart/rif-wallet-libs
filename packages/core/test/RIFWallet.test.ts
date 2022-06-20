@@ -1,7 +1,7 @@
 import { BigNumber, utils } from 'ethers'
 import { createNewTestWallet, returnSenderContractFactory, wasteGasContractFactory, deploySmartWalletFactory } from '@rsksmart/rif-wallet-test-lib'
-
-import { OnRequest, Request, RIFWallet, SendTransactionRequest, TransactionRequest } from '../src/RIFWallet'
+import { OnRequest, Request, RIFWallet, SendTransactionRequest } from '../src/RIFWallet'
+import { TransactionRequest } from '@ethersproject/abstract-provider'
 
 const txRequest: TransactionRequest = {
   to: '0x0000000000111111111122222222223333333333',

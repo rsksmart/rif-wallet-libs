@@ -1,0 +1,33 @@
+{
+    "name": "@rsksmart/token",
+    "version": "1.0.0",
+    "description": "RIF Wallet Token",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+      "dist"
+    ], 
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/rsksmart/rif-wallet.git"
+    },
+    "keywords": [
+      "rsk",
+      "rif"
+    ],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/rsksmart/rif-wallet/issues"
+    },
+    "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+      "ethers": "^5.4.7"
+    },
+    "devDependencies": {}
+  
+  }
+  
