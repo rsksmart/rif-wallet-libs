@@ -1,4 +1,4 @@
-import { Contract, ContractTransaction, Signer } from 'ethers';
+import { Contract, ContractTransaction, Signer } from 'ethers'
 interface ISmartWalletFactory {
     getSmartWalletAddress(): Promise<string>;
     isDeployed(): Promise<boolean>;
@@ -17,4 +17,4 @@ export declare class SmartWalletFactory implements ISmartWalletFactory {
     isDeployed: () => Promise<boolean>;
     deploy: () => Promise<ContractTransaction>;
 }
-export {};
+export {}

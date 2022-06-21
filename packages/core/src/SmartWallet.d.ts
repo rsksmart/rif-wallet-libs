@@ -1,4 +1,4 @@
-import { Contract, BytesLike, ContractTransaction, BigNumber, Signer } from 'ethers';
+import { Contract, BytesLike, ContractTransaction, BigNumber, Signer } from 'ethers'
 export declare class SmartWallet {
     address: string;
     smartWalletContract: Contract;

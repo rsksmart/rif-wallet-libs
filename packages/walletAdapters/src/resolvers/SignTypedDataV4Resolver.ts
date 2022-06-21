@@ -5,11 +5,11 @@ export class SignTypedDataV4Resolver implements IResolver {
   private signer: RIFWallet
   public methodName = 'eth_signTypedData_v4'
 
-  constructor(signer: RIFWallet) {
+  constructor (signer: RIFWallet) {
     this.signer = signer
   }
 
-  async resolve(params: any[]) {
+  async resolve (params: any[]) {
     const { domain, message, types } = JSON.parse(params[1])
 
     // delete domain type

@@ -7,11 +7,11 @@ export class SendTransactionResolver implements IResolver {
   private signer: Signer
   public methodName = 'eth_sendTransaction'
 
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     this.signer = signer
   }
 
-  async resolve(params: any[]) {
+  async resolve (params: any[]) {
     const payload = params.reduce((prev, curr) => ({ ...prev, ...curr }), {})
 
     const formattedPayload: TransactionRequest = {
@@ -22,7 +22,7 @@ export class SendTransactionResolver implements IResolver {
       value: BigNumber.from(payload.value || 0),
       chainId: payload.chainId,
       gasLimit: payload.gas ? BigNumber.from(payload.gas) : undefined, // WC's gas to gasLimit
-      gasPrice: payload.gasPrice ? BigNumber.from(payload.gasPrice) : undefined,
+      gasPrice: payload.gasPrice ? BigNumber.from(payload.gasPrice) : undefined
     }
 
     return this.signer

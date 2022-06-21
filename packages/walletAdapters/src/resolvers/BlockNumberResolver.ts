@@ -5,11 +5,11 @@ export class BlockNumberResolver implements IResolver {
   private signer: Signer
   public methodName = 'eth_blockNumber'
 
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     this.signer = signer
   }
 
-  async resolve() {
+  async resolve () {
     return this.signer.provider?.getBlockNumber()
   }
 }

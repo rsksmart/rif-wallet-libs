@@ -1,10 +1,10 @@
 /// <reference types="node" />
-import EventEmitter from 'events';
-import { IActivityTransaction } from './subscriptions/types';
-import { IAbiEnhancer } from '../../abiEnhancer/src/AbiEnhancer';
-import { RIFWallet } from '../../core/src/RIFWallet';
-import { IRIFWalletServicesFetcher } from './RifWalletServicesFetcher';
-import { ITokenWithBalance } from './RIFWalletServicesTypes';
+import EventEmitter from 'events'
+import { IActivityTransaction } from './subscriptions/types'
+import { IAbiEnhancer } from '../../abiEnhancer/src/AbiEnhancer'
+import { RIFWallet } from '../../core/src/RIFWallet'
+import { IRIFWalletServicesFetcher } from './RifWalletServicesFetcher'
+import { ITokenWithBalance } from './RIFWalletServicesTypes'
 export interface IServiceChangeEvent {
     type: string;
     payload: any;

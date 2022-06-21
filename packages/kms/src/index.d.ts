@@ -1,1 +1,1 @@
-export * from './KeyManagementSystem';
+export * from './KeyManagementSystem'

@@ -4,11 +4,11 @@ export class GetTransactionReceiptResolver implements IResolver {
   private signer: Signer
   public methodName = 'eth_getTransactionReceipt'
 
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     this.signer = signer
   }
 
-  async resolve(params: any[]) {
+  async resolve (params: any[]) {
     const txHash = params[0]
 
     let result = await this.signer.provider?.getTransactionReceipt(txHash)

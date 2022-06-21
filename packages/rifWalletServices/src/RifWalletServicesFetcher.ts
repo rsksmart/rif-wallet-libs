@@ -1,6 +1,6 @@
 import {
   ITokenWithBalance,
-  TransactionsServerResponse,
+  TransactionsServerResponse
 } from './RIFWalletServicesTypes'
 
 export interface IRIFWalletServicesFetcher {
@@ -29,18 +29,18 @@ const RESULTS_LIMIT = 10
 export class RifWalletServicesFetcher implements IRIFWalletServicesFetcher {
   uri: string
 
-  constructor(uri: string) {
+  constructor (uri: string) {
     this.uri = uri
   }
 
-  protected async fetchAvailableTokens() {
+  protected async fetchAvailableTokens () {
     return fetch(`${this.uri}/tokens`).then(response => response.json())
   }
 
   fetchTransactionsByAddress = (
     smartAddress: string,
     prev?: string | null,
-    next?: string | null,
+    next?: string | null
   ) => {
     let transactionsUrl = `${this.uri}/address/${smartAddress}/transactions?limit=${RESULTS_LIMIT}`
 
@@ -55,12 +55,12 @@ export class RifWalletServicesFetcher implements IRIFWalletServicesFetcher {
 
   fetchEventsByAddress = (smartAddress: string) =>
     fetch(`${this.uri}/address/${smartAddress}/events`).then(response =>
-      response.json(),
+      response.json()
     )
 
   fetchTokensByAddress = (address: string): Promise<ITokenWithBalance[]> =>
     fetch(`${this.uri}/address/${address.toLowerCase()}/tokens`).then(
-      response => response.json(),
+      response => response.json()
     )
 
   fetchDapps = (): Promise<IRegisteredDappsGroup[]> =>

@@ -1,2 +1,2 @@
-export * from './KeyManagementSystem';
-export * from './RIFWallet';
+export * from './KeyManagementSystem'
+export * from './RIFWallet'

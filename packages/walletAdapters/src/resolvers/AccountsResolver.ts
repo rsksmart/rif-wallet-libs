@@ -5,11 +5,11 @@ export class AccountsResolver implements IResolver {
   private signer: RIFWallet
   public methodName = 'eth_accounts'
 
-  constructor(signer: RIFWallet) {
+  constructor (signer: RIFWallet) {
     this.signer = signer
   }
 
-  async resolve() {
+  async resolve () {
     return [this.signer.smartWalletAddress]
   }
 }

@@ -5,11 +5,11 @@ export class GetBalanceResolver implements IResolver {
   private signer: Signer
   public methodName = 'eth_getBalance'
 
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     this.signer = signer
   }
 
-  async resolve() {
+  async resolve () {
     return this.signer.getBalance().then(b => b.toString())
   }
 }

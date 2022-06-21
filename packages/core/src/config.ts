@@ -8,7 +8,7 @@ export enum SETTINGS {
 
 export const getWalletSetting = (
   setting: SETTINGS,
-  chainId: 31 = 31,
+  chainId: 31 = 31
 ): string => {
   switch (setting) {
     case SETTINGS.RIF_WALLET_SERVICE_URL:

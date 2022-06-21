@@ -7,13 +7,13 @@ export class BaseToken {
   public symbol: string
   public logo: string
 
-  constructor(signer: Signer, symbol: string, logo: string) {
+  constructor (signer: Signer, symbol: string, logo: string) {
     this.signer = signer
     this.symbol = symbol
     this.logo = logo
   }
 
-  protected async getAccountAddress() {
+  protected async getAccountAddress () {
     return await this.signer.getAddress()
   }
 }

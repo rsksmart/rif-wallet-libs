@@ -1,5 +1,5 @@
-import { TransactionRequest } from '@ethersproject/abstract-provider';
-import { Signer } from '@ethersproject/abstract-signer';
+import { TransactionRequest } from '@ethersproject/abstract-provider'
+import { Signer } from '@ethersproject/abstract-signer'
 export interface IEnhancedResult {
     from?: string;
     to?: string;

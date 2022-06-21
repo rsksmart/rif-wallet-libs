@@ -6,11 +6,11 @@ import { SignTypedDataResolver } from './resolvers/SignTypedDataResolver'
 import { RPCAdapter } from './RPCAdapter'
 
 export class WalletConnectAdapter extends RPCAdapter {
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     super([
       new SendTransactionResolver(signer),
       new PersonalSignResolver(signer),
-      new SignTypedDataResolver(signer as RIFWallet),
+      new SignTypedDataResolver(signer as RIFWallet)
     ])
   }
 }

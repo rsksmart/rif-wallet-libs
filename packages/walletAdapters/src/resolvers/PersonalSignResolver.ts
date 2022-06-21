@@ -5,11 +5,11 @@ export class PersonalSignResolver implements IResolver {
   private signer: Signer
   public methodName = 'personal_sign'
 
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     this.signer = signer
   }
 
-  async resolve(params: any[]) {
+  async resolve (params: any[]) {
     let message = params[0]
 
     try {

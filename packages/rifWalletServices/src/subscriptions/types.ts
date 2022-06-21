@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { IApiTransaction } from '../RIFWalletServicesTypes'
+import { IApiTransaction, ITokenWithBalance } from '../RIFWalletServicesTypes'
 import { IRIFWalletServicesFetcher } from '../RifWalletServicesFetcher'
 import { IAbiEnhancer, IEnhancedResult } from '../../../abiEnhancer/src/AbiEnhancer'
-import { ITokenWithBalance } from '../RIFWalletServicesTypes'
 import { IRifWalletServicesSocket } from '../RifWalletServicesSocket'
 
 export interface IActivity

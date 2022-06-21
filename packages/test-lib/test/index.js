@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 test('dummy', function () {
-    expect(true).toBeTruthy();
-});
+  expect(true).toBeTruthy()
+})

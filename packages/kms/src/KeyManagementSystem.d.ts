@@ -1,4 +1,4 @@
-import { Wallet } from 'ethers';
+import { Wallet } from 'ethers'
 declare type Mnemonic = string;
 declare type DerivedPaths = {
     [derivatoinPath: string]: boolean;
@@ -65,6 +65,7 @@ export declare class KeyManagementSystem implements IKeyManagementSystem {
         kms: KeyManagementSystem;
         wallets: Wallet[];
     };
+
     /**
      * Use this method to get a string to be stored and recovered
      * @returns a serialized wallet
@@ -89,4 +90,4 @@ export declare class KeyManagementSystem implements IKeyManagementSystem {
      */
     removeWallet(derivationPath: string): void;
 }
-export {};
+export {}

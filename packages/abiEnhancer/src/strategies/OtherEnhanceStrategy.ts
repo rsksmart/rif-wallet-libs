@@ -20,7 +20,7 @@ const getFunctionSignatures = async (fnHexSig: string) => {
 
   return Promise.all([
     functionSignaturePromise,
-    functionSignatureWithNamesPromise,
+    functionSignatureWithNamesPromise
   ])
 }
 
@@ -50,7 +50,7 @@ const parseSignature = (signatures: string) => {
 
 const parseSignatureWithParametersNames = (
   signaturesWithNames: string,
-  parametersTypes: string[],
+  parametersTypes: string[]
 ) => {
   const INSIDE_PARENTHESIS = 1
 
@@ -72,9 +72,9 @@ const parseSignatureWithParametersNames = (
 }
 
 export class OtherEnhanceStrategy implements IEnhanceStrategy {
-  public async parse(
+  public async parse (
     signer: Signer,
-    transactionRequest: TransactionRequest,
+    transactionRequest: TransactionRequest
   ): Promise<IEnhancedResult | null> {
     if (!transactionRequest.data) {
       return null
@@ -103,21 +103,21 @@ export class OtherEnhanceStrategy implements IEnhanceStrategy {
     if (parametersTypes.length > 0) {
       parametersNames = parseSignatureWithParametersNames(
         signaturesWithParametersNames,
-        parametersTypes,
+        parametersTypes
       )
 
       parametersValues = utils.defaultAbiCoder.decode(
         parametersTypes,
-        hexDataSlice(transactionRequest.data, 4),
+        hexDataSlice(transactionRequest.data, 4)
       )
     }
 
-    let result: IEnhancedResult = {
+    const result: IEnhancedResult = {
       ...transactionRequest,
       functionName,
       functionParameters: [],
       from: transactionRequest.from!,
-      to: transactionRequest.to!,
+      to: transactionRequest.to!
     }
     for (let index = 0; index < parametersNames.length; index++) {
       const name = parametersNames[index]

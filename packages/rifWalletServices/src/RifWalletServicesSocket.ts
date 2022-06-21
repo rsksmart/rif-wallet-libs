@@ -29,17 +29,16 @@ export interface IRifWalletServicesSocket extends EventEmitter {
 
 export class RifWalletServicesSocket
   extends EventEmitter
-  implements IRifWalletServicesSocket
-{
+  implements IRifWalletServicesSocket {
   private rifWalletServicesUrl: string
   private fetcher: IRIFWalletServicesFetcher
   private abiEnhancer: IAbiEnhancer
   private socket: any
 
-  constructor(
+  constructor (
     rifWalletServicesUrl: string,
     fetcher: IRIFWalletServicesFetcher,
-    abiEnhancer: IAbiEnhancer,
+    abiEnhancer: IAbiEnhancer
   ) {
     super()
 
@@ -48,9 +47,9 @@ export class RifWalletServicesSocket
     this.rifWalletServicesUrl = rifWalletServicesUrl
   }
 
-  private async init(wallet: RIFWallet) {
+  private async init (wallet: RIFWallet) {
     const fetchedTransactions = await this.fetcher.fetchTransactionsByAddress(
-      wallet.smartWalletAddress,
+      wallet.smartWalletAddress
     )
 
     const activityTransactions = await Promise.all<IActivityTransaction[]>(
@@ -58,26 +57,26 @@ export class RifWalletServicesSocket
         const enhancedTransaction = await enhanceTransactionInput(
           tx,
           wallet,
-          this.abiEnhancer,
+          this.abiEnhancer
         )
         return {
           originTransaction: tx,
-          enhancedTransaction,
+          enhancedTransaction
         } as any
-      }),
+      })
     )
 
     const fetchedTokens = (await this.fetcher.fetchTokensByAddress(
-      wallet.smartWalletAddress,
+      wallet.smartWalletAddress
     )) as ITokenWithBalance[]
 
     this.emit('init', {
       transactions: activityTransactions,
-      balances: fetchedTokens,
+      balances: fetchedTokens
     })
   }
 
-  async connect(wallet: RIFWallet) {
+  async connect (wallet: RIFWallet) {
     try {
       await this.init(wallet)
 
@@ -87,7 +86,7 @@ export class RifWalletServicesSocket
         reconnectionAttempts: 3,
         timeout: 2000,
         autoConnect: true,
-        transports: ['websocket'], // you need to explicitly tell it to use websocket
+        transports: ['websocket'] // you need to explicitly tell it to use websocket
       })
 
       socket.on('connect', () => {
@@ -104,13 +103,13 @@ export class RifWalletServicesSocket
     }
   }
 
-  disconnect() {
+  disconnect () {
     if (this.socket) {
       this.socket.disconnect()
     }
   }
 
-  isConnected() {
+  isConnected () {
     return !!this.socket
   }
 }

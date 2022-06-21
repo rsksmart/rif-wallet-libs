@@ -19,7 +19,7 @@ import { GetTransactionByHashResolver } from './resolvers/GetTransactionByHashRe
 import { GetTransactionReceiptResolver } from './resolvers/GetTransactionReceiptResolver'
 
 export class InjectedBrowserAdapter extends RPCAdapter {
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     super([
       new SendTransactionResolver(signer),
       new PersonalSignResolver(signer),
@@ -36,7 +36,7 @@ export class InjectedBrowserAdapter extends RPCAdapter {
       new GetBlockByNumberResolver(signer),
       new GasPriceResolver(signer),
       new GetTransactionByHashResolver(signer),
-      new GetTransactionReceiptResolver(signer),
+      new GetTransactionReceiptResolver(signer)
     ])
   }
 }

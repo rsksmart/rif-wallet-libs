@@ -1,4 +1,4 @@
-import { ITokenWithBalance, TransactionsServerResponse } from './RIFWalletServicesTypes';
+import { ITokenWithBalance, TransactionsServerResponse } from './RIFWalletServicesTypes'
 export interface IRIFWalletServicesFetcher {
     fetchTokensByAddress(address: string): Promise<ITokenWithBalance[]>;
     fetchTransactionsByAddress(address: string, prev?: string | null, next?: string | null): Promise<TransactionsServerResponse>;

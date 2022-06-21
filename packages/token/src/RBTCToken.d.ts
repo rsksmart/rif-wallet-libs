@@ -1,5 +1,5 @@
-import { BigNumber, BigNumberish, ContractTransaction, Signer } from 'ethers';
-import { BaseToken, IToken, ITransferOptions, TokenType } from './BaseToken';
+import { BigNumber, BigNumberish, ContractTransaction, Signer } from 'ethers'
+import { BaseToken, IToken, ITransferOptions, TokenType } from './BaseToken'
 declare class RBTCToken extends BaseToken implements IToken {
     chainId: number;
     address: string;
@@ -9,4 +9,4 @@ declare class RBTCToken extends BaseToken implements IToken {
     balance(): Promise<BigNumber>;
     transfer(recipientAddress: string, amount: BigNumberish, options?: ITransferOptions): Promise<ContractTransaction>;
 }
-export { RBTCToken };
+export { RBTCToken }

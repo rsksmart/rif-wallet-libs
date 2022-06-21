@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, Signer, ContractTransaction } from 'ethers';
+import { BigNumber, BigNumberish, Signer, ContractTransaction } from 'ethers'
 export declare type TokenType = 'erc20' | 'rbtc';
 export declare class BaseToken {
     signer: Signer;
@@ -21,5 +21,5 @@ export interface IToken {
     symbol: string;
     address: string;
 }
-export declare const ten: BigNumber;
-export declare const tenPow: (exp: BigNumberish) => BigNumber;
+export declare const ten: BigNumber
+export declare const tenPow: (exp: BigNumberish) => BigNumber

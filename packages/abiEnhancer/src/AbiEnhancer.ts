@@ -27,17 +27,17 @@ export interface IAbiEnhancer {
 export class AbiEnhancer implements IAbiEnhancer {
   public strategies: IEnhanceStrategy[]
 
-  constructor() {
+  constructor () {
     this.strategies = [
       new ERC20EnhanceStrategy(),
       new OtherEnhanceStrategy(),
-      new RBTCEnhanceStrategy(),
+      new RBTCEnhanceStrategy()
     ]
   }
 
-  public async enhance(
+  public async enhance (
     signer: Signer,
-    transactionRequest: TransactionRequest,
+    transactionRequest: TransactionRequest
   ): Promise<IEnhancedResult | null> {
     for (const strategy of this.strategies) {
       const result = await strategy.parse(signer, transactionRequest)

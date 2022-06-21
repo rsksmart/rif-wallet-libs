@@ -5,11 +5,11 @@ export class EstimateGasResolver implements IResolver {
   private signer: Signer
   public methodName = 'eth_estimateGas'
 
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     this.signer = signer
   }
 
-  async resolve(params: any[]) {
+  async resolve (params: any[]) {
     const tx = params[0]
 
     return this.signer.estimateGas(tx).then(b => b.toHexString())

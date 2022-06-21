@@ -86,7 +86,7 @@ export const getAllTokens = async (signer: Signer): Promise<IToken[]> => {
 
 export const convertToERC20Token = (
   token: ITokenWithBalance,
-  { chainId, signer }: IConvertToERC20Options,
+  { chainId, signer }: IConvertToERC20Options
 ) => {
   const addressWithoutChecksum = token.contractAddress.toLowerCase()
   const logo = getTokenLogo(addressWithoutChecksum, chainId)

@@ -1,8 +1,8 @@
-import { Signer, BigNumberish, BytesLike, BigNumber } from 'ethers';
-import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider';
-import { TypedDataSigner } from '@ethersproject/abstract-signer';
-import { SmartWalletFactory } from './SmartWalletFactory';
-import { SmartWallet } from './SmartWallet';
+import { Signer, BigNumberish, BytesLike, BigNumber } from 'ethers'
+import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
+import { TypedDataSigner } from '@ethersproject/abstract-signer'
+import { SmartWalletFactory } from './SmartWalletFactory'
+import { SmartWallet } from './SmartWallet'
 declare type IRequest<Type, Payload, ReturnType, ConfirmArgs> = {
     type: Type;
     payload: Payload;
@@ -45,8 +45,8 @@ export declare class RIFWallet extends Signer implements TypedDataSigner {
     createDoRequest: CreateDoRequest;
     sendTransaction: (transactionRequest: TransactionRequest) => Promise<TransactionResponse>;
     signMessage: (message: BytesLike) => Promise<string>;
-    _signTypedData: (domain: import("@ethersproject/abstract-signer").TypedDataDomain, types: Record<string, import("@ethersproject/abstract-signer").TypedDataField[]>, value: Record<string, any>) => Promise<string>;
+    _signTypedData: (domain: import('@ethersproject/abstract-signer').TypedDataDomain, types: Record<string, import('@ethersproject/abstract-signer').TypedDataField[]>, value: Record<string, any>) => Promise<string>;
     estimateGas(transaction: TransactionRequest): Promise<BigNumber>;
     connect: (provider: Provider) => Signer;
 }
-export {};
+export {}

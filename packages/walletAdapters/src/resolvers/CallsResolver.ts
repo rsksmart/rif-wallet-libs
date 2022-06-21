@@ -5,11 +5,11 @@ export class CallsResolver implements IResolver {
   private signer: Signer
   public methodName = 'eth_call'
 
-  constructor(signer: Signer) {
+  constructor (signer: Signer) {
     this.signer = signer
   }
 
-  async resolve(params: any[]) {
+  async resolve (params: any[]) {
     const tx = params[0]
     const blockTag = params[1]
 
