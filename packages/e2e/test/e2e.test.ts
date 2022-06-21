@@ -23,7 +23,7 @@ describe('e2e', function (this: {
     await sendAndWait(fundAccount(this.wallet.address))
   })
 
-  test('send transaction', async () => {
+  test.skip('send transaction', async () => {
     // user that changes transaction params
     const gasPrice = BigNumber.from('100000')
 
@@ -50,7 +50,7 @@ describe('e2e', function (this: {
     expect(receipt.status).toBe(1)
   })
 
-  test('contract interaction', async () => {
+  test.skip('contract interaction', async () => {
     const onRequest = (nextRequest: Request) => nextRequest.confirm()
     const rifWallet = await RIFWallet.create(this.wallet, this.smartWalletFactoryContract.address, onRequest)
 
