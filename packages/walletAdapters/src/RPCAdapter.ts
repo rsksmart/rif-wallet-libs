@@ -1,3 +1,8 @@
+export interface IResolver {
+  methodName: string
+  resolve: (params: any[]) => Promise<any>
+}
+
 export class RPCAdapter {
   private resolvers: IResolver[]
 
@@ -14,9 +19,4 @@ export class RPCAdapter {
 
     return resolver.resolve(params)
   }
-}
-
-export interface IResolver {
-  methodName: string
-  resolve: (params: any[]) => Promise<any>
 }

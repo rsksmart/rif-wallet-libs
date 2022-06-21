@@ -36,8 +36,8 @@ const parseSignature = (signatures: string) => {
 
   const firstSignature = signatures.split(';')[0]
 
-  const parametersExpression = new RegExp(/\((.*)\)/).exec(firstSignature)
-  const nameExpression = new RegExp(/(.*)\(/).exec(firstSignature)
+  const parametersExpression = /\((.*)\)/.exec(firstSignature)
+  const nameExpression = /(.*)\(/.exec(firstSignature)
 
   const parameters: string[] = parametersExpression
     ? parametersExpression[INSIDE_PARENTHESIS].split(',')
@@ -56,7 +56,7 @@ const parseSignatureWithParametersNames = (
 
   const firstSignature = signaturesWithNames.split(';')[0]
 
-  const parametersExpression = new RegExp(/\((.*)\)/).exec(firstSignature)
+  const parametersExpression = /\((.*)\)/.exec(firstSignature)
 
   const parametersNames: string[] = parametersExpression
     ? parametersExpression[INSIDE_PARENTHESIS].split(',')

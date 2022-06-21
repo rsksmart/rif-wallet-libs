@@ -4,6 +4,21 @@ import { IRIFWalletServicesFetcher } from '../RifWalletServicesFetcher'
 import { IAbiEnhancer, IEnhancedResult } from '../../../abiEnhancer/src/AbiEnhancer'
 import { IRifWalletServicesSocket } from '../RifWalletServicesSocket'
 
+export interface TransactionsServerResponse {
+  next: string | null | undefined
+  prev: string | null | undefined
+}
+
+export interface IActivityTransaction {
+  originTransaction: IApiTransaction
+  enhancedTransaction?: IEnhancedResult
+}
+
+export interface TransactionsServerResponseWithActivityTransactions
+  extends TransactionsServerResponse {
+  activityTransactions: IActivityTransaction[]
+}
+
 export interface IActivity
   extends TransactionsServerResponseWithActivityTransactions {}
 
@@ -76,11 +91,6 @@ export type SubscriptionsProviderProps = {
   abiEnhancer: IAbiEnhancer
 }
 
-export interface IActivityTransaction {
-  originTransaction: IApiTransaction
-  enhancedTransaction?: IEnhancedResult
-}
-
 export type ActivityScreenProps = {
   fetcher: IRIFWalletServicesFetcher
   abiEnhancer: IAbiEnhancer
@@ -91,14 +101,4 @@ export interface FetchTransactionsOptions {
   prev: string | null
   fetcher: IRIFWalletServicesFetcher
   abiEnhancer: IAbiEnhancer
-}
-
-export interface TransactionsServerResponse {
-  next: string | null | undefined
-  prev: string | null | undefined
-}
-
-export interface TransactionsServerResponseWithActivityTransactions
-  extends TransactionsServerResponse {
-  activityTransactions: IActivityTransaction[]
 }
