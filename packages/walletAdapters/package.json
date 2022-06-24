@@ -25,7 +25,8 @@
       "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
-      "ethers": "^5.4.7"
+      "ethers": "^5.4.7",
+      "@rsksmart/rif-wallet-core": "*"
     }
   
   }

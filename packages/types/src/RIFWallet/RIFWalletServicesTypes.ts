@@ -1,3 +1,5 @@
+import { IActivityTransaction, TransactionsServerResponse } from '../Transaction/TransactionActivityTypes'
+
 export interface IApiTokens {
   address: string
   balance: string
@@ -76,8 +78,33 @@ export interface IApiTransaction {
   data: string
 }
 
-export interface TransactionsServerResponse {
-  data: IApiTransaction[]
-  next: string | null | undefined
-  prev: string | null | undefined
+export interface IRegisteredDapp {
+  title: string
+  url: string
+  allowedNetworks: number[]
+}
+
+export interface IRegisteredDappsGroup {
+  groupName: string
+  dapps: IRegisteredDapp[]
+}
+
+export interface IRIFWalletServicesFetcher {
+  fetchTokensByAddress(address: string): Promise<ITokenWithBalance[]>
+  fetchTransactionsByAddress(
+    address: string,
+    prev?: string | null,
+    next?: string | null,
+  ): Promise<TransactionsServerResponse>
+  fetchDapps(): Promise<IRegisteredDappsGroup[]>
+}
+
+export interface IServiceChangeEvent {
+  type: string
+  payload: any
+}
+
+export interface IServiceInitEvent {
+  transactions: IActivityTransaction[]
+  balances: ITokenWithBalance[]
 }

@@ -1,17 +1,16 @@
 import * as React from 'react'
-import { IApiTransaction, ITokenWithBalance } from '../RIFWalletServicesTypes'
-import { IRIFWalletServicesFetcher } from '../RifWalletServicesFetcher'
-import { IAbiEnhancer, IEnhancedResult } from '../../../abiEnhancer/src/AbiEnhancer'
-import { IRifWalletServicesSocket } from '../RifWalletServicesSocket'
-
-export interface TransactionsServerResponse {
-  next: string | null | undefined
-  prev: string | null | undefined
-}
+import { IApiTransaction, IEvent, IRIFWalletServicesFetcher, ITokenWithBalance } from '../RIFWallet/RIFWalletServicesTypes'
+import { IAbiEnhancer, IEnhancedResult } from '../AbiEnhancer/AbiEnhancerTypes'
 
 export interface IActivityTransaction {
   originTransaction: IApiTransaction
   enhancedTransaction?: IEnhancedResult
+}
+
+export interface TransactionsServerResponse {
+  data: IApiTransaction[]
+  next: string | null | undefined
+  prev: string | null | undefined
 }
 
 export interface TransactionsServerResponseWithActivityTransactions
@@ -30,16 +29,6 @@ export interface IPrice {
 export interface NewTransactionsAction {
   type: 'newTransactions'
   payload: IActivity
-}
-
-export interface IEvent {
-  blockNumber: number
-  event: string
-  timestamp: number
-  topics: Array<string>
-  args: Array<string>
-  transactionHash: string
-  txStatus: string
 }
 
 export interface NewBalanceAction {
@@ -87,7 +76,7 @@ export type Action =
 export type Dispatch = (action: Action) => void
 export type SubscriptionsProviderProps = {
   children: React.ReactNode
-  rifServiceSocket?: IRifWalletServicesSocket
+  rifServiceSocket?: IRIFWalletServicesFetcher
   abiEnhancer: IAbiEnhancer
 }
 

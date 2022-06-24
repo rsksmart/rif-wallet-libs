@@ -1,21 +1,11 @@
 import EventEmitter from 'events'
 import { io } from 'socket.io-client'
 import { enhanceTransactionInput } from './screens/activity/ActivityScreen'
-import { IActivityTransaction } from './subscriptions/types'
-import { IAbiEnhancer } from '../../abiEnhancer/src/AbiEnhancer'
-import { RIFWallet } from '../../core/src/RIFWallet'
-import { IRIFWalletServicesFetcher } from './RifWalletServicesFetcher'
-import { IApiTransaction, ITokenWithBalance } from './RIFWalletServicesTypes'
-
-export interface IServiceChangeEvent {
-  type: string
-  payload: any
-}
-
-export interface IServiceInitEvent {
-  transactions: IActivityTransaction[]
-  balances: ITokenWithBalance[]
-}
+import {
+  IActivityTransaction, IAbiEnhancer,
+  IApiTransaction, IRIFWalletServicesFetcher, IServiceChangeEvent, IServiceInitEvent, ITokenWithBalance
+} from '@rsksmart/rif-wallet-types'
+import { RIFWallet } from '@rsksmart/rif-wallet-core'
 
 export interface IRifWalletServicesSocket extends EventEmitter {
   connect: (wallet: RIFWallet) => Promise<void>

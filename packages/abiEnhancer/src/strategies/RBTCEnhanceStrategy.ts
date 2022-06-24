@@ -1,8 +1,8 @@
 import { BigNumber, Signer } from 'ethers'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { formatBigNumber } from '../formatBigNumber'
-import { IEnhancedResult, IEnhanceStrategy } from '../AbiEnhancer'
-import { makeRBTCToken } from '../../../token/src/tokenMetadata'
+import { IEnhancedResult, IEnhanceStrategy } from '@rsksmart/rif-wallet-types'
+import { makeRBTCToken } from '@rsksmart/token'
 
 export class RBTCEnhanceStrategy implements IEnhanceStrategy {
   public async parse (

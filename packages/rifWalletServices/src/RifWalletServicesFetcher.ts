@@ -1,28 +1,8 @@
 import {
-  ITokenWithBalance,
-  TransactionsServerResponse
-} from './RIFWalletServicesTypes'
-
-export interface IRegisteredDapp {
-  title: string
-  url: string
-  allowedNetworks: number[]
-}
-
-export interface IRegisteredDappsGroup {
-  groupName: string
-  dapps: IRegisteredDapp[]
-}
-
-export interface IRIFWalletServicesFetcher {
-  fetchTokensByAddress(address: string): Promise<ITokenWithBalance[]>
-  fetchTransactionsByAddress(
-    address: string,
-    prev?: string | null,
-    next?: string | null,
-  ): Promise<TransactionsServerResponse>
-  fetchDapps(): Promise<IRegisteredDappsGroup[]>
-}
+  IRegisteredDappsGroup,
+  IRIFWalletServicesFetcher,
+  ITokenWithBalance
+} from '@rsksmart/rif-wallet-types'
 
 const RESULTS_LIMIT = 10
 

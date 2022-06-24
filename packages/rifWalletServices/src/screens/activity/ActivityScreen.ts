@@ -1,11 +1,8 @@
 import {
-  IApiTransaction
-} from '../../RIFWalletServicesTypes'
-import {
-  IAbiEnhancer,
-  IEnhancedResult
-} from '../../../../abiEnhancer/src/AbiEnhancer'
-import { RIFWallet } from '../../../../core/src/RIFWallet'
+  IApiTransaction,
+  IAbiEnhancer, IEnhancedResult
+} from '@rsksmart/rif-wallet-types'
+import { RIFWallet } from '@rsksmart/rif-wallet-core'
 
 export const enhanceTransactionInput = async (
   transaction: IApiTransaction,

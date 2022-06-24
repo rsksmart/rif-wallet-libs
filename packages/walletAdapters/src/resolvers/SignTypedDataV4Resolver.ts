@@ -1,4 +1,4 @@
-import { RIFWallet } from '../../../core/src/RIFWallet'
+import { RIFWallet } from '@rsksmart/rif-wallet-core'
 import { IResolver } from '../RPCAdapter'
 
 export class SignTypedDataV4Resolver implements IResolver {

@@ -1,10 +1,8 @@
-import { ERC20__factory } from '../../../token/src/types'
+import { ERC20__factory, getAllTokens, ERC20Token } from '@rsksmart/token'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
-import { getAllTokens } from '../../../token/src/tokenMetadata'
 import { Signer } from '@ethersproject/abstract-signer'
 import { formatBigNumber } from '../formatBigNumber'
-import { IEnhancedResult, IEnhanceStrategy } from '../AbiEnhancer'
-import { ERC20Token } from '../../../token/src/ERC20Token'
+import { IEnhancedResult, IEnhanceStrategy } from '@rsksmart/rif-wallet-types'
 import { BigNumber } from '@ethersproject/bignumber'
 
 export class ERC20EnhanceStrategy implements IEnhanceStrategy {
