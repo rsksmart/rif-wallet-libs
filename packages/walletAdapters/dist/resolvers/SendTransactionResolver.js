@@ -47,52 +47,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ERC20EnhanceStrategy = void 0;
-var token_1 = require("@rsksmart/token");
-var formatBigNumber_1 = require("../formatBigNumber");
-var bignumber_1 = require("@ethersproject/bignumber");
-var ERC20EnhanceStrategy = /** @class */ (function () {
-    function ERC20EnhanceStrategy() {
+exports.SendTransactionResolver = void 0;
+var ethers_1 = require("ethers");
+var SendTransactionResolver = /** @class */ (function () {
+    function SendTransactionResolver(signer) {
+        this.methodName = 'eth_sendTransaction';
+        this.signer = signer;
     }
-    ERC20EnhanceStrategy.prototype.parse = function (signer, transactionRequest) {
+    SendTransactionResolver.prototype.resolve = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var tokens, tokenFounded, abiErc20Interface, resultTo, resultValue, _a, decodedTo, decodedValue, currentBalance, tokenDecimals, tokenSymbol;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (!transactionRequest.data) {
-                            return [2 /*return*/, null];
-                        }
-                        return [4 /*yield*/, (0, token_1.getAllTokens)(signer)
-                            // TODO: mixed up logic, needs refactor
-                        ];
-                    case 1:
-                        tokens = _b.sent();
-                        tokenFounded = tokens.find(function (x) { var _a; return x.address.toLowerCase() === ((_a = transactionRequest.to) === null || _a === void 0 ? void 0 : _a.toLowerCase()); });
-                        if (!tokenFounded) {
-                            return [2 /*return*/, null];
-                        }
-                        abiErc20Interface = token_1.ERC20__factory.createInterface();
-                        resultTo = transactionRequest.to;
-                        resultValue = transactionRequest.value;
-                        try {
-                            _a = abiErc20Interface.decodeFunctionData('transfer', transactionRequest.data), decodedTo = _a[0], decodedValue = _a[1];
-                            resultTo = decodedTo;
-                            resultValue = decodedValue;
-                        }
-                        catch (error) { }
-                        return [4 /*yield*/, tokenFounded.balance()];
-                    case 2:
-                        currentBalance = _b.sent();
-                        return [4 /*yield*/, tokenFounded.decimals()];
-                    case 3:
-                        tokenDecimals = _b.sent();
-                        tokenSymbol = tokenFounded.symbol;
-                        return [2 /*return*/, __assign(__assign({}, transactionRequest), { to: resultTo, symbol: tokenSymbol, balance: (0, formatBigNumber_1.formatBigNumber)(currentBalance, tokenDecimals), value: (0, formatBigNumber_1.formatBigNumber)(bignumber_1.BigNumber.from(resultValue !== null && resultValue !== void 0 ? resultValue : 0), tokenDecimals) })];
-                }
+            var payload, formattedPayload;
+            return __generator(this, function (_a) {
+                payload = params.reduce(function (prev, curr) { return (__assign(__assign({}, prev), curr)); }, {});
+                formattedPayload = {
+                    to: payload.to,
+                    from: payload.from,
+                    nonce: payload.nonce,
+                    data: payload.data || '0x',
+                    value: ethers_1.BigNumber.from(payload.value || 0),
+                    chainId: payload.chainId,
+                    gasLimit: payload.gas ? ethers_1.BigNumber.from(payload.gas) : undefined,
+                    gasPrice: payload.gasPrice ? ethers_1.BigNumber.from(payload.gasPrice) : undefined
+                };
+                return [2 /*return*/, this.signer
+                        .sendTransaction(formattedPayload)
+                        .then(function (tx) { return tx.hash; })];
             });
         });
     };
-    return ERC20EnhanceStrategy;
+    return SendTransactionResolver;
 }());
-exports.ERC20EnhanceStrategy = ERC20EnhanceStrategy;
+exports.SendTransactionResolver = SendTransactionResolver;

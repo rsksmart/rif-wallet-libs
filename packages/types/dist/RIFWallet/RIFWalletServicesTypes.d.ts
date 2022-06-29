@@ -1,4 +1,4 @@
-import { IActivityTransaction, TransactionsServerResponse } from "../Transaction/TransactionActivityTypes";
+import { IActivityTransaction, TransactionsServerResponse } from '../Transaction/TransactionActivityTypes';
 export interface IApiTokens {
     address: string;
     balance: string;
