@@ -20,9 +20,9 @@ const createInitialState = (): KeyManagementSystemState => ({
   derivedPaths: {}
 })
 
-type KeyManagementSystemSerialized = {
-  mnemonic: string
-  state: string
+type KeyManagementSystemSerialization = {
+  mnemonic: Mnemonic
+  state: KeyManagementSystemState
 }
 
 export type SaveableWallet = {
@@ -86,14 +86,12 @@ export class KeyManagementSystem implements IKeyManagementSystem {
    * @param serialized the serialized string
    * @returns the KeyManagementSystem that was serialized
    */
-  static fromSerialized ({ mnemonic, state }: KeyManagementSystemSerialized): { kms: KeyManagementSystem, wallets: Wallet[] } {
-    const parsedMnemonic: Mnemonic = JSON.parse(mnemonic)
-    const parsedState: KeyManagementSystemState = JSON.parse(state)
+  static fromSerialized (serialized: string): { kms: KeyManagementSystem, wallets: Wallet[] } {
+    const { mnemonic, state }: KeyManagementSystemSerialization = JSON.parse(serialized)
 
-    const kms = new KeyManagementSystem(parsedMnemonic, parsedState)
-
-    const wallets = Object.keys(parsedState.derivedPaths)
-      .filter(derivedPath => parsedState.derivedPaths[derivedPath])
+    const kms = new KeyManagementSystem(mnemonic, state)
+    const wallets = Object.keys(state.derivedPaths)
+      .filter(derivedPath => state.derivedPaths[derivedPath])
       .map(derivedPath => kms.deriveWallet(derivedPath))
 
     return {
@@ -106,11 +104,13 @@ export class KeyManagementSystem implements IKeyManagementSystem {
    * Use this method to get a string to be stored and recovered
    * @returns a serialized wallet
    */
-  serialize (): KeyManagementSystemSerialized {
-    return {
-      mnemonic: JSON.stringify(this.mnemonic),
-      state: JSON.stringify(this.state)
+  serialize (): string {
+    const serialization: KeyManagementSystemSerialization = {
+      mnemonic: this.mnemonic,
+      state: this.state
     }
+
+    return JSON.stringify(serialization)
   }
 
   private deriveWallet (derivationPath: string) {

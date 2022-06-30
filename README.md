@@ -20,12 +20,17 @@
   </a>
 </p>
 
-## Pacakges
+## Packages
 
 - `@rsksmart/rif-wallet-kms` - Key Management System
 - `@rsksmart/rif-wallet-core` - RIF Relay + `onRequest` integration
 - `@rsksmart/rif-wallet-test-lib` - testing library
 - `@rsksmart/rif-wallet-e2e` (not published) - some e2e tests
+- `@rsksmart/abi-enhancer` (not published)
+- `@rsksmart/rif-wallet-services` (not published)
+- `@rsksmart/token` (not published)
+- `@rsksmart/rif-wallet-types` (not published) - commmon interfaces and types
+- `@rsksmart/wallet-adapters` (not published)
 
 ## Run for development
 
