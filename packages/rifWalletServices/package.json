@@ -1,0 +1,38 @@
+{
+    "name": "@rsksmart/rif-wallet-services",
+    "version": "1.0.0",
+    "description": "RIF Wallet Services",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+      "dist"
+    ], 
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/rsksmart/rif-wallet.git"
+    },
+    "keywords": [
+      "rsk",
+      "rif"
+    ],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/rsksmart/rif-wallet/issues"
+    },
+    "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+      "socket.io-client": "^4.4.1",
+      "react": "17.0.2",
+      "@rsksmart/rif-wallet-core": "*",
+      "@rsksmart/rif-wallet-types": "*"
+    },
+    "devDependencies": {
+      "@types/react": "^17"
+    }
+  
+  }
+  
