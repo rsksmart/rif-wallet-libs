@@ -51,13 +51,11 @@ var KeyManagementSystem = /** @class */ (function () {
      * @param serialized the serialized string
      * @returns the KeyManagementSystem that was serialized
      */
-    KeyManagementSystem.fromSerialized = function (_a) {
-        var mnemonic = _a.mnemonic, state = _a.state;
-        var parsedMnemonic = JSON.parse(mnemonic);
-        var parsedState = JSON.parse(state);
-        var kms = new KeyManagementSystem(parsedMnemonic, parsedState);
-        var wallets = Object.keys(parsedState.derivedPaths)
-            .filter(function (derivedPath) { return parsedState.derivedPaths[derivedPath]; })
+    KeyManagementSystem.fromSerialized = function (serialized) {
+        var _a = JSON.parse(serialized), mnemonic = _a.mnemonic, state = _a.state;
+        var kms = new KeyManagementSystem(mnemonic, state);
+        var wallets = Object.keys(state.derivedPaths)
+            .filter(function (derivedPath) { return state.derivedPaths[derivedPath]; })
             .map(function (derivedPath) { return kms.deriveWallet(derivedPath); });
         return {
             kms: kms,
@@ -69,10 +67,11 @@ var KeyManagementSystem = /** @class */ (function () {
      * @returns a serialized wallet
      */
     KeyManagementSystem.prototype.serialize = function () {
-        return {
-            mnemonic: JSON.stringify(this.mnemonic),
-            state: JSON.stringify(this.state)
+        var serialization = {
+            mnemonic: this.mnemonic,
+            state: this.state
         };
+        return JSON.stringify(serialization);
     };
     KeyManagementSystem.prototype.deriveWallet = function (derivationPath) {
         // Create the seed - ref: BIP-39

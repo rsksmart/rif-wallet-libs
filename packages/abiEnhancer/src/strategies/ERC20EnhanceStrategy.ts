@@ -1,8 +1,8 @@
-import { ERC20__factory, getAllTokens, ERC20Token } from '@rsksmart/token'
+import { ERC20__factory, getAllTokens, ERC20Token } from '@rsksmart/rif-wallet/packages/token'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
 import { formatBigNumber } from '../formatBigNumber'
-import { IEnhancedResult, IEnhanceStrategy } from '@rsksmart/rif-wallet-types'
+import { IEnhancedResult, IEnhanceStrategy } from '@rsksmart/rif-wallet/packages/types'
 import { BigNumber } from '@ethersproject/bignumber'
 
 export class ERC20EnhanceStrategy implements IEnhanceStrategy {

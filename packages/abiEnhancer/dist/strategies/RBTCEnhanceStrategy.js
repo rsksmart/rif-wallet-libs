@@ -50,7 +50,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RBTCEnhanceStrategy = void 0;
 var ethers_1 = require("ethers");
 var formatBigNumber_1 = require("../formatBigNumber");
-var token_1 = require("@rsksmart/token");
+var token_1 = require("@rsksmart/rif-wallet/packages/token");
 var RBTCEnhanceStrategy = /** @class */ (function () {
     function RBTCEnhanceStrategy() {
     }

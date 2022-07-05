@@ -18,5 +18,4 @@ var SmartWalletABI_json_1 = __importDefault(require("./SmartWalletABI.json"));
 exports.SmartWalletABIJSON = SmartWalletABI_json_1.default;
 var SmartWalletFactoryABI_json_1 = __importDefault(require("./SmartWalletFactoryABI.json"));
 exports.SmartWalletFactoryABIJSON = SmartWalletFactoryABI_json_1.default;
-__exportStar(require("./KeyManagementSystem"), exports);
 __exportStar(require("./RIFWallet"), exports);

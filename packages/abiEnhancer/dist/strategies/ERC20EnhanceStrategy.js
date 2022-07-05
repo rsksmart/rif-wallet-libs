@@ -48,7 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ERC20EnhanceStrategy = void 0;
-var token_1 = require("@rsksmart/token");
+var token_1 = require("@rsksmart/rif-wallet/packages/token");
 var formatBigNumber_1 = require("../formatBigNumber");
 var bignumber_1 = require("@ethersproject/bignumber");
 var ERC20EnhanceStrategy = /** @class */ (function () {

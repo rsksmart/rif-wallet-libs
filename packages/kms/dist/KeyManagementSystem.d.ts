@@ -10,10 +10,6 @@ declare type KeyManagementSystemState = {
     lastDerivedAccountIndex: LastDerivedAccountIndex;
     derivedPaths: DerivedPaths;
 };
-declare type KeyManagementSystemSerialized = {
-    mnemonic: string;
-    state: string;
-};
 export declare type SaveableWallet = {
     derivationPath: string;
     wallet: Wallet;
@@ -61,7 +57,7 @@ export declare class KeyManagementSystem implements IKeyManagementSystem {
      * @param serialized the serialized string
      * @returns the KeyManagementSystem that was serialized
      */
-    static fromSerialized({ mnemonic, state }: KeyManagementSystemSerialized): {
+    static fromSerialized(serialized: string): {
         kms: KeyManagementSystem;
         wallets: Wallet[];
     };
@@ -69,7 +65,7 @@ export declare class KeyManagementSystem implements IKeyManagementSystem {
      * Use this method to get a string to be stored and recovered
      * @returns a serialized wallet
      */
-    serialize(): KeyManagementSystemSerialized;
+    serialize(): string;
     private deriveWallet;
     /**
      * Get the next wallet for the given chainId
