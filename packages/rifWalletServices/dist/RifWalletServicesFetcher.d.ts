@@ -1,4 +1,4 @@
-import { IRegisteredDappsGroup, IRIFWalletServicesFetcher, ITokenWithBalance } from '@rsksmart/rif-wallet-types';
+import { IRegisteredDappsGroup, IRIFWalletServicesFetcher, ITokenWithBalance } from '@rsksmart/rif-wallet/packages/types';
 export declare class RifWalletServicesFetcher implements IRIFWalletServicesFetcher {
     uri: string;
     constructor(uri: string);

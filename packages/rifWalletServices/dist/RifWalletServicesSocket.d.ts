@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import EventEmitter from 'events';
-import { IAbiEnhancer, IRIFWalletServicesFetcher, IServiceChangeEvent, IServiceInitEvent } from '@rsksmart/rif-wallet-types';
-import { RIFWallet } from '@rsksmart/rif-wallet-core';
+import { IAbiEnhancer, IRIFWalletServicesFetcher, IServiceChangeEvent, IServiceInitEvent } from '@rsksmart/rif-wallet/packages/types';
+import { RIFWallet } from '@rsksmart/rif-wallet/packages/core';
 export interface IRifWalletServicesSocket extends EventEmitter {
     connect: (wallet: RIFWallet) => Promise<void>;
     disconnect(): void;

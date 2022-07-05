@@ -1,5 +1,5 @@
 import { Signer } from 'ethers'
-import { RIFWallet } from '@rsksmart/rif-wallet-core'
+import { RIFWallet } from '@rsksmart/rif-wallet/packages/core'
 
 import { AccountsResolver } from './resolvers/AccountsResolver'
 import { CallsResolver } from './resolvers/CallsResolver'
