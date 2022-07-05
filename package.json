@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "setup": "npx lerna bootstrap",
-    "build": "npx lerna exec tsc",
+    "build": "npx lerna exec tsc && npx lerna run build --parallel",
     "ganache": "npx ganache-cli",
     "test": "npx jest --collect-coverage --verbose",
     "lint": "npx eslint . --ext .js,.ts"
