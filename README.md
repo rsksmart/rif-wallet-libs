@@ -1,7 +1,7 @@
 <p align="middle">
   <img src="https://www.rifos.org/assets/img/logo.svg" alt="logo" height="100" >
 </p>
-<h3 align="middle"><code>@rsksmart/rif-wallet</code></h3>
+<h3 align="middle"><code>@rsksmart/rif-wallet-libs</code></h3>
 <p align="middle">
   RIF Wallet
 </p>
@@ -26,11 +26,11 @@
 - `@rsksmart/rif-wallet-core` - RIF Relay + `onRequest` integration
 - `@rsksmart/rif-wallet-test-lib` - testing library
 - `@rsksmart/rif-wallet-e2e` (not published) - some e2e tests
-- `@rsksmart/abi-enhancer` (not published)
-- `@rsksmart/rif-wallet-services` (not published)
-- `@rsksmart/token` (not published)
+- `@rsksmart/abi-enhancer` - ABI enhancer used to parse transactions for human readability
+- `@rsksmart/rif-wallet-services` - SDK that connects to the rif-wallet-service server
+- `@rsksmart/token` - token interactions
 - `@rsksmart/rif-wallet-types` (not published) - commmon interfaces and types
-- `@rsksmart/wallet-adapters` (not published)
+- `@rsksmart/wallet-adapters` - WalletConnect and Injected browser connectors
 
 ## Run for development
 
