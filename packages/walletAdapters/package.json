@@ -1,5 +1,5 @@
 {
-    "name": "@rsksmart/wallet-adapters",
+    "name": "@rsksmart/rif-wallet-adapters",
     "version": "1.0.0",
     "description": "RIF Wallet Wallet Adapters",
     "main": "dist/index.js",

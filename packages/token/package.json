@@ -1,5 +1,5 @@
 {
-    "name": "@rsksmart/token",
+    "name": "@rsksmart/rif-wallet-token",
     "version": "1.0.0",
     "description": "RIF Wallet Token",
     "main": "dist/index.js",
