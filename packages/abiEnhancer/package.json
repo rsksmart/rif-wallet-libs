@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-abi-enhancer",
-  "version": "1.0.0",
+  "version": "1.0.0-beta1",
   "description": "RIF Wallet ABI Enhancer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,10 @@
   ], 
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+    "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@rsksmart"
   },
   "keywords": [
     "rsk",
@@ -18,9 +21,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rsksmart/rif-wallet/issues"
+    "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
-  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,12 +33,8 @@
     "@rsksmart/rsk-contract-metadata": "^1.0.15",
     "@rsksmart/rsk-testnet-contract-metadata": "^1.0.11",
     "@rsksmart/rif-wallet-token": "*",
-    "@rsksmart/rif-wallet-types": "*",
-    "@rsksmart/rif-wallet": "git+https://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:x-oauth-basic@github.com/rsksmart/rif-wallet.git"
+    "@rsksmart/rif-wallet-types": "*"
   },
   "devDependencies": {
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/jessgusclark"
-  }
+  }  
 }
