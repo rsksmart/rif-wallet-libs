@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-kms",
-  "version": "1.0.0",
+  "version": "1.0.0-beta1",
   "description": "RIF Wallet Key Management System",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+    "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "keywords": [
     "rsk",
@@ -18,9 +21,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rsksmart/rif-wallet/issues"
+    "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
-  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs#readme",
   "dependencies": {
     "@rsksmart/rif-id-mnemonic": "^0.1.1",
     "@rsksmart/rlogin-dpath": "^1.0.1",
