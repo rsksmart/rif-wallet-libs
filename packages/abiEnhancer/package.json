@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-abi-enhancer",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "description": "RIF Wallet ABI Enhancer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,8 +32,8 @@
     "axios": "^0.24.0",
     "@rsksmart/rsk-contract-metadata": "^1.0.15",
     "@rsksmart/rsk-testnet-contract-metadata": "^1.0.11",
-    "@rsksmart/rif-wallet-token": "^1.0.0-beta1",
-    "@rsksmart/rif-wallet-types": "^1.0.0-beta1"
+    "@rsksmart/rif-wallet-token": "^1.0.0-beta2",
+    "@rsksmart/rif-wallet-types": "^1.0.0-beta2"
   },
   "devDependencies": {
   }  
