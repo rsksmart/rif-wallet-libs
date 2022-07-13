@@ -1,6 +1,6 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
-import { IEnhancedResult, IEnhanceStrategy } from '@rsksmart/rif-wallet/packages/types'
+import { IEnhancedResult, IEnhanceStrategy } from '@rsksmart/rif-wallet-types'
 import axios from 'axios'
 import { hexDataSlice } from '@ethersproject/bytes'
 import { utils } from 'ethers'

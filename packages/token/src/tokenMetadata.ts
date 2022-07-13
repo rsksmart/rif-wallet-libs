@@ -15,7 +15,7 @@ import { IToken } from './BaseToken'
 import { ERC20Token } from './ERC20Token'
 import { RBTCToken } from './RBTCToken'
 import { Signer } from '@ethersproject/abstract-signer'
-import { ITokenWithBalance } from '@rsksmart/rif-wallet/packages/types'
+import { ITokenWithBalance } from '@rsksmart/rif-wallet-types'
 
 export interface ITokenMetadata {
   [address: string]: {

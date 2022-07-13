@@ -60,10 +60,10 @@ var getFunctionSignatures = function (fnHexSig) { return __awaiter(void 0, void 
     var functionSignaturePromise, functionSignatureWithNamesPromise;
     return __generator(this, function (_a) {
         functionSignaturePromise = axios_1.default
-            .get(ethList4BytesServiceUrl + "/" + fnHexSig)
+            .get("".concat(ethList4BytesServiceUrl, "/").concat(fnHexSig))
             .then(function (x) { return x.data; });
         functionSignatureWithNamesPromise = axios_1.default
-            .get(ethList4BytesWithNamesServiceUrl + "/" + fnHexSig)
+            .get("".concat(ethList4BytesWithNamesServiceUrl, "/").concat(fnHexSig))
             .then(function (x) { return x.data; });
         return [2 /*return*/, Promise.all([
                 functionSignaturePromise,
@@ -96,7 +96,7 @@ var parseSignatureWithParametersNames = function (signaturesWithNames, parameter
         : [];
     for (var index = 0; index < parametersNames.length; index++) {
         parametersNames[index] = parametersNames[index]
-            .replace(parametersTypes[index] + " ", '')
+            .replace("".concat(parametersTypes[index], " "), '')
             .replace(/[_-\s]/g, '');
     }
     return parametersNames;

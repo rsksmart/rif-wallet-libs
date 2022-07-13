@@ -50,7 +50,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RBTCEnhanceStrategy = void 0;
 var ethers_1 = require("ethers");
 var formatBigNumber_1 = require("../formatBigNumber");
-var token_1 = require("@rsksmart/rif-wallet/packages/token");
+var rif_wallet_token_1 = require("@rsksmart/rif-wallet-token");
 var RBTCEnhanceStrategy = /** @class */ (function () {
     function RBTCEnhanceStrategy() {
     }
@@ -62,7 +62,7 @@ var RBTCEnhanceStrategy = /** @class */ (function () {
                     case 0: return [4 /*yield*/, signer.getChainId()];
                     case 1:
                         chainId = _a.sent();
-                        rbtc = (0, token_1.makeRBTCToken)(signer, chainId);
+                        rbtc = (0, rif_wallet_token_1.makeRBTCToken)(signer, chainId);
                         return [4 /*yield*/, rbtc.balance()];
                     case 2:
                         currentBalance = _a.sent();

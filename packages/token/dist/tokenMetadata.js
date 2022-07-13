@@ -63,7 +63,7 @@ var getTokenLogo = function (address, chainId) {
     var tokensMetadata = chainId === exports.MAINNET_CHAINID ? exports.tokensMetadataMainnet : exports.tokensMetadataTestnet;
     var imageBaseUrl = chainId === exports.MAINNET_CHAINID ? exports.imagesUrlMainnet : exports.imagesUrlTestnet;
     if (tokensMetadata[address] && tokensMetadata[address].logo) {
-        return imageBaseUrl + "/" + tokensMetadata[address].logo;
+        return "".concat(imageBaseUrl, "/").concat(tokensMetadata[address].logo);
     }
     return chainId === exports.MAINNET_CHAINID ? token_mainnet_svg_1.default : token_testnet_svg_1.default;
 };
