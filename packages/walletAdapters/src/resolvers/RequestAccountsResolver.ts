@@ -1,4 +1,4 @@
-import { RIFWallet } from '@rsksmart/rif-wallet/packages/core'
+import { RIFWallet } from '@rsksmart/rif-wallet-core'
 import { IResolver } from '../RPCAdapter'
 
 export class RequestAccountsResolver implements IResolver {

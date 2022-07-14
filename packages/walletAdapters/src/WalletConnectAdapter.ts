@@ -1,5 +1,5 @@
 import { Signer } from 'ethers'
-import { RIFWallet } from '@rsksmart/rif-wallet/packages/core'
+import { RIFWallet } from '@rsksmart/rif-wallet-core'
 import { PersonalSignResolver } from './resolvers/PersonalSignResolver'
 import { SendTransactionResolver } from './resolvers/SendTransactionResolver'
 import { SignTypedDataResolver } from './resolvers/SignTypedDataResolver'
