@@ -34,7 +34,7 @@
       "@rsksmart/rsk-contract-metadata": "^1.0.15",
       "@rsksmart/rsk-testnet-contract-metadata": "^1.0.11",
       "react-native-config": "^1.4.5",
-      "@rsksmart/rif-wallet-types": "1.0.0-beta1"
+      "@rsksmart/rif-wallet-types": "1.0.0-beta2"
     },
     "devDependencies": {}
   }

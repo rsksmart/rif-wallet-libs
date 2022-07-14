@@ -27,7 +27,8 @@
     "dependencies": {
       "socket.io-client": "^4.4.1",
       "react": "17.0.2",
-      "@rsksmart/rif-wallet": "git+https://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:x-oauth-basic@github.com/rsksmart/rif-wallet.git"
+      "@rsksmart/rif-wallet-types": "^1.0.0-beta2",
+      "@rsksmart/rif-wallet-core": "^1.0.0-beta1"
     },
     "devDependencies": {
       "@types/react": "^17"
