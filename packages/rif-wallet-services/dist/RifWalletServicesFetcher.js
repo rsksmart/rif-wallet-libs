@@ -42,32 +42,32 @@ var RifWalletServicesFetcher = /** @class */ (function () {
     function RifWalletServicesFetcher(uri) {
         var _this = this;
         this.fetchTransactionsByAddress = function (smartAddress, prev, next) {
-            var transactionsUrl = _this.uri + "/address/" + smartAddress + "/transactions?limit=" + RESULTS_LIMIT;
+            var transactionsUrl = "".concat(_this.uri, "/address/").concat(smartAddress, "/transactions?limit=").concat(RESULTS_LIMIT);
             if (prev) {
-                transactionsUrl = transactionsUrl + "&prev=" + prev;
+                transactionsUrl = "".concat(transactionsUrl, "&prev=").concat(prev);
             }
             else if (next) {
-                transactionsUrl = transactionsUrl + "&next=" + next;
+                transactionsUrl = "".concat(transactionsUrl, "&next=").concat(next);
             }
             return fetch(transactionsUrl).then(function (response) { return response.json(); });
         };
         this.fetchEventsByAddress = function (smartAddress) {
-            return fetch(_this.uri + "/address/" + smartAddress + "/events").then(function (response) {
+            return fetch("".concat(_this.uri, "/address/").concat(smartAddress, "/events")).then(function (response) {
                 return response.json();
             });
         };
         this.fetchTokensByAddress = function (address) {
-            return fetch(_this.uri + "/address/" + address.toLowerCase() + "/tokens").then(function (response) { return response.json(); });
+            return fetch("".concat(_this.uri, "/address/").concat(address.toLowerCase(), "/tokens")).then(function (response) { return response.json(); });
         };
         this.fetchDapps = function () {
-            return fetch(_this.uri + "/dapps").then(function (response) { return response.json(); });
+            return fetch("".concat(_this.uri, "/dapps")).then(function (response) { return response.json(); });
         };
         this.uri = uri;
     }
     RifWalletServicesFetcher.prototype.fetchAvailableTokens = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, fetch(this.uri + "/tokens").then(function (response) { return response.json(); })];
+                return [2 /*return*/, fetch("".concat(this.uri, "/tokens")).then(function (response) { return response.json(); })];
             });
         });
     };

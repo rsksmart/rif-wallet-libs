@@ -3,7 +3,7 @@ import { OtherEnhanceStrategy } from './strategies/OtherEnhanceStrategy'
 import { RBTCEnhanceStrategy } from './strategies/RBTCEnhanceStrategy'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
-import { IEnhancedResult, IAbiEnhancer, IEnhanceStrategy } from '@rsksmart/rif-wallet/packages/types'
+import { IEnhancedResult, IAbiEnhancer, IEnhanceStrategy } from '@rsksmart/rif-wallet-types'
 
 export class AbiEnhancer implements IAbiEnhancer {
   public strategies: IEnhanceStrategy[]

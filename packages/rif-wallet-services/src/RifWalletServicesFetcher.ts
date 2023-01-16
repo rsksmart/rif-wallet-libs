@@ -2,7 +2,7 @@ import {
   IRegisteredDappsGroup,
   IRIFWalletServicesFetcher,
   ITokenWithBalance
-} from '@rsksmart/rif-wallet/packages/types'
+} from '@rsksmart/rif-wallet-types'
 
 const RESULTS_LIMIT = 10
 

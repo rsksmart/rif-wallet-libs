@@ -48,7 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ERC20EnhanceStrategy = void 0;
-var token_1 = require("@rsksmart/rif-wallet/packages/token");
+var rif_wallet_token_1 = require("@rsksmart/rif-wallet-token");
 var formatBigNumber_1 = require("../formatBigNumber");
 var bignumber_1 = require("@ethersproject/bignumber");
 var ERC20EnhanceStrategy = /** @class */ (function () {
@@ -63,7 +63,7 @@ var ERC20EnhanceStrategy = /** @class */ (function () {
                         if (!transactionRequest.data) {
                             return [2 /*return*/, null];
                         }
-                        return [4 /*yield*/, (0, token_1.getAllTokens)(signer)
+                        return [4 /*yield*/, (0, rif_wallet_token_1.getAllTokens)(signer)
                             // TODO: mixed up logic, needs refactor
                         ];
                     case 1:
@@ -72,7 +72,7 @@ var ERC20EnhanceStrategy = /** @class */ (function () {
                         if (!tokenFounded) {
                             return [2 /*return*/, null];
                         }
-                        abiErc20Interface = token_1.ERC20__factory.createInterface();
+                        abiErc20Interface = rif_wallet_token_1.ERC20__factory.createInterface();
                         resultTo = transactionRequest.to;
                         resultValue = transactionRequest.value;
                         try {

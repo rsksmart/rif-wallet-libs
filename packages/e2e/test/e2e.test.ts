@@ -1,7 +1,7 @@
 import { Wallet, Contract, BigNumber } from 'ethers'
 import { sendAndWait, fundAccount, testJsonRpcProvider, deploySmartWalletFactory, erc677ContractFactory } from '@rsksmart/rif-wallet/packages/test-lib'
 import { KeyManagementSystem } from '@rsksmart/rif-wallet/packages/kms'
-import { RIFWallet, Request, OnRequest, SendTransactionRequest } from '@rsksmart/rif-wallet/packages/core'
+import { RIFWallet, Request, OnRequest, SendTransactionRequest } from '@rsksmart/rif-wallet'
 
 describe('e2e', function (this: {
   smartWalletFactoryContract: Contract

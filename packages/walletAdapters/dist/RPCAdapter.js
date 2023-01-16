@@ -47,7 +47,7 @@ var RPCAdapter = /** @class */ (function () {
             return __generator(this, function (_a) {
                 resolver = this.resolvers.find(function (x) { return x.methodName === method; });
                 if (!resolver) {
-                    throw new Error("'" + method + "' method not supported by Adapter.");
+                    throw new Error("'".concat(method, "' method not supported by Adapter."));
                 }
                 return [2 /*return*/, resolver.resolve(params)];
             });

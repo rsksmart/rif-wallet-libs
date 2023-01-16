@@ -1,4 +1,4 @@
-import { RIFWallet } from '@rsksmart/rif-wallet/packages/core';
+import { RIFWallet } from '@rsksmart/rif-wallet';
 import { IResolver } from '../RPCAdapter';
 export declare class RequestAccountsResolver implements IResolver {
     private signer;

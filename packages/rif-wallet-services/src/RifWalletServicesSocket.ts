@@ -4,8 +4,8 @@ import { enhanceTransactionInput } from './screens/activity/ActivityScreen'
 import {
   IActivityTransaction, IAbiEnhancer,
   IApiTransaction, IRIFWalletServicesFetcher, IServiceChangeEvent, IServiceInitEvent, ITokenWithBalance
-} from '@rsksmart/rif-wallet/packages/types'
-import { RIFWallet } from '@rsksmart/rif-wallet/packages/core'
+} from '@rsksmart/rif-wallet-types'
+import { RIFWallet } from '@rsksmart/rif-wallet'
 
 export interface IRifWalletServicesSocket extends EventEmitter {
   connect: (wallet: RIFWallet) => Promise<void>

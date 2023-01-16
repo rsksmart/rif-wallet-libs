@@ -4,5 +4,5 @@ export declare class BlockNumberResolver implements IResolver {
     private signer;
     methodName: string;
     constructor(signer: Signer);
-    resolve(): Promise<number | undefined>;
+    resolve(): Promise<number>;
 }
