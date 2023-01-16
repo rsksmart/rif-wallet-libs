@@ -1,5 +1,5 @@
 {
-    "name": "@rsksmart/token",
+    "name": "@rsksmart/rif-wallet-token",
     "version": "1.0.0",
     "description": "RIF Wallet Token",
     "main": "dist/index.js",
@@ -31,7 +31,8 @@
       "@rsksmart/rsk-contract-metadata": "^1.0.15",
       "@rsksmart/rsk-testnet-contract-metadata": "^1.0.11",
       "react-native-config": "^1.4.5",
-      "@rsksmart/rif-wallet": "*"
+      "@rsksmart/rif-wallet": "*",
+      "@rsksmart/rif-wallet-types": "*"
     },
     "devDependencies": {}
   

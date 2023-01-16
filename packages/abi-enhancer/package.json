@@ -29,8 +29,8 @@
     "axios": "^0.24.0",
     "@rsksmart/rsk-contract-metadata": "^1.0.15",
     "@rsksmart/rsk-testnet-contract-metadata": "^1.0.11",
-    "@rsksmart/token": "*",
     "@rsksmart/rif-wallet-types": "*",
+    "@rsksmart/rif-wallet-token": "*",
     "@rsksmart/rif-wallet": "*"
   },
   "devDependencies": {
