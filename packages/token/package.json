@@ -10,7 +10,7 @@
     ], 
     "repository": {
       "type": "git",
-      "url": "git+https://github.com/rsksmart/rif-wallet.git"
+      "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
     },
     "keywords": [
       "rsk",
@@ -31,7 +31,7 @@
       "@rsksmart/rsk-contract-metadata": "^1.0.15",
       "@rsksmart/rsk-testnet-contract-metadata": "^1.0.11",
       "react-native-config": "^1.4.5",
-      "@rsksmart/rif-wallet": "git+https://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:x-oauth-basic@github.com/rsksmart/rif-wallet.git"
+      "@rsksmart/rif-wallet": "*"
     },
     "devDependencies": {}
   
