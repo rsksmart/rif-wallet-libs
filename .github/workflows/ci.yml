@@ -19,7 +19,7 @@ jobs:
         node-version: 16.x
 
     - run: npm i
-    - run: installCi
+    - run: npm run installCi
     # - run: npm run setup
     - run: npm run build
 
