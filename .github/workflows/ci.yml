@@ -19,8 +19,8 @@ jobs:
         node-version: 16.x
 
     - run: npm i
-    - run: npm run installCi
-    # - run: npm run setup
+    # - run: npm run installCi
+    - run: npm run setup
     - run: npm run build
 
     - run: npx ganache-cli &
