@@ -5,8 +5,8 @@
   "description": "RIF Wallet e2e",
   "devDependencies": {
     "ethers": "^5.4.7",
-    "@rsksmart/rif-wallet": "^1.0.0",
-    "@rsksmart/rif-wallet-kms": "^1.0.0",
-    "@rsksmart/rif-wallet-test-lib": "^1.0.0"
+    "@rsksmart/rif-wallet": "*",
+    "@rsksmart/rif-wallet-kms": "*",
+    "@rsksmart/rif-wallet-test-lib": "*"
   }
 }

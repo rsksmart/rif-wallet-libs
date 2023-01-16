@@ -22,13 +22,12 @@
 
 ## Packages
 
-- `@rsksmart/rif-wallet-kms` - Key Management System
-- `@rsksmart/rif-wallet-core` - RIF Relay + `onRequest` integration
-- `@rsksmart/rif-wallet-test-lib` - testing library
-- `@rsksmart/rif-wallet-e2e` (not published) - some e2e tests
-- `@rsksmart/abi-enhancer` (not published)
-- `@rsksmart/rif-wallet-services` (not published)
-- `@rsksmart/token` (not published)
+- `@rsksmart/abi-enhancer` - ABI Enhancer - under development
+- `@rsksmart/rif-wallet-kms` - Key Management System - under development
+- `@rsksmart/rif-wallet` - RIF Wallet Library
+- `@rsksmart/rif-wallet-services` - Sockets connecter between app and the server - under development
+- `@rsksmart/rif-wallet-e2e` - some e2e tests - under development
+- `@rsksmart/token` (not published) - under development
 - `@rsksmart/rif-wallet-types` (not published) - commmon interfaces and types
 - `@rsksmart/wallet-adapters` (not published)
 
