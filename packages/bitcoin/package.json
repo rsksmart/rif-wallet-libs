@@ -1,0 +1,26 @@
+{
+  "name": "bitcoin",
+  "version": "1.0.0",
+  "description": "Bitcoin Library to send bitcoin, receive bitcoin by generating an address, and much more.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rsk",
+    "rif"
+  ],
+  "author": "Freshenext @ IOV Labs S.A",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+  },
+  "dependencies": {
+    "@rsksmart/rif-id-mnemonic": "^0.1.1",
+    "bip32": "^2.0.6",
+    "bitcoin-address-validation": "^2.2.1",
+    "bitcoinjs-lib": "^6.0.2",
+    "ethers": "^5.4.7"
+  }
+}
