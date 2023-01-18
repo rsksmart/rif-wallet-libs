@@ -1,12 +1,9 @@
 import BitcoinNetwork from '../src/core/BitcoinNetwork'
 import * as constants from '../src/constants'
-import BIP39 from '../src/core/BIP39'
+import { bip39Instance } from './testSharedConfig'
 
 describe('BitcoinNetwork tests', function () {
   describe('Mnemonic rely truly issue ghost elder intact kiss provide project hobby thumb thing blur slender true', () => {
-    const mnemonic = 'rely truly issue ghost elder intact kiss provide project hobby thumb thing blur slender true'
-    const bip39Instance = new BIP39(mnemonic)
-
     describe('Create Testnet BitcoinNetwork with BIP84', () => {
       const bitcoinInstance = new BitcoinNetwork(
         constants.NETWORK_ID.BITCOIN_TESTNET,

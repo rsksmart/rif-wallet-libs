@@ -16,8 +16,13 @@ export default class AddressFactory {
           network: this.network,
           pubkey: publicKey
         }).address as string
+      case 44:
+        return payments.p2pkh({
+          network: this.network,
+          pubkey: publicKey
+        }).address as string
       default:
-        return ''
+        throw new Error(`Not implemented ${this.purpose}`)
     }
   }
 }

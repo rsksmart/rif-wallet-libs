@@ -50,22 +50,22 @@ export const COIN_BIPS = {
         public: 0x0488b21e,
         private: 0x0488ade4
       },
-      wif: 0xef,
+      wif: 0x80,
       bech32: '1',
       messagePrefix: '',
       pubKeyHash: 0,
-      scriptHash: 0
+      scriptHash: 5
     },
     [BIP_ID.BIP84]: {
       bip32: {
         public: 0x04b24746,
         private: 0x04b2430c
       },
-      wif: 0xef,
+      wif: 0x80,
       bech32: 'bc',
       messagePrefix: '',
       pubKeyHash: 0,
-      scriptHash: 0
+      scriptHash: 5
     }
   },
   [NETWORK_ID.BITCOIN_TESTNET]: {
@@ -77,8 +77,8 @@ export const COIN_BIPS = {
       wif: 0xef,
       bech32: 'm',
       messagePrefix: '',
-      pubKeyHash: 0,
-      scriptHash: 0
+      pubKeyHash: 111,
+      scriptHash: 196
     },
     [BIP_ID.BIP84]: {
       bip32: {
@@ -88,8 +88,8 @@ export const COIN_BIPS = {
       wif: 0xef,
       bech32: 'tb',
       messagePrefix: '',
-      pubKeyHash: 0,
-      scriptHash: 0
+      pubKeyHash: 111,
+      scriptHash: 196
     }
   }
 }
