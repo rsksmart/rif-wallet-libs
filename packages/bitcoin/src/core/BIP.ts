@@ -12,6 +12,7 @@ import {
 
 import { fromSeed } from 'bip32'
 import { Network } from 'bitcoinjs-lib'
+import { DefaultFetcher } from './DefaultFetcher'
 
 export default class BIP {
   network: BitcoinNetwork
@@ -36,7 +37,7 @@ export default class BIP {
     networkInstance: BitcoinNetwork,
     bipId: string,
     seed: Buffer,
-    options: BIPOptionsType
+    options: BIPOptionsType = {}
   ) {
     this.network = networkInstance
     this.bipId = bipId
@@ -58,7 +59,7 @@ export default class BIP {
   }
 
   setOptions () {
-    this.fetcher = this.options.fetcher
+    this.fetcher = this.options.fetcher || new DefaultFetcher()
     this.paymentFactory = this.options.paymentFactory || getPaymentInstance
   }
 

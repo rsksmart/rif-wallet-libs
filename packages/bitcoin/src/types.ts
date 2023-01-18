@@ -145,7 +145,7 @@ export interface ISendTransactionJsonReturnData {
 
 export interface BIPFetcher {
   fetchXpubBalance: (xpub: string) => Promise<XPubBalanceData>
-  fetchUtxos: (xpub: string) => Promise<Array<UnspentTransactionType>>
+  fetchUtxos: (xpub: string) => Promise<UnspentTransactionType[]>
   fetchXpubNextUnusedIndex: (xpub: string) => Promise<number>
   fetchXpubTransactions: (
     xpub: string,
@@ -166,7 +166,7 @@ export type BitcoinRequestFunction = (payload: BitcoinRequest) => void
 
 export interface BIPOptionsType {
   request?: BitcoinRequestFunction
-  fetcher: BIPFetcher
+  fetcher?: BIPFetcher
   paymentFactory?: PaymentFactoryType
 }
 
