@@ -105,7 +105,7 @@ export default class BIP {
       this.accountPublicKey
     )
     this.balance = parseInt(data.balance, 10)
-    this.btc = data.btc
+    this.btc = data.btc || 0
     return this.btc
   }
 
