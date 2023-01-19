@@ -1,10 +1,15 @@
 {
-  "name": "bitcoin",
+  "name": "@rsksmart/rif-wallet-bitcoin",
   "version": "1.0.0",
   "description": "Bitcoin Library to send bitcoin, receive bitcoin by generating an address, and much more.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "npx jest --collect-coverage --verbose"
+    "test": "npx jest --collect-coverage --verbose",
+    "build": "tsc"
   },
   "keywords": [
     "rsk",
