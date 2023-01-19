@@ -1,4 +1,5 @@
-import { BigNumber, utils } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
+import utils from '@ethersproject/units'
 import { BitcoinRequestFunction, createBipFactoryType } from './types'
 import BIPWithRequest from './facades/BIPWithRequest'
 import { validate, Network } from 'bitcoin-address-validation'
