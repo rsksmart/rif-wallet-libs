@@ -1,4 +1,4 @@
-export default class PathDerivator {
+export class PathDerivator {
   purpose: number | string
   coinTypeNumber: number | string
   account: number | string

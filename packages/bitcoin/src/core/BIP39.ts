@@ -1,6 +1,6 @@
 import { mnemonicToSeedSync } from '@rsksmart/rif-id-mnemonic'
 
-export default class BIP39 {
+export class BIP39 {
   mnemonic: string
   seed!: Buffer
   constructor (mnemonic: string) {

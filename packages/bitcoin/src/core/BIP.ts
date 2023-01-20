@@ -1,8 +1,8 @@
-import PathDerivator from './PathDerivator'
+import { PathDerivator } from './PathDerivator'
 import { BIP_DATA, COIN_BIPS } from '../constants'
-import BitcoinNetwork from './BitcoinNetwork'
-import AddressFactory from '../factories/AddressFactory'
-import getPaymentInstance from '../factories/getPaymentInstance'
+import { BitcoinNetwork } from './BitcoinNetwork'
+import { AddressFactory } from '../factories/AddressFactory'
+import { getPaymentInstance } from '../factories/getPaymentInstance'
 import {
   BIP32Interface,
   BIPOptionsType,
@@ -14,7 +14,7 @@ import { fromSeed } from 'bip32'
 import { Network } from 'bitcoinjs-lib'
 import { DefaultFetcher } from './DefaultFetcher'
 
-export default class BIP {
+export class BIP {
   network: BitcoinNetwork
   PathDerivator: PathDerivator
   bipId: string
