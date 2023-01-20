@@ -1,0 +1,36 @@
+{
+  "name": "@rsksmart/rif-wallet-token",
+  "version": "1.0.0",
+  "description": "RIF Wallet Token",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "npx jest --collect-coverage --verbose",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+  },
+  "keywords": [
+    "rsk",
+    "rif"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rsksmart/rif-wallet/issues"
+  },
+  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "dependencies": {
+    "ethers": "^5.4.7"
+  },
+  "devDependencies": {
+    "@rsksmart/rif-wallet-test-lib": "^1.0.0",
+    "@rsksmart/rsk-contract-metadata": "^1.0.17",
+    "@rsksmart/rsk-testnet-contract-metadata": "^1.0.11"
+  }
+}
