@@ -7,7 +7,7 @@ import {
   Psbt
 } from '../types'
 
-export default class BIPPaymentFacade {
+export class BIPPaymentFacade {
   payment: IPayment
   onSendTransaction: OnSendTransactionFunction
   constructor (

@@ -1,6 +1,6 @@
 import { Network, payments } from 'bitcoinjs-lib'
 
-export default class AddressFactory {
+export class AddressFactory {
   purpose: string | number
   network: Network
 

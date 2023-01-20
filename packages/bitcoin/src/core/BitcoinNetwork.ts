@@ -1,9 +1,9 @@
-import BIP39 from './BIP39'
+import { BIP39 } from './BIP39'
 import { NETWORK_DATA } from '../constants'
-import BIP from './BIP'
-import createBipFactory from '../factories/BIPFactory'
+import { BIP } from './BIP'
+import { createBipFactory } from '../factories/BIPFactory'
 
-export default class BitcoinNetwork {
+export class BitcoinNetwork {
   networkId: string
   networkName!: string
   coinTypeNumber!: number

@@ -1,9 +1,9 @@
-import BIP from '../core/BIP'
-import BIPRequestPaymentFacade from './BIPRequestPaymentFacade'
+import { BIP } from '../core/BIP'
+import { BIPRequestPaymentFacade } from './BIPRequestPaymentFacade'
 import { BitcoinRequestFunction, OnSendTransactionFunction } from '../types'
-import BIPPaymentFacade from './BIPPaymentFacade'
+import { BIPPaymentFacade } from './BIPPaymentFacade'
 
-class BIPWithRequest extends BIP {
+export class BIPWithRequest extends BIP {
   request!: BitcoinRequestFunction
   paymentFacade!: BIPPaymentFacade
   requestPayment!: BIPRequestPaymentFacade
@@ -28,5 +28,3 @@ class BIPWithRequest extends BIP {
     )
   }
 }
-
-export default BIPWithRequest

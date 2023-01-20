@@ -1,4 +1,4 @@
-import BitcoinNetwork from '../src/core/BitcoinNetwork'
+import { BitcoinNetwork } from '../src'
 import * as constants from '../src/constants'
 import { bip39Instance } from './testSharedConfig'
 

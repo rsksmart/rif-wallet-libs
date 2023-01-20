@@ -1,4 +1,4 @@
-import BIPPaymentFacade from './BIPPaymentFacade'
+import { BIPPaymentFacade } from './BIPPaymentFacade'
 import {
   PaymentTypeWithBalance,
   Psbt,
@@ -8,7 +8,7 @@ import {
 } from '../types'
 import { BITCOIN_REQUEST_TYPES } from '../constants'
 
-export default class BIPRequestPaymentFacade {
+export class BIPRequestPaymentFacade {
   request: BitcoinRequestFunction
   payment: BIPPaymentFacade
   generatedPayment!: Psbt

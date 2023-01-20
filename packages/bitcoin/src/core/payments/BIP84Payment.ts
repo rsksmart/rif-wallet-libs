@@ -9,7 +9,7 @@ import {
   UnspentTransactionType
 } from '../../types'
 
-class BIP84Payment implements IPayment {
+export class BIP84Payment implements IPayment {
   bip32root!: HDSigner
   networkInfo: NetworkInfoType
   constructor (bip32root: HDSigner, networkInfo: NetworkInfoType) {
@@ -86,5 +86,3 @@ class BIP84Payment implements IPayment {
     }
   }
 }
-
-export default BIP84Payment

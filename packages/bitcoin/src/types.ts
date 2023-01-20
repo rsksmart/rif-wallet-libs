@@ -1,9 +1,9 @@
 import { BIP32Interface } from 'bip32'
 import { Psbt, Network, HDSigner } from 'bitcoinjs-lib'
-import BIPRequestPaymentFacade from './facades/BIPRequestPaymentFacade'
-import BitcoinNetwork from './core/BitcoinNetwork'
-import BIPWithRequest from './facades/BIPWithRequest'
-import BIP from './core/BIP'
+import { BIPRequestPaymentFacade } from './facades/BIPRequestPaymentFacade'
+import { BitcoinNetwork } from './core/BitcoinNetwork'
+import { BIPWithRequest } from './facades/BIPWithRequest'
+import { BIP } from './core/BIP'
 
 export { BIP32Interface, Psbt, Network, HDSigner }
 
