@@ -1,4 +1,4 @@
-import { getSigner, TEST_TOKEN_DECIMALS } from '@rsksmart/rif-wallet-test-lib'
+import { getSigner, TEST_TOKEN_DECIMALS } from './utils'
 import { BigNumber } from 'ethers'
 import { tenPow } from '../src/BaseToken'
 import { ERC20Token } from '../src/ERC20Token'

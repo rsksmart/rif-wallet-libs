@@ -1,6 +1,6 @@
-import { getSigner, TEST_CHAIN_ID, TEST_TOKEN_DECIMALS } from '@rsksmart/rif-wallet-test-lib'
 import { BigNumber } from 'ethers'
 import { RBTCToken } from '../src/RBTCToken'
+import { getSigner, TEST_CHAIN_ID, TEST_TOKEN_DECIMALS } from './utils'
 
 describe('RBTC token', () => {
   let rbtcToken: RBTCToken | null = null
