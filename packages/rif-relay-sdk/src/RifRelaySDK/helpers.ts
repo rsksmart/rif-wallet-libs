@@ -3,7 +3,7 @@ import {
   DeployRequestType,
   DomainSeparatorType,
   RelayDataType,
-  RelayRequestType,
+  RelayRequestType
 } from './types'
 
 export interface EIP712Domain {
@@ -16,18 +16,18 @@ export interface EIP712Domain {
 
 export const dataTypeFields = (isDeployRequest: boolean) => ({
   RelayRequest: isDeployRequest ? DeployRequestType : RelayRequestType,
-  RelayData: RelayDataType,
+  RelayData: RelayDataType
 })
 
-export function getDomainSeparator(
+export function getDomainSeparator (
   verifyingContract: string,
-  chainId: number,
+  chainId: number
 ): EIP712Domain {
   return {
     name: DomainSeparatorType.name,
     version: DomainSeparatorType.version,
     chainId: chainId,
-    verifyingContract: verifyingContract,
+    verifyingContract: verifyingContract
   }
 }
 

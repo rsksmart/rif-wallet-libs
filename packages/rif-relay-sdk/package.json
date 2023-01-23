@@ -1,9 +1,17 @@
 {
   "name": "@rsksmart/rif-relay-light-sdk",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "",
   "main": "index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/rsksmart"
+  },
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

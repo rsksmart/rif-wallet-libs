@@ -16,14 +16,14 @@ export const DeployRequestDataType = [
   { name: 'tokenGas', type: 'uint256' },
   { name: 'validUntilTime', type: 'uint256' },
   { name: 'index', type: 'uint256' },
-  { name: 'data', type: 'bytes' },
+  { name: 'data', type: 'bytes' }
 ]
 
 export const RelayDataType = [
   { name: 'gasPrice', type: 'uint256' },
   { name: 'feesReceiver', type: 'address' },
   { name: 'callForwarder', type: 'address' },
-  { name: 'callVerifier', type: 'address' },
+  { name: 'callVerifier', type: 'address' }
 ]
 
 export const ForwardRequestType = [
@@ -37,24 +37,24 @@ export const ForwardRequestType = [
   { name: 'tokenAmount', type: 'uint256' },
   { name: 'tokenGas', type: 'uint256' },
   { name: 'validUntilTime', type: 'uint256' },
-  { name: 'data', type: 'bytes' },
+  { name: 'data', type: 'bytes' }
 ]
 
 export const DeployRequestType = [
   ...DeployRequestDataType,
-  { name: 'relayData', type: 'RelayData' },
+  { name: 'relayData', type: 'RelayData' }
 ]
 
 export const RelayRequestType = [
   ...ForwardRequestType,
-  { name: 'relayData', type: 'RelayData' },
+  { name: 'relayData', type: 'RelayData' }
 ]
 
 // use these values in registerDomainSeparator
 export const DomainSeparatorType = {
   prefix: 'string name,string version',
   name: 'RSK Enveloping Transaction',
-  version: '2',
+  version: '2'
 }
 
 export interface RelayData {
@@ -104,36 +104,15 @@ export interface DeployRequest {
 }
 
 export interface RelayPayment {
-  tokenContract: Address
+  tokenContract: string
   tokenAmount: BigNumber
 }
 
 export interface RifRelayConfig {
-  factoryAddress: Address
   relayVerifierAddress: Address
   deployVerifierAddress: Address
   relayServer: string
-}
-
-/**
- * The response from the server when calling /getaddr
- */
-export interface ServerConfig {
   relayWorkerAddress: Address
-  relayManagerAddress: Address
   relayHubAddress: Address
-  minGasPrice: string
-  chainId: string
-  networkId: string
-  ready: boolean
-  version: string
   feesReceiver: Address
-}
-
-export interface ServerEstimate {
-  estimation: IntString
-  exchangeRate: IntString
-  gasPrice: IntString
-  requiredNativeAmount: IntString
-  requiredTokenAmount: IntString
 }

@@ -52,7 +52,7 @@ export class SmartWalletFactory implements ISmartWalletFactory {
   getNonce = async (owner:string): Promise<BigNumber> =>
     this.smartWalletFactoryContract.nonce(owner)
 
-  get address(): string {
+  get address (): string {
     return this.smartWalletFactoryContract.address
   }
 }
