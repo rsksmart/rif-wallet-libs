@@ -1,3 +1,3 @@
 export * from './RifRelaySDK'
-export * from './SmartWallet/SmartWallet'
-export * from './SmartWalletFactory/SmartWalletFactory'
+export * from './SmartWallet'
+export * from './SmartWalletFactory'

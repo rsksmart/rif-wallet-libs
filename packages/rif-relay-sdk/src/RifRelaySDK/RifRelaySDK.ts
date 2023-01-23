@@ -6,7 +6,7 @@ import {
 import axios, { AxiosResponse } from 'axios'
 import { BigNumber, ethers } from 'ethers'
 
-import { SmartWallet } from '../SmartWallet/SmartWallet'
+import { SmartWallet } from '../SmartWallet'
 import {
   RelayPayment,
   RelayRequest,
@@ -22,7 +22,7 @@ import {
   ZERO_ADDRESS
 } from './helpers'
 
-import { SmartWalletFactory } from '../SmartWalletFactory/SmartWalletFactory'
+import { SmartWalletFactory } from '../SmartWalletFactory'
 
 export class RIFRelaySDK {
   chainId: number
