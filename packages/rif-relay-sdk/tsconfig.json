@@ -4,5 +4,7 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "exclude": ["test", "dist"]
+  "exclude": ["test", "dist"],
+  "target": "esnext",
+  "lib": ["ES2022"]
 }
