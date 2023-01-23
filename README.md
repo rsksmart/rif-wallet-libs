@@ -26,6 +26,7 @@
 - `@rsksmart/rif-wallet-bitcoin` - Bitcoin Library to send bitcoin, create addresses and much more.
 - `@rsksmart/rif-relay-light-sdk` - Light version of the RIF Relay client SDK used in the wallet.
 - `@rsksmart/rif-wallet-token` - RIF Wallet Token
+- `@rsksmart/rif-wallet-eip681` - RIF Wallet EIP681
 
 ## Run for development
 

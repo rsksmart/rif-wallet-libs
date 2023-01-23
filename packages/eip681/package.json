@@ -1,0 +1,34 @@
+{
+  "name": "@rsksmart/rif-wallet-eip681",
+  "version": "1.0.0",
+  "description": "RIF Wallet EIP681",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "npx jest --collect-coverage --verbose",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+  },
+  "keywords": [
+    "rsk",
+    "rif"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rsksmart/rif-wallet/issues"
+  },
+  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "dependencies": {
+    "ethers": "^5.4.7"
+  },
+  "devDependencies": {
+    "@rsksmart/rsk-utils": "^1.1.0"
+  }
+}
