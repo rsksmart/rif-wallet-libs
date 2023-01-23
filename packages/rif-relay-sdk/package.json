@@ -1,0 +1,30 @@
+{
+  "name": "@rsksmart/rif-relay-light-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
+  },
+  "keywords": [
+    "RSK",
+    "RIF",
+    "Relay",
+    "EVM"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
+  },
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs#readme",
+  "dependencies": {
+    "@ethersproject/abstract-provider": "^5.7.0",
+    "axios": "^1.2.3",
+    "ethers": "^5.7.2"
+  }
+}
