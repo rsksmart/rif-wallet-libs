@@ -1,18 +1,18 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import utils from '@ethersproject/units'
+import { parseUnits, formatUnits } from '@ethersproject/units'
 import { BitcoinRequestFunction, createBipFactoryType } from './types'
 import { BIPWithRequest } from './facades/BIPWithRequest'
 import { validate, Network } from 'bitcoin-address-validation'
 
 export function convertBtcToSatoshi (btc: string) {
   if (btc === '') {
-    return utils.parseUnits('0', 8)
+    return parseUnits('0', 8)
   }
-  return utils.parseUnits(btc, 8)
+  return parseUnits(btc, 8)
 }
 
 export function convertSatoshiToBtcHuman (satoshi: number | string | BigNumber) {
-  return utils.formatUnits(BigNumber.from(satoshi), 8)
+  return formatUnits(BigNumber.from(satoshi), 8)
 }
 
 export function isBitcoinAddressValid (

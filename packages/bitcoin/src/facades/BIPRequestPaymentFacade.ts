@@ -6,7 +6,6 @@ import {
   ISendTransactionJsonReturnData,
   BitcoinRequestFunction
 } from '../types'
-import { BITCOIN_REQUEST_TYPES } from '../constants'
 
 export class BIPRequestPaymentFacade {
   request: BitcoinRequestFunction
@@ -85,7 +84,7 @@ export class BIPRequestPaymentFacade {
     return new Promise((resolve, reject) => {
       this.resolve = resolve
       this.request({
-        type: BITCOIN_REQUEST_TYPES.SEND_BITCOIN,
+        type: 'SEND_BITCOIN',
         payload: {
           ...args,
           miningFee: estimatedMiningFee,
