@@ -93,7 +93,3 @@ export const COIN_BIPS = {
     }
   }
 }
-
-export const BITCOIN_REQUEST_TYPES = {
-  SEND_BITCOIN: 'SEND_BITCOIN'
-}

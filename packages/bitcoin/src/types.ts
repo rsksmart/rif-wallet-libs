@@ -155,15 +155,15 @@ export interface BIPFetcher {
   sendTransactionHexData: (hexdata: string) => Promise<ISendTransactionJsonReturnData>
 }
 
-export interface BitcoinRequest {
+export interface SendBitcoinRequest {
   type: 'SEND_BITCOIN',
   payload: PaymentTypeWithPaymentFacade,
-  returnType: void,
+  returnType?: void,
   confirm: () => Promise<void>,
   reject: (reason?: any) => void
 }
 
-export type BitcoinRequestFunction = (payload: BitcoinRequest) => void
+export type BitcoinRequestFunction = (payload: SendBitcoinRequest) => void
 
 export interface BIPOptionsType {
   request?: BitcoinRequestFunction
