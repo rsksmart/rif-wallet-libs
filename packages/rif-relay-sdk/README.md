@@ -1,11 +1,12 @@
 # RIF Relay Light SDK
 
-This is a light implementation of the client RIF Relay SDK built using ethers.
+This is a light implementation of the client RIF Relay SDK built using ethers. This is experimential and is subject to change. Please report any issues that you may find.
 
 ## Install:
 
 ```
 yarn @rsksmart/rif-relay-light-sdk
+// or
 npm i  @rsksmart/rif-relay-light-sdk
 ```
 
@@ -31,8 +32,6 @@ const relayConfig = {
   relayServer: ''
 }
 
-// ...
-
 // Create the Signer: 
 const provider = new ethers.providers.JsonRpcProvider('https://public-node.testnet.rsk.co')
 const signer = new ethers.Wallet(privateKey, provider)
@@ -44,7 +43,6 @@ const relaySDK = await sdk.RIFRelaySDK.create(signer, relayConfig)
 const eoaAddress = relaySDK.eoaAddress
 const smartWalletAddress = relaySDK.smartWalletAddress
 const isDeployed = await relaySDK.smartWalletFactory.isDeployed()
-
 ```
 
 ### Deploy the SmartWallet:
@@ -57,6 +55,7 @@ const freePayment = {
   tokenContract: RIF_TOKEN_ADDRESS_TESTNET,
   tokenAmount: '0'
 }
+
 const deployTx = await relaySDK.sendDeployTransaction(freePayment)
 console.log(deployTx)
 ```
@@ -77,8 +76,9 @@ const payment = {
     tokenAmount: estimateFee.toString()
   }
 
-// OR to relay a transaction if the smartcontract is already deployed:
+// relay a transaction if the smartcontract is already deployed:
 const relayTx = await relaySDK.sendRelayTransaction(sendFiveRifToJesseTx, payment)
+
 console.log(relayTx)
 ```
 
