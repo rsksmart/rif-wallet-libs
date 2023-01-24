@@ -24,6 +24,7 @@
 - `@rsksmart/rif-wallet-test-lib` - testing library
 - `@rsksmart/rif-wallet-e2e` (not published) - some e2e tests
 - `@rsksmart/rif-wallet-bitcoin` - Bitcoin Library to send bitcoin, create addresses and much more.
+- `@rsksmart/rif-relay-light-sdk` - Light version of the RIF Relay client SDK used in the wallet.
 
 ## Run for development
 

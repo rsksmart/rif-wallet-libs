@@ -13,6 +13,8 @@ npm i  @rsksmart/rif-relay-light-sdk
 
 The documentation for this is missing and needs much improvement. This repo is under development and is subject to change without notice.
 
+### Basic setup:
+
 ```ts
 import RIFRelaySDK from '@rsksmart/rif-relay-light-sdk
 import ethers from 'ethers'
@@ -43,6 +45,25 @@ const eoaAddress = relaySDK.eoaAddress
 const smartWalletAddress = relaySDK.smartWalletAddress
 const isDeployed = await relaySDK.smartWalletFactory.isDeployed()
 
+```
+
+### Deploy the SmartWallet:
+
+The server this is being tested with offers free deployment transactions, if your server costs, then you may need to estimate the cost and send it. Below we are sending 0:
+
+```ts
+// Deploy the smartwallet for the user.
+const freePayment = {
+  tokenContract: RIF_TOKEN_ADDRESS_TESTNET,
+  tokenAmount: '0'
+}
+const deployTx = await relaySDK.sendDeployTransaction(freePayment)
+console.log(deployTx)
+```
+
+### Estimate and Relay a Transaction:
+
+```ts
 // A simple ERC20 transaction:
 const sendFiveRifToJesseTx = {
   to: RIF_TOKEN_ADDRESS_TESTNET,
@@ -56,10 +77,6 @@ const payment = {
     tokenAmount: estimateFee.toString()
   }
 
-// to deploy the smartwallet for the user:
-const deployTx = await relaySDK.sendDeployTransaction(payment)
-console.log(deployTx)
-
 // OR to relay a transaction if the smartcontract is already deployed:
 const relayTx = await relaySDK.sendRelayTransaction(sendFiveRifToJesseTx, payment)
 console.log(relayTx)
@@ -67,7 +84,7 @@ console.log(relayTx)
 
 ## Tests:
 
-There are no tests for this library at this time. This tech debt is known.
+There are no tests for this library at this time. This tech debt is known, your help is appreciated.
 
 ## Contribution
 
