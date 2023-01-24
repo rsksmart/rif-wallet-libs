@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+    "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
   },
   "keywords": [
     "rsk",
@@ -22,9 +22,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rsksmart/rif-wallet/issues"
+    "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
-  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs#readme",
   "dependencies": {
     "ethers": "^5.4.7"
   },
