@@ -6,8 +6,7 @@ import {
 import axios, { AxiosResponse } from 'axios'
 import { BigNumber, ethers } from 'ethers'
 
-import { SmartWallet } from '../SmartWallet2/SmartWallet'
-import { SmartWalletFactory } from '../SmartWalletFactory2/SmartWalletFactory'
+import { SmartWallet, SmartWalletFactory } from '../'
 import {
   RelayPayment,
   RelayRequest,
