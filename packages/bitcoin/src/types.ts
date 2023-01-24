@@ -156,8 +156,9 @@ export interface BIPFetcher {
 }
 
 export interface BitcoinRequest {
-  type: string,
+  type: 'SEND_BITCOIN',
   payload: PaymentTypeWithPaymentFacade,
+  returnType: void,
   confirm: () => Promise<void>,
   reject: (reason?: any) => void
 }
