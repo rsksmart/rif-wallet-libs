@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-relay-light-sdk",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
-  "homepage": "https://github.com/rsksmart/rif-wallet-libs#readme",
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs/tree/develop/packages/rif-relay-sdk#readme",
   "dependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
     "axios": "^1.2.3",

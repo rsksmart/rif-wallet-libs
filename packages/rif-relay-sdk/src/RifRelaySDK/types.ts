@@ -16,14 +16,14 @@ export const DeployRequestDataType = [
   { name: 'tokenGas', type: 'uint256' },
   { name: 'validUntilTime', type: 'uint256' },
   { name: 'index', type: 'uint256' },
-  { name: 'data', type: 'bytes' },
+  { name: 'data', type: 'bytes' }
 ]
 
 export const RelayDataType = [
   { name: 'gasPrice', type: 'uint256' },
   { name: 'feesReceiver', type: 'address' },
   { name: 'callForwarder', type: 'address' },
-  { name: 'callVerifier', type: 'address' },
+  { name: 'callVerifier', type: 'address' }
 ]
 
 export const ForwardRequestType = [
@@ -37,24 +37,24 @@ export const ForwardRequestType = [
   { name: 'tokenAmount', type: 'uint256' },
   { name: 'tokenGas', type: 'uint256' },
   { name: 'validUntilTime', type: 'uint256' },
-  { name: 'data', type: 'bytes' },
+  { name: 'data', type: 'bytes' }
 ]
 
 export const DeployRequestType = [
   ...DeployRequestDataType,
-  { name: 'relayData', type: 'RelayData' },
+  { name: 'relayData', type: 'RelayData' }
 ]
 
 export const RelayRequestType = [
   ...ForwardRequestType,
-  { name: 'relayData', type: 'RelayData' },
+  { name: 'relayData', type: 'RelayData' }
 ]
 
 // use these values in registerDomainSeparator
 export const DomainSeparatorType = {
   prefix: 'string name,string version',
   name: 'RSK Enveloping Transaction',
-  version: '2',
+  version: '2'
 }
 
 export interface RelayData {
