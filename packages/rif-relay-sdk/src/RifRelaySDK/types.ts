@@ -109,6 +109,7 @@ export interface RelayPayment {
 }
 
 export interface RifRelayConfig {
+  smartWalletFactoryAddress: Address
   relayVerifierAddress: Address
   deployVerifierAddress: Address
   relayServer: string
