@@ -1,4 +1,4 @@
-import { BigNumber, ContractReceipt, ContractTransaction, providers, Wallet } from 'ethers'
+import { Wallet, ContractTransaction, ContractReceipt, providers, BigNumber } from 'ethers'
 
 const nodeUrl = 'http://localhost:8545'
 
