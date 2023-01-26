@@ -6,9 +6,9 @@ import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
 import { makeRBTCToken } from 'lib/token/tokenMetadata'
 
 export class RBTCEnhanceStrategy implements EnhanceStrategy {
-  public async parse(
+  public async parse (
     signer: Signer,
-    transactionRequest: TransactionRequest,
+    transactionRequest: TransactionRequest
   ): Promise<EnhancedResult | null> {
     const chainId = await signer.getChainId()
 
@@ -24,8 +24,8 @@ export class RBTCEnhanceStrategy implements EnhanceStrategy {
       balance: formatBigNumber(currentBalance, tokenDecimals),
       value: formatBigNumber(
         BigNumber.from(transactionRequest.value),
-        tokenDecimals,
-      ),
+        tokenDecimals
+      )
     }
   }
 }

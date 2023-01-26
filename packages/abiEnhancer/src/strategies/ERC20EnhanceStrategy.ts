@@ -8,9 +8,9 @@ import { ERC20Token } from 'lib/token/ERC20Token'
 import { BigNumber } from '@ethersproject/bignumber'
 
 export class ERC20EnhanceStrategy implements EnhanceStrategy {
-  public async parse(
+  public async parse (
     signer: Signer,
-    transactionRequest: TransactionRequest,
+    transactionRequest: TransactionRequest
   ): Promise<EnhancedResult | null> {
     if (!transactionRequest.data) {
       return null
@@ -19,7 +19,7 @@ export class ERC20EnhanceStrategy implements EnhanceStrategy {
     const tokens = await getAllTokens(signer)
     // TODO: mixed up logic, needs refactor
     const tokenFounded = tokens.find(
-      x => x.address.toLowerCase() === transactionRequest.to?.toLowerCase(),
+      x => x.address.toLowerCase() === transactionRequest.to?.toLowerCase()
     ) as ERC20Token
 
     if (!tokenFounded) {
@@ -34,7 +34,7 @@ export class ERC20EnhanceStrategy implements EnhanceStrategy {
     try {
       const [decodedTo, decodedValue] = abiErc20Interface.decodeFunctionData(
         'transfer',
-        transactionRequest.data,
+        transactionRequest.data
       )
       resultTo = decodedTo
       resultValue = decodedValue
@@ -49,7 +49,7 @@ export class ERC20EnhanceStrategy implements EnhanceStrategy {
       to: resultTo,
       symbol: tokenSymbol,
       balance: formatBigNumber(currentBalance, tokenDecimals),
-      value: formatBigNumber(BigNumber.from(resultValue ?? 0), tokenDecimals),
+      value: formatBigNumber(BigNumber.from(resultValue ?? 0), tokenDecimals)
     }
   }
 }
