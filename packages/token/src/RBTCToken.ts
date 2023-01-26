@@ -4,7 +4,7 @@ import constants from '@ethersproject/constants'
 import { ContractTransaction } from '@ethersproject/contracts'
 import { BaseToken, IToken, ITransferOptions, TokenType } from './BaseToken'
 
-class RBTCToken extends BaseToken implements IToken {
+export class RBTCToken extends BaseToken implements IToken {
   public chainId: number
   public address: string
 
@@ -42,5 +42,3 @@ class RBTCToken extends BaseToken implements IToken {
     })
   }
 }
-
-export { RBTCToken }
