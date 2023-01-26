@@ -1,0 +1,34 @@
+{
+  "name": "@rsksmart/rif-wallet-abi-enhancer",
+  "version": "1.0.0-beta.1",
+  "description": "ABI Enhancer Library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/rsksmart"
+  },
+  "scripts": {
+    "test": "npx jest --collect-coverage --verbose",
+    "build": "tsc"
+  },
+  "keywords": [
+    "rsk",
+    "rif"
+  ],
+  "author": "IOV Labs S.A",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
+  },
+  "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/abstract-provider": "^5.7.0",
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
+    "@ethersproject/bytes": "^5.7.0"
+  }
+}
