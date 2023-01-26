@@ -1,6 +1,6 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import constants from '@ethersproject/constants'
+import { AddressZero } from '@ethersproject/constants'
 import { ContractTransaction } from '@ethersproject/contracts'
 import { BaseToken, IToken, ITransferOptions, TokenType } from './BaseToken'
 
@@ -12,7 +12,7 @@ export class RBTCToken extends BaseToken implements IToken {
     super(signer, symbol, logo)
 
     this.chainId = chainId
-    this.address = constants.AddressZero
+    this.address = AddressZero
   }
 
   public getType(): TokenType {
