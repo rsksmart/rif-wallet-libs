@@ -1,9 +1,9 @@
 import { getSigner, TEST_TOKEN_DECIMALS } from './utils'
-import { BigNumber } from 'ethers'
 import { tenPow } from '../src/BaseToken'
 import { ERC20Token } from '../src/ERC20Token'
 import { ERC20__factory } from '../src/types'
 import { ERC677__factory } from '../src/types/factories/ERC677__factory'
+import { BigNumber } from '@ethersproject/bignumber'
 
 describe('ERC20 token', () => {
   let erc20Token: ERC20Token | null = null

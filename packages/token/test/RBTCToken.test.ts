@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 import { RBTCToken } from '../src/RBTCToken'
 import { getSigner, TEST_CHAIN_ID, TEST_TOKEN_DECIMALS } from './utils'
 
