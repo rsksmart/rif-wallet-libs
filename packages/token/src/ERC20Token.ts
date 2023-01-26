@@ -1,4 +1,6 @@
-import { BigNumber, BigNumberish, ContractTransaction, Signer } from 'ethers'
+import { Signer } from '@ethersproject/abstract-signer'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { ContractTransaction } from '@ethersproject/contracts'
 import { BaseToken, IToken, ITransferOptions, TokenType } from './BaseToken'
 import { ERC20 as ERC20Type, ERC20__factory } from './types'
 

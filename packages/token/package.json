@@ -26,7 +26,11 @@
   },
   "homepage": "https://github.com/rsksmart/rif-wallet-libs#readme",
   "dependencies": {
-    "ethers": "^5.4.7"
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
+    "@ethersproject/constants": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0"
   },
   "devDependencies": {
     "@rsksmart/rif-wallet-test-lib": "^1.0.0",

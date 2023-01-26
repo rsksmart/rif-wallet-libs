@@ -1,10 +1,7 @@
-import {
-  BigNumber,
-  BigNumberish,
-  constants,
-  ContractTransaction,
-  Signer,
-} from 'ethers'
+import { Signer } from '@ethersproject/abstract-signer'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import constants from '@ethersproject/constants'
+import { ContractTransaction } from '@ethersproject/contracts'
 import { BaseToken, IToken, ITransferOptions, TokenType } from './BaseToken'
 
 class RBTCToken extends BaseToken implements IToken {

@@ -1,4 +1,6 @@
-import { BigNumber, BigNumberish, Signer, ContractTransaction } from 'ethers'
+import { Signer } from '@ethersproject/abstract-signer'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { ContractTransaction } from '@ethersproject/contracts'
 
 export type TokenType = 'erc20' | 'rbtc'
 
