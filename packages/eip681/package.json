@@ -26,9 +26,6 @@
   },
   "homepage": "https://github.com/rsksmart/rif-wallet#readme",
   "dependencies": {
-    "ethers": "^5.4.7"
-  },
-  "devDependencies": {
     "@rsksmart/rsk-utils": "^1.1.0"
   }
 }
