@@ -2,7 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
+import { Interface } from "@ethersproject/abi";
+import { Signer } from "@ethersproject/abstract-signer"
+import { Contract, ContractFactory, Overrides } from "@ethersproject/contracts"
 import { Provider, TransactionRequest } from "@ethersproject/providers";
 import type { ERC20, ERC20Interface } from "../ERC20";
 
@@ -326,7 +328,7 @@ export class ERC20__factory extends ContractFactory {
   static readonly bytecode = _bytecode;
   static readonly abi = _abi;
   static createInterface(): ERC20Interface {
-    return new utils.Interface(_abi) as ERC20Interface;
+    return new Interface(_abi) as ERC20Interface;
   }
   static connect(address: string, signerOrProvider: Signer | Provider): ERC20 {
     return new Contract(address, _abi, signerOrProvider) as ERC20;

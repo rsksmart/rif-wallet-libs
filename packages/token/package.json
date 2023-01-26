@@ -30,7 +30,8 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
-    "@ethersproject/contracts": "^5.7.0"
+    "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2"
   },
   "devDependencies": {
     "@rsksmart/rif-wallet-test-lib": "^1.0.0",
