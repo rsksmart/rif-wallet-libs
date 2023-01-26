@@ -26,7 +26,7 @@ import ethers from 'ethers'
 const privateKey = ''
 
 const relayConfig = {
-  factoryAddress: '',
+  smartWalletFactoryAddress: '',
   relayVerifierAddress: '',
   deployVerifierAddress: '',
   relayServer: ''

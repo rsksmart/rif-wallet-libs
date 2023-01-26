@@ -1,4 +1,4 @@
-import { TypedDataSigner } from '@ethersproject/abstract-signer'
+import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import {
   TransactionResponse,
   TransactionRequest
@@ -6,12 +6,15 @@ import {
 import axios, { AxiosResponse } from 'axios'
 import { BigNumber, ethers } from 'ethers'
 
-import { SmartWallet, SmartWalletFactory } from '../'
+import { SmartWallet } from '../SmartWallet'
 import {
   RelayPayment,
   RelayRequest,
   DeployRequest,
-  RifRelayConfig
+  RifRelayConfig,
+  ServerConfig,
+  ServerEstimate,
+  Address
 } from './types'
 import {
   dataTypeFields,
@@ -21,10 +24,14 @@ import {
   validUntilTime,
   ZERO_ADDRESS
 } from './helpers'
+import ERC20Abi from './erc20abi.json'
+
+import { SmartWalletFactory } from '../SmartWalletFactory'
 
 export class RIFRelaySDK {
-  chainId: number
   sdkConfig: RifRelayConfig
+  serverConfig: ServerConfig | null
+
   smartWallet: SmartWallet
   smartWalletFactory: SmartWalletFactory
   smartWalletAddress: string
@@ -34,7 +41,6 @@ export class RIFRelaySDK {
   constructor (
     smartWallet: SmartWallet,
     smartWalletFactory: SmartWalletFactory,
-    chainId: number,
     eoaAddress: string,
     sdkConfig: RifRelayConfig
   ) {
@@ -46,31 +52,41 @@ export class RIFRelaySDK {
     this.provider = smartWallet.signer.provider
     this.smartWallet = smartWallet
     this.smartWalletFactory = smartWalletFactory
-    this.chainId = chainId
     this.sdkConfig = sdkConfig
 
     this.smartWalletAddress = smartWallet.smartWalletAddress
     this.eoaAddress = eoaAddress
+
+    this.serverConfig = null
   }
 
   static async create (
-    smartWallet: SmartWallet,
-    smartWalletFactory: SmartWalletFactory,
+    signer: Signer,
     rifRelayConfig: RifRelayConfig
   ) {
+    const smartWalletFactory = await SmartWalletFactory.create(signer, rifRelayConfig.smartWalletFactoryAddress)
+    const smartWalletAddress = await smartWalletFactory.getSmartWalletAddress()
+    const smartWallet = await SmartWallet.create(signer, smartWalletAddress)
+
     const eoaAddress = await smartWallet.signer.getAddress()
-    const chainId = await smartWallet.signer.getChainId()
 
     return new RIFRelaySDK(
       smartWallet,
       smartWalletFactory,
-      chainId,
       eoaAddress,
       rifRelayConfig
     )
   }
 
-  createRelayRequest = async (
+  private getServerConfig = (): Promise<ServerConfig> =>
+    axios
+      .get(`${this.sdkConfig.relayServer}/getaddr`)
+      .then(
+        (response: AxiosResponse<ServerConfig>) =>
+          (this.serverConfig = response.data)
+      )
+
+  private createRelayRequest = async (
     tx: TransactionRequest,
     payment: RelayPayment
   ): Promise<RelayRequest> => {
@@ -90,7 +106,7 @@ export class RIFRelaySDK {
 
     const relayRequest: RelayRequest = {
       request: {
-        relayHub: this.sdkConfig.relayHubAddress,
+        relayHub: this.serverConfig!.relayHubAddress,
         from: this.eoaAddress,
         to: tx.to || ZERO_ADDRESS,
         data: tx.data?.toString() || '0x',
@@ -104,7 +120,7 @@ export class RIFRelaySDK {
       },
       relayData: {
         gasPrice: gasPrice.toString(),
-        feesReceiver: this.sdkConfig.feesReceiver,
+        feesReceiver: this.serverConfig!.feesReceiver,
         callForwarder: this.smartWalletAddress,
         callVerifier: this.sdkConfig.relayVerifierAddress
       }
@@ -113,7 +129,7 @@ export class RIFRelaySDK {
     return relayRequest
   }
 
-  signRelayRequest = async (
+  private signRelayRequest = async (
     relayRequest: RelayRequest | DeployRequest,
     isDeployRequest: boolean
   ): Promise<string> => {
@@ -121,7 +137,7 @@ export class RIFRelaySDK {
       isDeployRequest
         ? this.smartWalletFactory.address
         : this.smartWalletAddress,
-      this.chainId
+      parseInt(this.serverConfig!.chainId, 10)
     )
 
     const types = dataTypeFields(isDeployRequest)
@@ -142,6 +158,10 @@ export class RIFRelaySDK {
     tx: TransactionRequest,
     payment: RelayPayment
   ): Promise<TransactionResponse> => {
+    if (Object.is(this.serverConfig, null)) {
+      await this.getServerConfig()
+    }
+
     const request = await this.createRelayRequest(tx, payment)
     const signature = await this.signRelayRequest(request, false)
 
@@ -151,7 +171,7 @@ export class RIFRelaySDK {
   }
 
   // The following methods are for deploying a smart wallet
-  createDeployRequest = async (
+  private createDeployRequest = async (
     payment: RelayPayment
   ): Promise<DeployRequest> => {
     const gasPrice = await this.provider.getGasPrice()
@@ -163,7 +183,7 @@ export class RIFRelaySDK {
 
     const deployRequest: DeployRequest = {
       request: {
-        relayHub: this.sdkConfig.relayHubAddress,
+        relayHub: this.serverConfig!.relayHubAddress,
         from: this.eoaAddress,
         to: ZERO_ADDRESS,
         value: '0',
@@ -178,7 +198,7 @@ export class RIFRelaySDK {
       },
       relayData: {
         gasPrice: gasPrice.toString(),
-        feesReceiver: this.sdkConfig.feesReceiver,
+        feesReceiver: this.serverConfig!.feesReceiver,
         callForwarder: this.smartWalletFactory.address,
         callVerifier: this.sdkConfig.deployVerifierAddress
       }
@@ -190,8 +210,11 @@ export class RIFRelaySDK {
   async sendDeployTransaction (
     payment: RelayPayment
   ): Promise<TransactionResponse> {
-    const deployRequest = await this.createDeployRequest(payment)
+    if (Object.is(this.serverConfig, null)) {
+      await this.getServerConfig()
+    }
 
+    const deployRequest = await this.createDeployRequest(payment)
     const signature = await this.signRelayRequest(deployRequest, true)
 
     return this.sendRequestToRelay(deployRequest, signature).then(
@@ -199,60 +222,86 @@ export class RIFRelaySDK {
     )
   }
 
-  sendRequestToRelay = (
+  private prepareDataForServer = (
+    request: RelayRequest | DeployRequest,
+    signature: string
+  ) =>
+    this.provider
+      .getTransactionCount(this.serverConfig!.relayWorkerAddress)
+      .then((relayMaxNonce: number) => {
+        const metadata = {
+          relayHubAddress: this.serverConfig!.relayHubAddress,
+          relayMaxNonce: relayMaxNonce + MAX_RELAY_NONCE_GAP,
+          signature
+        }
+
+        const relayRequest = {
+          ...request,
+          request: {
+            ...request.request,
+            validUntilTime: request.request.validUntilTime.toString()
+          }
+        }
+
+        return { metadata, relayRequest }
+      })
+
+  private sendRequestToRelay = (
     request: RelayRequest | DeployRequest,
     signature: string
   ) =>
     new Promise<string>((resolve, reject) =>
-      this.provider
-        .getTransactionCount(this.sdkConfig.relayWorkerAddress)
-        .then((relayMaxNonce: number) => {
-          const metadata = {
-            relayHubAddress: this.sdkConfig.relayHubAddress,
-            relayMaxNonce: relayMaxNonce + MAX_RELAY_NONCE_GAP,
-            signature
-          }
-
-          const modifyType = {
-            ...request,
-            request: {
-              ...request.request,
-              validUntilTime: request.request.validUntilTime.toString()
+      this.prepareDataForServer(request, signature).then(relayRequest =>
+        axios
+          .post(`${this.sdkConfig.relayServer}/relay`, relayRequest)
+          .then((response: AxiosResponse) => {
+            if (response.data.error) {
+              return reject(response.data.error)
             }
-          }
 
-          return axios
-            .post(`${this.sdkConfig.relayServer}/relay`, {
-              relayRequest: modifyType,
-              metadata
-            })
-            .then((response: AxiosResponse) => {
-              if (response.data.error) {
-                return reject(response.data.error)
-              }
-
-              // if okay...
-              resolve(response.data.transactionHash)
-            })
-            .catch(reject)
-        })
+            // if okay...
+            return resolve(response.data.transactionHash)
+          })
+          .catch(reject)
+      )
     )
 
-  // @todo: We will get this value from the RIF relay server, but for now, we will overpay
-  // to ensure transaction goes through:
-  estimateTransactionCost = () => Promise.resolve(BigNumber.from(0))
+  estimateTransactionCost = async (
+    tx: TransactionRequest,
+    tokenContract: Address
+  ): Promise<BigNumber> => {
+    if (Object.is(this.serverConfig, null)) {
+      await this.getServerConfig()
+    }
+
+    const payment = {
+      tokenContract,
+      tokenAmount: BigNumber.from(0)
+    }
+    const relayRequest = await this.createRelayRequest(tx, payment)
+    const signature = await this.signRelayRequest(relayRequest, false)
+    const request = await this.prepareDataForServer(relayRequest, signature)
+
+    return await axios
+      .post(`${this.sdkConfig.relayServer}/estimate`, request)
+      .then((response: AxiosResponse<ServerEstimate>) =>
+        BigNumber.from(response.data.requiredTokenAmount)
+      )
+  }
 
   // the cost to send the token payment from the smartwallet to the fee collector:
-  estimateTokenTransferCost = (tokenAddress: string, feeAmount: BigNumber) => {
-    const feesReceiver = this.sdkConfig.feesReceiver.replace('0x', '')
-    const feeHex = feeAmount.toHexString().replace('0x', '')
-    const amount = String(feeHex).padStart(64 - feeHex.length, '0')
+  private estimateTokenTransferCost = async (
+    tokenAddress: Address,
+    feeAmount: BigNumber
+  ): Promise<string> => {
+    const erc20 = new ethers.Contract(
+      tokenAddress,
+      ERC20Abi,
+      this.smartWallet.signer
+    )
 
-    return this.smartWallet.signer
-      .estimateGas({
-        to: tokenAddress.toLowerCase(),
-        data: `0xa9059cbb000000000000000000000000${feesReceiver}${amount}`
-      })
-      .then((estGas: BigNumber) => estGas.toString())
+    return erc20.estimateGas
+      .transfer(this.serverConfig!.feesReceiver, feeAmount)
+      .then((est: BigNumber) => est.toString())
   }
 }
