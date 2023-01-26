@@ -1,5 +1,4 @@
 import contractMapTestNet from '@rsksmart/rsk-testnet-contract-metadata'
-
 import { IToken } from './BaseToken'
 import { ERC20Token } from './ERC20Token'
 import { RBTCToken } from './RBTCToken'
@@ -7,7 +6,6 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { ITokenWithBalance } from './types/ITokenWithBalance'
 
 const contractMapMainnet = require('@rsksmart/rsk-contract-metadata')
-
 const rbtcMainnet = require('./assets/RBTC-mainnet.svg')
 const rbtcTestnet = require('./assets/RBTC-testnet.svg')
 const tokenMainnet = require('./assets/token-mainnet.svg')
