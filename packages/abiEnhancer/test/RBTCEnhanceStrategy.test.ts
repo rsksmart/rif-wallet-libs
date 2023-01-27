@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Signer } from '@ethersproject/abstract-signer'
 
-import { RBTCEnhanceStrategy } from '../src/strategies/RBTCEnhanceStrategy'
-import { getSigner } from '../../../../testLib/utils'
+import { RBTCEnhanceStrategy } from '../src'
+import { getSigner } from './utils'
 
 describe('RBTC Enhance Strategy', () => {
   const initialBalance = BigNumber.from(100)

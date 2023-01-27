@@ -1,6 +1,8 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
 import { ERC20EnhanceStrategy, OtherEnhanceStrategy, RBTCEnhanceStrategy } from './strategies'
+import { BytesLike } from '@ethersproject/bytes'
+import { BigNumberish } from '@ethersproject/bignumber'
 
 export interface FunctionParameter {
   name: string
@@ -12,8 +14,8 @@ export interface EnhancedResult {
   to?: string
   symbol?: string
   balance?: string
-  value?: string
-  data?: string
+  value?: BigNumberish
+  data?: BytesLike | string
   functionName?: string
   functionParameters?: FunctionParameter[]
 }

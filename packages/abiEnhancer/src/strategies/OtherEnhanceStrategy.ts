@@ -122,7 +122,7 @@ export class OtherEnhanceStrategy implements EnhanceStrategy {
     for (let index = 0; index < parametersNames.length; index++) {
       const name = parametersNames[index]
       const value = parametersValues[index]
-      result.functionParameters.push({ name, value })
+      result.functionParameters?.push({ name, value })
     }
 
     return result

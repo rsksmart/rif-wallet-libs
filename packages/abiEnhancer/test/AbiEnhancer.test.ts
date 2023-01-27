@@ -1,9 +1,20 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Signer } from '@ethersproject/abstract-signer'
+import { getAllTokens, makeRBTCToken } from '@rsksmart/rif-wallet-token'
 
-import { AbiEnhancer } from '../src/AbiEnhancer'
-import { deployTestTokens, getSigner } from '../../../testLib/utils'
-import * as tokenMetadata from '../token/tokenMetadata'
+import { AbiEnhancer } from '../src'
+import { deployTestTokens, getSigner } from './utils'
+
+// Mock entire module
+jest.mock('@rsksmart/rif-wallet-token', () => {
+  // @ts-ignore
+  const original = jest.requireActual('@rsksmart/rif-wallet-token')
+  return {
+    ...original,
+    getAllTokens: jest.fn(),
+    makeRBTCToken: jest.fn()
+  }
+})
 
 describe('Abi Enhancer', () => {
   let transactionRequest = {
@@ -20,10 +31,10 @@ describe('Abi Enhancer', () => {
     const { firstErc20Token, secondErc20Token, rbtcToken } =
       await deployTestTokens(accountSigner)
 
-    tokenMetadata.getAllTokens = jest.fn(() =>
-      Promise.resolve([firstErc20Token, secondErc20Token]),
-    )
-    tokenMetadata.makeRBTCToken = jest.fn(() => rbtcToken)
+    // @ts-ignore
+    getAllTokens.mockImplementation(async () => Promise.resolve([firstErc20Token, secondErc20Token]))
+    // @ts-ignore
+    makeRBTCToken.mockImplementation(() => rbtcToken)
 
     transactionRequest = { ...transactionRequest, to: firstErc20Token.address }
   })

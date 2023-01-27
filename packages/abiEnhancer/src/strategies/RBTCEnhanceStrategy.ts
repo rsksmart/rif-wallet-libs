@@ -3,7 +3,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { formatBigNumber } from '../formatBigNumber'
 import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
-import { makeRBTCToken } from 'lib/token/tokenMetadata'
+import { makeRBTCToken } from '@rsksmart/rif-wallet-token'
 
 export class RBTCEnhanceStrategy implements EnhanceStrategy {
   public async parse (
