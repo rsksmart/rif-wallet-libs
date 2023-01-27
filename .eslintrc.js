@@ -4,19 +4,16 @@ module.exports = {
     es2021: true,
     'jest/globals': true
   },
-  extends: [
-    'standard'
-  ],
+  extends: ['standard'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 12,
     sourceType: 'module'
   },
-  plugins: [
-    '@typescript-eslint',
-    'jest'
-  ],
+  plugins: ['@typescript-eslint', 'jest'],
   rules: {
-    camelcase: 'off'
+    camelcase: 'off',
+    'space-before-function-paren': 'off',
+    'comma-dangle': 'off'
   }
 }
