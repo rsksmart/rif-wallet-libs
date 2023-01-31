@@ -3,7 +3,7 @@ import { TypedDataSigner } from '@ethersproject/abstract-signer'
 import { RelayPayment } from '@rsksmart/rif-relay-light-sdk'
 import { BigNumberish, BytesLike } from 'ethers'
 
-export type IRequest<Type, Payload, ReturnType, ConfirmArgs> = {
+export type IncomingRequest<Type, Payload, ReturnType, ConfirmArgs> = {
   type: Type,
   payload: Payload
   returnType: ReturnType
@@ -17,14 +17,14 @@ export type OverriddableTransactionOptions = {
   tokenPayment?: RelayPayment
 }
 
-export type SendTransactionRequest = IRequest<
+export type SendTransactionRequest = IncomingRequest<
   'sendTransaction',
   [transactionRequest: TransactionRequest],
   TransactionResponse,
   Partial<OverriddableTransactionOptions>
 >
 
-export type SignMessageRequest = IRequest<
+export type SignMessageRequest = IncomingRequest<
   'signMessage',
   [message: BytesLike],
   string,
@@ -33,7 +33,7 @@ export type SignMessageRequest = IRequest<
 
 export type SignTypedDataArgs = Parameters<TypedDataSigner['_signTypedData']>
 
-export type SignTypedDataRequest = IRequest<
+export type SignTypedDataRequest = IncomingRequest<
   'signTypedData',
   SignTypedDataArgs,
   string,
