@@ -20,7 +20,7 @@ jobs:
 
     - run: npm i
     - run: npm run setup
-    - run: npm run build
+    - run: npm run build-assets
 
     - run: npx ganache-cli &
     - run: npm test

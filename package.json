@@ -4,7 +4,7 @@
     "setup": "npx lerna bootstrap",
     "build": "npx lerna exec tsc",
     "ganache": "npx ganache-cli",
-    "test": "npx jest --collect-coverage --verbose",
+    "test": "npx lerna run test",
     "lint": "npx eslint . --ext .js,.ts",
     "build-assets": "npx lerna run build",
     "graph": "npx nx graph"
