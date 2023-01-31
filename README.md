@@ -21,7 +21,7 @@
 
 - `@rsksmart/rif-wallet-kms` - Key Management System
 - `@rsksmart/rif-wallet-core` - RIF Relay + `onRequest` integration
-- `@rsksmart/rif-wallet-test-lib` - testing library
+- `@rsksmart/rif-wallet-test-lib` - testing library (deprecated)
 - `@rsksmart/rif-wallet-bitcoin` - Bitcoin Library to send bitcoin, create addresses and much more.
 - `@rsksmart/rif-relay-light-sdk` - Light version of the RIF Relay client SDK used in the wallet.
 - `@rsksmart/rif-wallet-token` - RIF Wallet Token

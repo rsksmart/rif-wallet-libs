@@ -1,13 +1,14 @@
-import { Signer, BytesLike, constants, BigNumber } from 'ethers'
-import { resolveProperties } from 'ethers/lib/utils'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
-import { TypedDataSigner } from '@ethersproject/abstract-signer'
-import { defineReadOnly } from '@ethersproject/properties'
+import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
+import { defineReadOnly, resolveProperties } from '@ethersproject/properties'
+import { BigNumber } from '@ethersproject/bignumber'
+import { BytesLike } from '@ethersproject/bytes'
 
 import { RIFRelaySDK, RelayPayment, RifRelayConfig, SmartWalletFactory, SmartWallet } from '@rsksmart/rif-relay-light-sdk'
 
 import { filterTxOptions } from './filterTxOptions'
 import { OverriddableTransactionOptions, Request, OnRequest, SignTypedDataArgs } from './types'
+import { HashZero, AddressZero } from './constants'
 
 type RequestType = Request['type']
 type RequestPayload = Request['payload']
@@ -104,7 +105,7 @@ export class RIFWallet extends Signer implements TypedDataSigner {
         ...overriddenOptions || {}
       }
 
-      return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data ?? constants.HashZero, txOptions)
+      return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data ?? HashZero, txOptions)
     }) as CreateDoRequestOnConfirm
   ) as (transactionRequest: TransactionRequest) => Promise<TransactionResponse>
 
@@ -121,8 +122,8 @@ export class RIFWallet extends Signer implements TypedDataSigner {
   estimateGas (transaction: TransactionRequest): Promise<BigNumber> {
     return resolveProperties(this.checkTransaction(transaction))
       .then((tx: TransactionRequest) => this.smartWallet.estimateDirectExecute(
-        tx.to || constants.AddressZero,
-        tx.data || constants.HashZero,
+        tx.to || AddressZero,
+        tx.data || HashZero,
         filterTxOptions(tx)
       ))
   }
