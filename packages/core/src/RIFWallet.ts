@@ -1,50 +1,14 @@
-import { Signer, BigNumberish, BytesLike, constants, BigNumber } from 'ethers'
 import { TransactionRequest, Provider, TransactionResponse, BlockTag } from '@ethersproject/abstract-provider'
-import { TypedDataSigner } from '@ethersproject/abstract-signer'
-import { defineReadOnly } from '@ethersproject/properties'
-import { resolveProperties } from 'ethers/lib/utils'
-import { SmartWalletFactory } from './SmartWalletFactory'
-import { SmartWallet } from './SmartWallet'
+import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
+import { defineReadOnly, resolveProperties } from '@ethersproject/properties'
+import { BigNumber } from '@ethersproject/bignumber'
+import { BytesLike } from '@ethersproject/bytes'
+
+import { RIFRelaySDK, RelayPayment, RifRelayConfig, SmartWalletFactory, SmartWallet } from '@rsksmart/rif-relay-light-sdk'
+
 import { filterTxOptions } from './filterTxOptions'
-
-type IRequest<Type, Payload, ReturnType, ConfirmArgs> = {
-  type: Type,
-  payload: Payload
-  returnType: ReturnType
-  confirm: (args?: ConfirmArgs) => Promise<void>
-  reject: (reason?: any) => void
-}
-
-export type OverriddableTransactionOptions = {
-  gasLimit: BigNumberish,
-  gasPrice: BigNumberish,
-}
-
-export type SendTransactionRequest = IRequest<
-  'sendTransaction',
-  [transactionRequest: TransactionRequest],
-  TransactionResponse,
-  Partial<OverriddableTransactionOptions>
->
-
-export type SignMessageRequest = IRequest<
-  'signMessage',
-  [message: BytesLike],
-  string,
-  void
->
-
-type SignTypedDataArgs = Parameters<TypedDataSigner['_signTypedData']>
-
-export type SignTypedDataRequest = IRequest<
-  'signTypedData',
-  SignTypedDataArgs,
-  string,
-  void
->
-
-export type Request = SendTransactionRequest | SignMessageRequest | SignTypedDataRequest
-export type OnRequest = (request: Request) => void
+import { OverriddableTransactionOptions, Request, OnRequest, SignTypedDataArgs } from './types'
+import { HashZero, AddressZero } from './constants'
 
 type RequestType = Request['type']
 type RequestPayload = Request['payload']
@@ -63,13 +27,15 @@ type CreateDoRequest = (
 export class RIFWallet extends Signer implements TypedDataSigner {
   smartWallet: SmartWallet
   smartWalletFactory: SmartWalletFactory
+  rifRelaySdk: RIFRelaySDK
   onRequest: OnRequest
 
-  private constructor (smartWalletFactory: SmartWalletFactory, smartWallet: SmartWallet, onRequest: OnRequest) {
+  private constructor (sdk: RIFRelaySDK, onRequest: OnRequest) {
     super()
-    this.smartWalletFactory = smartWalletFactory
-    this.smartWallet = smartWallet
+    this.smartWalletFactory = sdk.smartWalletFactory
+    this.smartWallet = sdk.smartWallet
     this.onRequest = onRequest
+    this.rifRelaySdk = sdk
 
     defineReadOnly(this, 'provider', this.smartWallet.signer.provider) // ref: https://github.com/ethers-io/ethers.js/blob/b1458989761c11bf626591706aa4ce98dae2d6a9/packages/abstract-signer/src.ts/index.ts#L130
   }
@@ -82,11 +48,10 @@ export class RIFWallet extends Signer implements TypedDataSigner {
     return this.smartWallet.smartWalletAddress
   }
 
-  static async create (signer: Signer, smartWalletFactoryAddress: string, onRequest: OnRequest) {
-    const smartWalletFactory = await SmartWalletFactory.create(signer, smartWalletFactoryAddress)
-    const smartWalletAddress = await smartWalletFactory.getSmartWalletAddress()
-    const smartWallet = await SmartWallet.create(signer, smartWalletAddress)
-    return new RIFWallet(smartWalletFactory, smartWallet, onRequest)
+  static async create (signer: Signer, onRequest: OnRequest, rifRelayConfig: RifRelayConfig) {
+    const sdk = await RIFRelaySDK.create(signer, rifRelayConfig)
+
+    return new RIFWallet(sdk, onRequest)
   }
 
   getAddress = (): Promise<string> => Promise.resolve(this.smartWallet.smartWalletAddress)
@@ -112,15 +77,35 @@ export class RIFWallet extends Signer implements TypedDataSigner {
     })
   }
 
+  deploySmartWallet = (payment: RelayPayment) => this.rifRelaySdk.sendDeployTransaction(payment)
+
   sendTransaction = this.createDoRequest(
     'sendTransaction',
     (([transactionRequest]: [TransactionRequest], overriddenOptions?: Partial<OverriddableTransactionOptions>) => {
+      // check if attempting to send rBTC from the EOA account and paying with gas:
+      if (!transactionRequest.data && !!transactionRequest.value && !!transactionRequest.to && !overriddenOptions?.tokenPayment) {
+        return this.smartWallet.signer.sendTransaction({
+          to: transactionRequest.to.toLowerCase(),
+          value: transactionRequest.value
+        })
+      }
+
+      // check if paying with tokens:
+      if (overriddenOptions && overriddenOptions.tokenPayment) {
+        return this.rifRelaySdk.sendRelayTransaction({
+          ...transactionRequest,
+          gasPrice: overriddenOptions.gasPrice,
+          gasLimit: overriddenOptions.gasLimit,
+        }, overriddenOptions.tokenPayment)
+      }
+
+      // direct execute transaction paying gas with EOA wallet:
       const txOptions = {
         ...filterTxOptions(transactionRequest),
         ...overriddenOptions || {}
       }
 
-      return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data ?? constants.HashZero, txOptions)
+      return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data ?? HashZero, txOptions)
     }) as CreateDoRequestOnConfirm
   ) as (transactionRequest: TransactionRequest) => Promise<TransactionResponse>
 
@@ -137,15 +122,13 @@ export class RIFWallet extends Signer implements TypedDataSigner {
   estimateGas (transaction: TransactionRequest): Promise<BigNumber> {
     return resolveProperties(this.checkTransaction(transaction))
       .then((tx: TransactionRequest) => this.smartWallet.estimateDirectExecute(
-        tx.to || constants.AddressZero,
-        tx.data || constants.HashZero,
+        tx.to || AddressZero,
+        tx.data || HashZero,
         filterTxOptions(tx)
       ))
   }
 
-  connect = (provider: Provider): Signer => {
+  connect = (_provider: Provider): Signer => {
     throw new Error('Method not implemented')
   }
 }
-
-export { TransactionRequest }

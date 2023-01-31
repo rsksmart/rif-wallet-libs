@@ -7,24 +7,28 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/rsksmart"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rsksmart/rif-wallet.git"
+    "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
   },
   "keywords": [
     "rsk",
     "rif"
   ],
-  "author": "",
+  "author": "Jesse Clark @ IOV Labs",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rsksmart/rif-wallet/issues"
+    "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
-  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs/packages/code/#readme",
   "dependencies": {
-    "ethers": "^5.4.7"
-  },
-  "devDependencies": {
-    "@rsksmart/rif-wallet-test-lib": "^1.0.0"
+    "@ethersproject/abstract-provider": "^5.7.0",
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
+    "@ethersproject/bytes": "^5.7.0",
+    "@rsksmart/rif-relay-light-sdk": "*"
   }
 }
