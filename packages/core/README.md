@@ -5,14 +5,18 @@ RIF Wallet Core is the wallet library that the connects the UI with the RIF Rela
 ## Basic Usage:
 
 ```ts
-signer: Signer, smartWalletFactoryAddress: string, onRequest: OnRequest, rifRelayConfig: RifRelayConfig
-
 // Create a signer:
+const privateKey = ''
 const provider = new ethers.providers.JsonRpcProvider('https://public-node.testnet.rsk.co')
 const signer = new ethers.Wallet(privateKey, provider)
 
-// SmartWallet Factory Address:
-const factoryAddress = '0x....'
+// RIF Relay Config:
+const rifRelayConfig = {
+  smartWalletFactoryAddress: '0x...'
+  relayVerifierAddress: '0x...'
+  deployVerifierAddress: '0x...'
+  relayServer: 'http://localhost:3000'
+}
 
 // On Request function
 const onRequest = (request: IncomingRequest) => {
@@ -29,7 +33,17 @@ const onRequest = (request: IncomingRequest) => {
   return Promise.Resolve(reject('User Rejects'))
 }
 
-const rifWallet = await RIFWallet.create(signer, factoryAddress, onRequest)
+const rifWallet = await RIFWallet.create(signer, onRequest, rifRelayConfig)
+
+// invoke things as normal:
+rifWallet.signTransaction(tx) // sends via RIF Relay
+rifWallet.estimateGas(tx)
+rifWallet.signMessage('hello world!')
+rifWallet.signTypedData(typedDataObject)
+
+// RIF Relay specific things:
+rifWallet.deploySmartWallet(payment)
+
 ```
 
 ## `onRequest` function
