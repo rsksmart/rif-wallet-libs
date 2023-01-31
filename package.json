@@ -5,7 +5,9 @@
     "build": "npx lerna exec tsc",
     "ganache": "npx ganache-cli",
     "test": "npx jest --collect-coverage --verbose",
-    "lint": "npx eslint . --ext .js,.ts"
+    "lint": "npx eslint . --ext .js,.ts",
+    "build-assets": "npx lerna run build",
+    "graph": "npx nx graph"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
