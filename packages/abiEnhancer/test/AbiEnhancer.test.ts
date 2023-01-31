@@ -65,7 +65,7 @@ describe('Abi Enhancer', () => {
     expect(result).not.toBeNull()
     expect(result?.from).toBe(transactionRequest.from)
     expect(result?.to).toBe(transactionRequest.to)
-    expect(result?.balance).toBe('1000')
+    expect(result?.balance).toBe('100')
     expect(result?.value).toBe('0.001')
   })
 
@@ -83,7 +83,7 @@ describe('Abi Enhancer', () => {
     expect(result).not.toBeNull()
     expect(result?.from).toBe(transactionRequest.from)
     expect(result?.to).toBe('0xNotExist')
-    expect(result?.balance).toBe('1000')
+    expect(result?.balance).toBe('100')
     expect(result?.value).toBe('0.001')
   })
 })
