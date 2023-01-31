@@ -30,7 +30,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/bytes": "^5.7.0",
-    "@rsksmart/rif-wallet-token": "1.0.0",
+    "@rsksmart/rif-wallet-token": "*",
     "axios": "^0.27.2"
   },
   "devDependencies": {
