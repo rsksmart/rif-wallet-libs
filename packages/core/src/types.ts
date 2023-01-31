@@ -1,7 +1,8 @@
 import { TransactionRequest, TransactionResponse } from '@ethersproject/abstract-provider'
 import { TypedDataSigner } from '@ethersproject/abstract-signer'
+import { BigNumberish } from '@ethersproject/bignumber'
+import { BytesLike } from '@ethersproject/bytes'
 import { RelayPayment } from '@rsksmart/rif-relay-light-sdk'
-import { BigNumberish, BytesLike } from 'ethers'
 
 export type IncomingRequest<Type, Payload, ReturnType, ConfirmArgs> = {
   type: Type,
