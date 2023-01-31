@@ -35,9 +35,10 @@ const parseSignature = (signatures: string) => {
   const INSIDE_PARENTHESIS = 1
 
   const firstSignature = signatures.split(';')[0]
-
-  const parametersExpression = new RegExp(/\((.*)\)/).exec(firstSignature)
-  const nameExpression = new RegExp(/(.*)\(/).exec(firstSignature)
+  const regexParameters = /\((.*)\)/
+  const regexNameExpression = /(.*)\(/
+  const parametersExpression = new RegExp(regexParameters).exec(firstSignature)
+  const nameExpression = new RegExp(regexNameExpression).exec(firstSignature)
 
   const parameters: string[] = parametersExpression
     ? parametersExpression[INSIDE_PARENTHESIS].split(',')
@@ -55,8 +56,8 @@ const parseSignatureWithParametersNames = (
   const INSIDE_PARENTHESIS = 1
 
   const firstSignature = signaturesWithNames.split(';')[0]
-
-  const parametersExpression = new RegExp(/\((.*)\)/).exec(firstSignature)
+  const regexParameters = /\((.*)\)/
+  const parametersExpression = new RegExp(regexParameters).exec(firstSignature)
 
   const parametersNames: string[] = parametersExpression
     ? parametersExpression[INSIDE_PARENTHESIS].split(',')
@@ -65,7 +66,7 @@ const parseSignatureWithParametersNames = (
   for (let index = 0; index < parametersNames.length; index++) {
     parametersNames[index] = parametersNames[index]
       .replace(`${parametersTypes[index]} `, '')
-      .replace(/[_-\s]/g, '')
+      .replace(/[_\-\s]/g, '')
   }
 
   return parametersNames
