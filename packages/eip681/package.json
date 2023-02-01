@@ -25,9 +25,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rsksmart/rif-wallet/issues"
+    "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
-  "homepage": "https://github.com/rsksmart/rif-wallet#readme",
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs#readme",
   "dependencies": {
     "@rsksmart/rsk-utils": "^1.1.0"
   }
