@@ -1,6 +1,6 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WalletConnectAdapter } from '../WalletConnectAdapter'
+import { WalletConnectAdapter } from '../src'
 import { JsonRpcProvider } from '@ethersproject/providers'
 
 export const testJsonRpcProvider = new JsonRpcProvider('http://localhost:8545')
