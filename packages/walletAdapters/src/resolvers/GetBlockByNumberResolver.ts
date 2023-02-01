@@ -10,7 +10,6 @@ export class GetBlockByNumberResolver implements IResolver {
     this.signer = signer
   }
 
-  // @ts-ignore
   async resolve(blockOrTag: BlockTag) {
     return this.signer.provider?.getBlock(blockOrTag)
   }

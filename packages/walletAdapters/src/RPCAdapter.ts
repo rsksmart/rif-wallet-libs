@@ -1,6 +1,6 @@
 export interface IResolver {
   methodName: string
-  resolve: (params: any[]) => Promise<any> // TODO: this is not correct?
+  resolve: (params: any[] | any) => Promise<any> // TODO: this is not correct?
   // There are many different types this param can be
 }
 
