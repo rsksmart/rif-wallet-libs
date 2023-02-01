@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
-  "homepage": "https://github.com/rsksmart/rif-wallet-libs#readme",
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs/packages/eip681#readme",
   "dependencies": {
     "@rsksmart/rsk-utils": "^1.1.0"
   }
