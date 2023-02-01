@@ -20,10 +20,10 @@
   ],
   "author": "Jesse Clark @ IOV Labs",
   "license": "ISC",
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs/packages/core#readme",
   "bugs": {
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
-  "homepage": "https://github.com/rsksmart/rif-wallet-libs/packages/code/#readme",
   "dependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
     "@ethersproject/abstract-signer": "^5.7.0",
