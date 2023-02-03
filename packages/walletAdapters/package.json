@@ -1,0 +1,40 @@
+{
+  "name": "@rsksmart/rif-wallet-adapters",
+  "version": "1.0.0",
+  "description": "Wallet Adapters for everyday use",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/rsksmart"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "npx jest --collect-coverage --verbose"
+  },
+  "keywords": [
+    "rsk",
+    "rif"
+  ],
+  "author": "IOV Labs",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
+  },
+  "homepage": "https://github.com/rsksmart/rif-wallet-libs/packages/walletAdapters#readme",
+  "bugs": {
+    "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
+  },
+  "dependencies": {
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
+    "@ethersproject/units": "^5.7.0",
+    "@ethersproject/bytes": "^5.7.0",
+    "@ethersproject/strings": "^5.7.0",
+    "@rsksmart/rif-wallet-core": "*"
+  }
+}

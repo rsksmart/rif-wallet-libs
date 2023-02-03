@@ -1,12 +1,15 @@
 {
   "name": "@rsksmart/rif-wallet-core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "RIF Wallet Core",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "scripts": {
+    "build": "tsc"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/rsksmart"
   },

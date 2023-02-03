@@ -1,0 +1,18 @@
+import { Signer } from '@ethersproject/abstract-signer'
+import { IResolver } from '../RPCAdapter'
+
+export class GetTransactionByHashResolver implements IResolver {
+  private signer: Signer
+  public methodName = 'eth_getTransactionByHash'
+
+  constructor(signer: Signer) {
+    this.signer = signer
+  }
+
+  async resolve(params: any[]) {
+    // TODO: fix the type!
+    const txHash = params[0]
+
+    return this.signer.provider?.getTransaction(txHash)
+  }
+}
