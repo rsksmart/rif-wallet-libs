@@ -1,6 +1,6 @@
 # Wallet Adapters
 
-This library handles wallet adapters
+This handles wallet adapters specifically connecting the Ethers.js signer instance in the RIF Wallet to WalletConnect and an Injecteced Browser. The WalletConnect implementation is currently implemented but the injected browser is not.
 
 ## Install:
 
