@@ -35,5 +35,8 @@
     "bip32": "^2.0.6",
     "bitcoin-address-validation": "^2.2.1",
     "bitcoinjs-lib": "^6.0.2"
+  },
+  "devDependencies": {
+    "ts-jest": "^29.0.5"
   }
 }

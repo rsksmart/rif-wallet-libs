@@ -1,6 +1,6 @@
 import { BitcoinNetwork } from '../src'
 import * as constants from '../src/constants'
-import { bip39Instance } from './testSharedConfig'
+import { mnemonic } from './testSharedConfig'
 
 describe('BitcoinNetwork tests', function () {
   describe('Mnemonic rely truly issue ghost elder intact kiss provide project hobby thumb thing blur slender true', () => {
@@ -8,7 +8,7 @@ describe('BitcoinNetwork tests', function () {
       const bitcoinInstance = new BitcoinNetwork(
         constants.NETWORK_ID.BITCOIN_TESTNET,
         [constants.BIP_ID.BIP84],
-        bip39Instance
+        mnemonic
       )
 
       it('Should be the networkId BITCOIN_TESTNET', () => {

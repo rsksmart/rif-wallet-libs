@@ -1,12 +1,12 @@
 import { BitcoinNetwork } from '../src'
-import { bip39Instance, mnemonic } from './testSharedConfig'
+import { mnemonic } from './testSharedConfig'
 import * as constants from '../src/constants'
 
 describe('BIP Class tests', () => {
   const bitcoinNetworkInstance = new BitcoinNetwork(
     constants.NETWORK_ID.BITCOIN_TESTNET,
     [constants.BIP_ID.BIP84, constants.BIP_ID.BIP44],
-    bip39Instance
+    mnemonic
   )
 
   describe(`BIP84 tests with mnemonic ${mnemonic}`, () => {
