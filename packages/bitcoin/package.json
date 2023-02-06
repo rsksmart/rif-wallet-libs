@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-bitcoin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bitcoin Library to send bitcoin, receive bitcoin by generating an address, and much more.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
