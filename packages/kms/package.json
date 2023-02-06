@@ -2,6 +2,10 @@
   "name": "@rsksmart/rif-wallet-kms",
   "version": "1.0.1",
   "description": "RIF Wallet Key Management System",
+  "scripts": {
+    "test": "npx jest --collect-coverage --verbose",
+    "build": "tsc"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
