@@ -8,7 +8,7 @@ export class BitcoinNetwork {
   networkName!: string
   coinTypeNumber!: number
   bipNames: { [key: string]: BIP } = {}
-  BIP39Instance: BIP39
+  seed: Buffer
   BIPFactory: typeof createBipFactory
   bips: Array<BIP> = []
   balance = 0
@@ -19,12 +19,12 @@ export class BitcoinNetwork {
   constructor (
     networkId: string,
     bipNames: Array<string> = [],
-    BIP39Instance: BIP39,
+    mnemonic: string,
     bipFactory = createBipFactory
   ) {
     this.networkId = networkId
     this.contractAddress = networkId
-    this.BIP39Instance = BIP39Instance
+    this.seed = new BIP39(mnemonic).seed
     this.BIPFactory = bipFactory
     this.setCoinConfiguration()
     if (bipNames.length === 0) {
@@ -46,7 +46,7 @@ export class BitcoinNetwork {
       const BIPInstance = this.BIPFactory(
         this,
         bipName,
-        this.BIP39Instance.seed
+        this.seed
       )
       this.bipNames[counter] = BIPInstance
       this.bipNames[bipName] = BIPInstance
