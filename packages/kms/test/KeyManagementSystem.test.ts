@@ -4,10 +4,10 @@ import * as testCase from './testCase'
 
 describe('KeyManagementSystem', () => {
   describe('creation', () => {
-    test('24 words mnemonic', () => {
+    test('12 words mnemonic', () => {
       const kms = KeyManagementSystem.create()
 
-      expect(kms.mnemonic.split(' ')).toHaveLength(24)
+      expect(kms.mnemonic.split(' ')).toHaveLength(12)
     })
 
     test('generates different mnemonics', () => {
