@@ -4,7 +4,7 @@ import {
   TransactionRequest
 } from '@ethersproject/abstract-provider'
 import axios, { AxiosResponse } from 'axios'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, BigNumberish, ethers } from 'ethers'
 
 import { SmartWallet } from '../SmartWallet'
 import {
@@ -86,11 +86,24 @@ export class RIFRelaySDK {
           (this.serverConfig = response.data)
       )
 
+  private checkTransactionGasPrice = (gasPrice?: BigNumberish):string => {
+    if (!gasPrice) {
+      return this.serverConfig!.minGasPrice
+    }
+
+    // if the transactions gasPrice is less than the servers:
+    if (BigNumber.from(gasPrice).lt(BigNumber.from(this.serverConfig!.minGasPrice))) {
+      return this.serverConfig!.minGasPrice
+    }
+
+    return gasPrice.toString()
+  }
+
   private createRelayRequest = async (
     tx: TransactionRequest,
     payment: RelayPayment
   ): Promise<RelayRequest> => {
-    const gasPrice = tx.gasPrice ? tx.gasPrice.toString() : this.serverConfig!.minGasPrice
+    const gasPrice = this.checkTransactionGasPrice(tx.gasPrice)
     const nonce = await this.smartWallet.nonce()
     const tokenGas = await this.estimateTokenTransferCost(
       payment.tokenContract,
