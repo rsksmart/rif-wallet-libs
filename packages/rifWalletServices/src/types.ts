@@ -107,17 +107,17 @@ export interface AuthenticationTokensType {
   refreshToken: string
 }
 
-export type onSetInternetCredentials = (
+export type onSetInternetCredentials<Options, Return> = (
   server: string,
   username: string,
   password: string,
-  options?: unknown
-) => Promise<void>
+  options?: Options
+) => Return
 
-export type onResetInternetCredentials = (
+export type onResetInternetCredentials<Options, Return> = (
   server: string,
-  options?: unknown
-) => Promise<void>
+  options?: Options
+) => Return
 
 export type onSaveSignUp = (value: { signup: boolean }) => void
 
@@ -127,18 +127,18 @@ export type onDeleteSignUp = () => void
 
 export type onGetSignUp = () => any
 
-export type RifWalletAuthServiceDependencies = {
-  onSetInternetCredentials: onSetInternetCredentials,
+export type RifWalletAuthServiceDependencies<Options, onSetInternetCredentialsReturn, onResetInternetCredentialsReturn> = {
+  onSetInternetCredentials: onSetInternetCredentials<Options, onSetInternetCredentialsReturn>,
   onSaveSignUp: onSaveSignUp,
   onHasSignUp: onHasSignUp,
   onDeleteSignUp: onDeleteSignUp,
   onGetSignUp: onGetSignUp,
-  onResetInternetCredentials: onResetInternetCredentials,
+  onResetInternetCredentials: onResetInternetCredentials<Options, onResetInternetCredentialsReturn>,
   authClient: string
 }
 
-export type RifWalletFetcherDependencies = {
-  onSetInternetCredentials: onSetInternetCredentials,
+export type RifWalletFetcherDependencies<Options, onSetInternetCredentialsReturn> = {
+  onSetInternetCredentials: onSetInternetCredentials<Options, onSetInternetCredentialsReturn>,
   defaultChainId: string
   resultsLimit?: number
 }
@@ -196,10 +196,10 @@ export interface IServiceInitEvent {
   balances: ITokenWithBalance[]
 }
 
-export interface IRifWalletServicesSocket extends EventEmitter {
+export interface IRifWalletServicesSocket<Options, onSetInternetCredentialsReturn> extends EventEmitter {
   connect: (
     wallet: RIFWallet,
-    fetcher: RifWalletServicesFetcher,
+    fetcher: RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn>,
   ) => Promise<void>
 
   disconnect(): void
@@ -220,14 +220,14 @@ export interface CacheInterface {
   has: (key: string) => boolean
 }
 
-export type OnBeforeInitFunction = (encryptionKey: string, currentInstance: RifWalletServicesSocket) => void
+export type OnBeforeInitFunction<Options, onSetInternetCredentialsReturn> = (encryptionKey: string, currentInstance: RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>) => void
 
 export type EnhanceTransactionFunction = (transaction: IApiTransaction, wallet: RIFWallet) => Promise<EnhancedResult | null>
 
-export type RifWalletSocketDependencies = {
+export type RifWalletSocketDependencies<Options, onSetInternetCredentialsReturn> = {
   onFilterOutRepeatedTransactions: FilterOutRepeatedTransactionsFunction
   cache: CacheInterface
-  onBeforeInit: OnBeforeInitFunction
+  onBeforeInit: OnBeforeInitFunction<Options, onSetInternetCredentialsReturn>
   onEnhanceTransaction: EnhanceTransactionFunction
   encryptionKeyMessageToSign: string
 }
