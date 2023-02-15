@@ -12,21 +12,21 @@ import {
   onResetInternetCredentials
 } from './types'
 
-export class RifWalletServicesAuth {
+export class RifWalletServicesAuth<Options, onSetInternetCredentialsReturn, onResetInternetCredentialsReturn> {
   axiosInstance: AxiosInstance
   wallet: RIFWallet
   did: string
-  onSetInternetCredentials: onSetInternetCredentials
+  onSetInternetCredentials: onSetInternetCredentials<Options, onSetInternetCredentialsReturn>
   onSaveSignUp: onSaveSignUp
   onHasSignUp: onHasSignUp
   onDeleteSignUp: onDeleteSignUp
   onGetSignUp: onGetSignUp
-  onResetInternetCredentials: onResetInternetCredentials
+  onResetInternetCredentials: onResetInternetCredentials<Options, onResetInternetCredentialsReturn>
   authClient: string
   constructor(
     axiosInstance: AxiosInstance,
     wallet: RIFWallet,
-    dependencies: RifWalletAuthServiceDependencies
+    dependencies: RifWalletAuthServiceDependencies<Options, onSetInternetCredentialsReturn, onResetInternetCredentialsReturn>
   ) {
     this.axiosInstance = axiosInstance
     this.wallet = wallet

@@ -8,18 +8,18 @@ import { BitcoinTransactionContainerType, UnspentTransactionType } from '@rsksma
 import axios, { AxiosInstance } from 'axios'
 import createAuthRefreshInterceptor from 'axios-auth-refresh'
 
-export class RifWalletServicesFetcher implements RIFWalletServicesFetcherInterface {
+export class RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn> implements RIFWalletServicesFetcherInterface {
   axiosInstance: AxiosInstance
   accessToken = ''
   refreshToken = ''
-  onSetInternetCredentials: onSetInternetCredentials
+  onSetInternetCredentials: onSetInternetCredentials<Options, onSetInternetCredentialsReturn>
   defaultChainId: string
   resultsLimit: number
   constructor(
     axiosInstance: AxiosInstance,
     accessToken: string,
     refreshToken: string,
-    dependencies: RifWalletFetcherDependencies
+    dependencies: RifWalletFetcherDependencies<Options, onSetInternetCredentialsReturn>
   ) {
     this.axiosInstance = axiosInstance
     this.accessToken = accessToken

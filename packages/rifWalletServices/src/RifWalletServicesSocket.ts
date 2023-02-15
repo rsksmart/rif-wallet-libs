@@ -13,18 +13,18 @@ import {
   RifWalletSocketDependencies
 } from './types'
 
-export class RifWalletServicesSocket
+export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
   extends EventEmitter
-  implements IRifWalletServicesSocket {
+  implements IRifWalletServicesSocket<Options, onSetInternetCredentialsReturn> {
   private rifWalletServicesUrl: string
   private abiEnhancer: IAbiEnhancer
   private socket: Socket | undefined
   onFilterOutRepeatedTransactions: FilterOutRepeatedTransactionsFunction
   onEnhanceTransaction: EnhanceTransactionFunction
   cache: CacheInterface
-  onBeforeInit: OnBeforeInitFunction
+  onBeforeInit: OnBeforeInitFunction<Options, onSetInternetCredentialsReturn>
   encryptionKeyMessageToSign: string
-  constructor(rifWalletServicesUrl: string, abiEnhancer: IAbiEnhancer, dependencies: RifWalletSocketDependencies) {
+  constructor(rifWalletServicesUrl: string, abiEnhancer: IAbiEnhancer, dependencies: RifWalletSocketDependencies<Options, onSetInternetCredentialsReturn>) {
     super()
 
     this.abiEnhancer = abiEnhancer
@@ -39,7 +39,7 @@ export class RifWalletServicesSocket
   private async init(
     wallet: RIFWallet,
     encryptionKey: string,
-    fetcher: RifWalletServicesFetcher,
+    fetcher: RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn>,
   ) {
     this.onBeforeInit(encryptionKey, this)
 
@@ -97,7 +97,7 @@ export class RifWalletServicesSocket
     })
   }
 
-  async connect(wallet: RIFWallet, fetcher: RifWalletServicesFetcher) {
+  async connect(wallet: RIFWallet, fetcher: RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn>) {
     try {
       const encriptionKey = await wallet.smartWallet.signer.signMessage(
         this.encryptionKeyMessageToSign,
