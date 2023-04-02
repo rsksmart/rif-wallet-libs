@@ -1,9 +1,11 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
-import { ERC20EnhanceStrategy, OtherEnhanceStrategy, RBTCEnhanceStrategy } from './strategies'
+import {
+  ERC20EnhanceStrategy, OtherEnhanceStrategy,
+  RBTCEnhanceStrategy, RifRelayEnhanceStrategy
+} from './strategies'
 import { BytesLike } from '@ethersproject/bytes'
 import { BigNumberish } from '@ethersproject/bignumber'
-import { RifRelayEnhanceStrategy } from './strategies/RifRelayEnhanceStrategy'
 
 export interface FunctionParameter {
   name: string
