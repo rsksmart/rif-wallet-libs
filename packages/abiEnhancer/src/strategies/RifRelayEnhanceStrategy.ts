@@ -21,7 +21,10 @@ interface ForwardRequestStruct {
   data: BytesLike
 };
 interface ForwardRequest {
-  request: ForwardRequestStruct
+  request: ForwardRequestStruct,
+  relayData: {
+    callForwarder: string
+  }
 }
 
 export class RifRelayEnhanceStrategy implements EnhanceStrategy {
@@ -36,12 +39,11 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
       return null
     }
 
-    const { request: { from, tokenContract, tokenAmount, data } } = tx.relayRequest as ForwardRequest
+    const { request: { tokenContract, tokenAmount, data }, relayData: { callForwarder } } = tx.relayRequest as ForwardRequest
     const tokens = await getAllTokens(signer)
     const tokenFounded = tokens.find(
       x => x.address.toLowerCase() === tokenContract.toLowerCase()
     ) as ERC20Token
-
     if (!tokenFounded) {
       return null
     }
@@ -54,7 +56,7 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     )
 
     return {
-      from,
+      from: callForwarder,
       to: decodedTo,
       symbol: tokenFounded.symbol,
       value: formatBigNumber(BigNumber.from(decodedValue ?? 0), tokenDecimals),
