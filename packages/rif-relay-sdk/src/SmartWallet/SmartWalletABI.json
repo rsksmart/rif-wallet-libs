@@ -1,4 +1,9 @@
 [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
   {
     "inputs": [],
     "name": "DATA_VERSION_HASH",
@@ -42,13 +47,21 @@
     "type": "function"
   },
   {
-    "inputs": [
+      "inputs": [],
+      "name": "domainSeparator",
+      "outputs": [
       {
         "internalType": "bytes32",
-        "name": "domainSeparator",
+          "name": "",
         "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
       },
       {
+      "inputs": [
+        {
         "internalType": "bytes32",
         "name": "suffixData",
         "type": "bytes32"
@@ -101,6 +114,11 @@
             "type": "uint256"
           },
           {
+              "internalType": "uint256",
+              "name": "validUntilTime",
+              "type": "uint256"
+            },
+            {
             "internalType": "bytes",
             "name": "data",
             "type": "bytes"
@@ -111,6 +129,11 @@
         "type": "tuple"
       },
       {
+          "internalType": "address",
+          "name": "feesReceiver",
+          "type": "address"
+        },
+        {
         "internalType": "bytes",
         "name": "sig",
         "type": "bytes"
@@ -133,6 +156,19 @@
     "type": "function"
   },
   {
+      "inputs": [],
+      "name": "getOwner",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "owner",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
     "inputs": [
       {
         "internalType": "address",
@@ -244,11 +280,6 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "domainSeparator",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
         "name": "suffixData",
         "type": "bytes32"
       },
@@ -300,6 +331,11 @@
             "type": "uint256"
           },
           {
+              "internalType": "uint256",
+              "name": "validUntilTime",
+              "type": "uint256"
+            },
+            {
             "internalType": "bytes",
             "name": "data",
             "type": "bytes"

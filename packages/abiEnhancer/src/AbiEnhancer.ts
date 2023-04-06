@@ -1,6 +1,9 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
-import { ERC20EnhanceStrategy, OtherEnhanceStrategy, RBTCEnhanceStrategy } from './strategies'
+import {
+  ERC20EnhanceStrategy, OtherEnhanceStrategy,
+  RBTCEnhanceStrategy, RifRelayEnhanceStrategy
+} from './strategies'
 import { BytesLike } from '@ethersproject/bytes'
 import { BigNumberish } from '@ethersproject/bignumber'
 
@@ -15,6 +18,8 @@ export interface EnhancedResult {
   symbol?: string
   balance?: string
   value?: BigNumberish
+  feeSymbol?: string
+  feeValue?: BigNumberish
   data?: BytesLike | string
   functionName?: string
   functionParameters?: FunctionParameter[]
@@ -41,6 +46,7 @@ export class AbiEnhancer implements IAbiEnhancer {
     this.strategies = [
       new ERC20EnhanceStrategy(),
       new OtherEnhanceStrategy(),
+      new RifRelayEnhanceStrategy(),
       new RBTCEnhanceStrategy()
     ]
   }
