@@ -86,8 +86,7 @@ export class RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn> i
 
     createAuthRefreshInterceptor(this.axiosInstance, refreshAuthLogic, {
       shouldRefresh: error => {
-        const message = error.response?.data as string
-        return message.includes('expired')
+        return error.response?.status === 401
       },
     })
   }
