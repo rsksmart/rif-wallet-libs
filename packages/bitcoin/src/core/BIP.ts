@@ -1,6 +1,5 @@
 import { PathDerivator } from './PathDerivator'
 import { BIP_DATA, COIN_BIPS } from '../constants'
-import { BitcoinNetwork } from './BitcoinNetwork'
 import { AddressFactory } from '../factories/AddressFactory'
 import { getPaymentInstance } from '../factories/getPaymentInstance'
 import {
@@ -15,7 +14,6 @@ import { Network } from 'bitcoinjs-lib'
 import { DefaultFetcher } from './DefaultFetcher'
 
 export class BIP {
-  network: BitcoinNetwork
   PathDerivator: PathDerivator
   bipId: string
   bipNumber: number
@@ -34,26 +32,26 @@ export class BIP {
   payment!: IPayment
   options: BIPOptionsType
   constructor (
-    networkInstance: BitcoinNetwork,
+    coinTypeNumber: number,
+    networkId: string,
     bipId: string,
     seed: Buffer,
     options: BIPOptionsType = {}
   ) {
-    this.network = networkInstance
     this.bipId = bipId
     this.bipNumber = BIP_DATA[bipId].number
     this.bipName = BIP_DATA[bipId].name
     this.paymentType = 'p2wpkh' // For escalation use constants.ts and implement a paymentType constant there for all BIPs
     this.PathDerivator = new PathDerivator(
       this.bipNumber,
-      this.network.coinTypeNumber,
+      coinTypeNumber,
       0
     )
     this.options = options
     this.setOptions()
-    this.setBIP32RootKey(seed)
+    this.setBIP32RootKey(seed, networkId)
     this.setAccount()
-    this.setNetworkInfo()
+    this.setNetworkInfo(networkId)
     this.setPaymentInstance()
     this.setAddressFactory()
   }
@@ -63,10 +61,10 @@ export class BIP {
     this.paymentFactory = this.options.paymentFactory || getPaymentInstance
   }
 
-  setBIP32RootKey (seed: Buffer) {
+  setBIP32RootKey (seed: Buffer, networkId: string) {
     this.bip32Root = fromSeed(
       seed,
-      COIN_BIPS[this.network.networkId][this.bipId]
+      COIN_BIPS[networkId][this.bipId]
     )
   }
 
@@ -77,8 +75,8 @@ export class BIP {
     this.accountPublicKey = this.account.neutered().toBase58()
   }
 
-  setNetworkInfo () {
-    this.networkInfo = COIN_BIPS[this.network.networkId][this.bipId]
+  setNetworkInfo (networkId: string) {
+    this.networkInfo = COIN_BIPS[networkId][this.bipId]
   }
 
   setPaymentInstance () {

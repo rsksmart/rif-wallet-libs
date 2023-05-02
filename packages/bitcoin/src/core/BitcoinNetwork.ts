@@ -3,6 +3,10 @@ import { NETWORK_DATA } from '../constants'
 import { BIP } from './BIP'
 import { createBipFactory } from '../factories/BIPFactory'
 
+export interface BitcoinNetworkOptions {
+  runUpdateBalanceOnInitialization: true
+}
+
 export class BitcoinNetwork {
   networkId: string
   networkName!: string
@@ -20,7 +24,8 @@ export class BitcoinNetwork {
     networkId: string,
     bipNames: Array<string> = [],
     mnemonic: string,
-    bipFactory = createBipFactory
+    bipFactory = createBipFactory,
+    options: BitcoinNetworkOptions = { runUpdateBalanceOnInitialization: true }
   ) {
     this.networkId = networkId
     this.contractAddress = networkId
@@ -31,7 +36,9 @@ export class BitcoinNetwork {
       throw new Error('You must define a BIP for this Network')
     }
     this.setBips(bipNames)
-    this.updateBalance()
+    if (options.runUpdateBalanceOnInitialization) {
+      this.updateBalance()
+    }
   }
 
   setCoinConfiguration () {
@@ -44,7 +51,8 @@ export class BitcoinNetwork {
     let counter = 0
     for (const bipName of bips) {
       const BIPInstance = this.BIPFactory(
-        this,
+        this.coinTypeNumber,
+        this.networkId,
         bipName,
         this.seed
       )
