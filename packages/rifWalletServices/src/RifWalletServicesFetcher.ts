@@ -86,8 +86,7 @@ export class RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn> i
 
     createAuthRefreshInterceptor(this.axiosInstance, refreshAuthLogic, {
       shouldRefresh: error => {
-        const message = error.response?.data as string
-        return message.includes('expired')
+        return error.response?.status === 401
       },
     })
   }
@@ -130,10 +129,16 @@ export class RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn> i
   fetchEventsByAddress = (smartAddress: string) =>
     this.axiosInstance.get(`/address/${smartAddress}/events`)
 
-  fetchTokensByAddress = (address: string): Promise<ITokenWithBalance[]> =>
-    this.axiosInstance
-      .get<ITokenWithBalance[]>(`/address/${address.toLowerCase()}/tokens`)
-      .then(response => response.data)
+    fetchTokensByAddress = async (address: string): Promise<ITokenWithBalance[]> => {
+      for (let i = 0; i < 2; i++) {
+        try {
+          const response = await this.axiosInstance
+            .get<ITokenWithBalance[]>(`/address/${address.toLowerCase()}/tokens`)
+          return response.data
+        } catch { }
+      }
+      throw new Error('Please restart the app')
+    }
 
   fetchDapps = (): Promise<IRegisteredDappsGroup[]> =>
     this.axiosInstance
