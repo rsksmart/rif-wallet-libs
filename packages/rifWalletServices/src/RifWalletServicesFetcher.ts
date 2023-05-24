@@ -129,15 +129,22 @@ export class RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn> i
   fetchEventsByAddress = (smartAddress: string) =>
     this.axiosInstance.get(`/address/${smartAddress}/events`)
 
-  fetchTokensByAddress = async (address: string): Promise<ITokenWithBalance[]> => {
-    for (let i = 0; i < 2; i++) {
-      try {
-        const response = await this.axiosInstance
-          .get<ITokenWithBalance[]>(`/address/${address.toLowerCase()}/tokens`)
-        return response.data
-      } catch { }
+  private async retryPromise<T>(promise: Promise<T>, nthTry: number = 1) : Promise<T> {
+    try {
+      const data = await promise
+      return data
+    } catch (e) {
+      if (nthTry === 1) {
+        return Promise.reject(e)
+      }
+      return this.retryPromise(promise, nthTry - 1)
     }
-    throw new Error('Please restart the app')
+  }
+
+  fetchTokensByAddress = async (address: string): Promise<ITokenWithBalance[]> => {
+    const promise = this.axiosInstance.get<ITokenWithBalance[]>(`/address/${address.toLowerCase()}/tokens`)
+    const response = await this.retryPromise(promise, 2)
+    return response.data
   }
 
   fetchDapps = (): Promise<IRegisteredDappsGroup[]> =>
