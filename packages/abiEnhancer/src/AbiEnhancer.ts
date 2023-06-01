@@ -44,9 +44,9 @@ export class AbiEnhancer implements IAbiEnhancer {
 
   constructor () {
     this.strategies = [
+      new RifRelayEnhanceStrategy(),
       new ERC20EnhanceStrategy(),
       new OtherEnhanceStrategy(),
-      new RifRelayEnhanceStrategy(),
       new RBTCEnhanceStrategy()
     ]
   }

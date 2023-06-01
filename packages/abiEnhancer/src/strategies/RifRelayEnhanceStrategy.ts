@@ -5,7 +5,8 @@ import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { BytesLike } from '@ethersproject/bytes'
 import { formatBigNumber } from '../formatBigNumber'
-import { ERC20__factory, ERC20Token, getAllTokens } from '@rsksmart/rif-wallet-token'
+import { ERC20Token, getAllTokens } from '@rsksmart/rif-wallet-token'
+import { Interface } from '@ethersproject/abi'
 
 interface ForwardRequestStruct {
   relayHub: string
@@ -39,7 +40,7 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
       return null
     }
 
-    const { request: { tokenContract, tokenAmount, data }, relayData: { callForwarder } } = tx.relayRequest as ForwardRequest
+    const { request: { tokenContract, tokenAmount, data, to }, relayData: { callForwarder } } = tx.relayRequest as ForwardRequest
     const tokens = await getAllTokens(signer)
     const tokenFounded = tokens.find(
       x => x.address.toLowerCase() === tokenContract.toLowerCase()
@@ -49,11 +50,27 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     }
     const tokenDecimals = await tokenFounded.decimals()
     const currentBalance = await tokenFounded.balance()
-    const abiErc20Interface = ERC20__factory.createInterface()
-    const [decodedTo, decodedValue] = abiErc20Interface.decodeFunctionData(
-      'transfer',
-      data
-    )
+    const commonMethods = [
+      'function transfer(address recipient, uint256 amount) external returns (bool)',
+      'function commit(bytes32 commitment) external',
+      'function transferAndCall(address receiver, uint amount, bytes data)'
+    ]
+    const commonInterface = new Interface(commonMethods)
+    let decodedTo, decodedValue
+    if (data.toString().startsWith(commonInterface.getSighash('transfer'))) {
+      const [recipient, amount] = commonInterface.decodeFunctionData('transfer', data)
+      decodedTo = recipient
+      decodedValue = amount
+    } else if (data.toString().startsWith(commonInterface.getSighash('commit'))) {
+      commonInterface.decodeFunctionData('commit', data)
+      decodedTo = to
+    } else if (data.toString().startsWith(commonInterface.getSighash('transferAndCall'))) {
+      const [recipient, amount] = commonInterface.decodeFunctionData('transferAndCall', data)
+      decodedTo = recipient
+      decodedValue = amount
+    } else {
+      return null
+    }
 
     return {
       from: callForwarder,
