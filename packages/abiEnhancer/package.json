@@ -30,6 +30,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/bytes": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
     "@rsksmart/rif-wallet-token": "*",
     "@rsksmart/rif-relay-light-sdk": "*",
     "axios": "^0.27.2"
