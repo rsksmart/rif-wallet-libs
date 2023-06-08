@@ -5,8 +5,7 @@ import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { BytesLike } from '@ethersproject/bytes'
 import { formatBigNumber } from '../formatBigNumber'
-import { ERC20Token, getAllTokens } from '@rsksmart/rif-wallet-token'
-import { Interface } from '@ethersproject/abi'
+import { findToken } from './ERC20EnhanceStrategy'
 
 interface ForwardRequestStruct {
   relayHub: string
@@ -29,6 +28,12 @@ interface ForwardRequest {
 }
 
 export class RifRelayEnhanceStrategy implements EnhanceStrategy {
+  private strategies: EnhanceStrategy[]
+
+  constructor(strategies: EnhanceStrategy[]) {
+    this.strategies = strategies
+  }
+
   public async parse(signer: Signer, transactionRequest: TransactionRequest) : Promise<EnhancedResult | null> {
     if (!transactionRequest.data) {
       return null
@@ -41,42 +46,30 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     }
 
     const { request: { tokenContract, tokenAmount, data, to }, relayData: { callForwarder } } = tx.relayRequest as ForwardRequest
-    const tokens = await getAllTokens(signer)
-    const tokenFounded = tokens.find(
-      x => x.address.toLowerCase() === tokenContract.toLowerCase()
-    ) as ERC20Token
+
+    const tokenFounded = await findToken(signer, tokenContract)
     if (!tokenFounded) {
       return null
     }
     const tokenDecimals = await tokenFounded.decimals()
     const currentBalance = await tokenFounded.balance()
-    const commonMethods = [
-      'function transfer(address recipient, uint256 amount) external returns (bool)',
-      'function commit(bytes32 commitment) external',
-      'function transferAndCall(address receiver, uint amount, bytes data)'
-    ]
-    const commonInterface = new Interface(commonMethods)
-    let decodedTo, decodedValue
-    if (data.toString().startsWith(commonInterface.getSighash('transfer'))) {
-      const [recipient, amount] = commonInterface.decodeFunctionData('transfer', data)
-      decodedTo = recipient
-      decodedValue = amount
-    } else if (data.toString().startsWith(commonInterface.getSighash('commit'))) {
-      commonInterface.decodeFunctionData('commit', data)
-      decodedTo = to
-    } else if (data.toString().startsWith(commonInterface.getSighash('transferAndCall'))) {
-      const [recipient, amount] = commonInterface.decodeFunctionData('transferAndCall', data)
-      decodedTo = recipient
-      decodedValue = amount
-    } else {
-      return null
+    let result
+    for (const strategy of this.strategies) {
+      result = await strategy.parse(signer, {
+        from: transactionRequest.from,
+        data,
+        value: transactionRequest.value,
+        to: tokenContract
+      })
+      if (result) {
+        break
+      }
     }
-
     return {
+      to: result?.to || to,
       from: callForwarder,
-      to: decodedTo,
       symbol: tokenFounded.symbol,
-      value: formatBigNumber(BigNumber.from(decodedValue ?? 0), tokenDecimals),
+      value: result?.value || 0,
       balance: formatBigNumber(currentBalance, tokenDecimals),
       feeSymbol: tokenFounded.symbol,
       feeValue: formatBigNumber(BigNumber.from(tokenAmount), tokenDecimals)
