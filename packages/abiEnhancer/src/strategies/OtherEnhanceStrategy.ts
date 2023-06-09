@@ -4,6 +4,12 @@ import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
 import axios from 'axios'
 import { hexDataSlice, BytesLike } from '@ethersproject/bytes'
 import { defaultAbiCoder } from '@ethersproject/abi/lib'
+import { Interface } from '@ethersproject/abi'
+import { Contract } from '@ethersproject/contracts'
+import FaucetAbi from './FaucetABI.json'
+import { ERC20Token, getAllTokens } from '@rsksmart/rif-wallet-token'
+import { formatBigNumber } from '../formatBigNumber'
+import { BigNumber } from '@ethersproject/bignumber'
 
 const ethList4BytesServiceUrl =
   'https://raw.githubusercontent.com/ethereum-lists/4bytes/master/signatures'
@@ -72,9 +78,41 @@ const parseSignatureWithParametersNames = (
   return parametersNames
 }
 
+const handleFaucet = async (
+  hexSig: string,
+  transactionRequest: TransactionRequest,
+  signer: Signer) => {
+  const faucetMethod = ['function dispense(address to)']
+  const faucetInterface = new Interface(faucetMethod)
+  if (faucetInterface.getSighash('dispense') === `0x${hexSig}`) {
+    const faucetContract = new Contract(transactionRequest.to!, FaucetAbi, signer)
+    const [to] = faucetInterface.decodeFunctionData('dispense', transactionRequest.data!)
+    const tokenContract = await faucetContract.tokenContract()
+    const value = await faucetContract.dispenseValue()
+    const tokens = await getAllTokens(signer)
+    const tokenFounded = tokens.find(
+      x => x.address.toLowerCase() === tokenContract.toLowerCase()
+    ) as ERC20Token
+    if (!tokenFounded) {
+      return null
+    }
+    const tokenDecimals = await tokenFounded.decimals()
+    const feeSymbol = (await signer.getChainId()) === 31 ? 'TRBTC' : 'RBTC'
+    return {
+      ...transactionRequest,
+      from: transactionRequest.to,
+      to,
+      value: formatBigNumber(BigNumber.from(value ?? 0), tokenDecimals),
+      symbol: tokenFounded.symbol,
+      feeSymbol
+    }
+  }
+  return null
+}
+
 export class OtherEnhanceStrategy implements EnhanceStrategy {
   public async parse (
-    _: Signer,
+    signer: Signer,
     transactionRequest: TransactionRequest
   ): Promise<EnhancedResult | null> {
     if (!transactionRequest.data) {
@@ -82,6 +120,34 @@ export class OtherEnhanceStrategy implements EnhanceStrategy {
     }
 
     const hexSig = getHexSig(transactionRequest.data)
+    const faucet = await handleFaucet(hexSig, transactionRequest, signer)
+    if (faucet) {
+      return faucet
+    }
+
+    const commonMethods = [
+      'function commit(bytes32 commitment) external',
+      'function transferAndCall(address receiver, uint amount, bytes data)'
+    ]
+    const commonInterface = new Interface(commonMethods)
+    let decodedTo, decodedValue
+    const data = transactionRequest.data
+    if (data.toString().startsWith(commonInterface.getSighash('commit'))) {
+      const [params] = commonInterface.decodeFunctionData('commit', data)
+      return {
+        ...transactionRequest,
+        functionParameters: params
+      }
+    } else if (data.toString().startsWith(commonInterface.getSighash('transferAndCall'))) {
+      const [recipient, amount] = commonInterface.decodeFunctionData('transferAndCall', data)
+      decodedTo = recipient
+      decodedValue = amount
+      return {
+        ...transactionRequest,
+        to: decodedTo,
+        value: formatBigNumber(BigNumber.from(decodedValue ?? 0), 18)
+      }
+    }
 
     let signaturesFounded: string[] | null = []
     try {

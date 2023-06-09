@@ -1,6 +1,6 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { deployTestTokens, getSigner } from './utils'
-import { RifRelayEnhanceStrategy } from '../src'
+import { ERC20EnhanceStrategy, OtherEnhanceStrategy, RifRelayEnhanceStrategy } from '../src'
 import { BigNumber } from '@ethersproject/bignumber'
 import { getAllTokens, makeRBTCToken } from '@rsksmart/rif-wallet-token'
 
@@ -62,7 +62,7 @@ describe('Rif Relay Enhance Strategy', () => {
     makeRBTCToken.mockImplementation(() => rbtcToken)
   })
   it('should return transaction info enhanced', async () => {
-    const strategy = new RifRelayEnhanceStrategy()
+    const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
     if (accountSigner) {
       const result = await strategy.parse(accountSigner, transactionRequest)
 
@@ -77,7 +77,7 @@ describe('Rif Relay Enhance Strategy', () => {
   })
 
   it('should return null if data is empty', async () => {
-    const strategy = new RifRelayEnhanceStrategy()
+    const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
     if (accountSigner) {
       const result = await strategy.parse(accountSigner, {
         ...transactionRequest,
@@ -89,7 +89,7 @@ describe('Rif Relay Enhance Strategy', () => {
   })
 
   it('should return null if can not decode data', async () => {
-    const strategy = new RifRelayEnhanceStrategy()
+    const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
 
     if (accountSigner) {
       const result = await strategy.parse(accountSigner, {
