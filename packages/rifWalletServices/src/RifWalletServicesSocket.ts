@@ -15,7 +15,7 @@ import {
 
 export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
   extends EventEmitter
-  implements IRifWalletServicesSocket<Options, onSetInternetCredentialsReturn> {
+  implements IRifWalletServicesSocket {
   private rifWalletServicesUrl: string
   private abiEnhancer: IAbiEnhancer
   private socket: Socket | undefined
@@ -39,7 +39,7 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
   private async init(
     wallet: RIFWallet,
     encryptionKey: string,
-    fetcher: RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn>,
+    fetcher: RifWalletServicesFetcher,
   ) {
     this.onBeforeInit(encryptionKey, this)
 
@@ -97,7 +97,7 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
     })
   }
 
-  async connect(wallet: RIFWallet, fetcher: RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn>) {
+  async connect(wallet: RIFWallet, fetcher: RifWalletServicesFetcher) {
     try {
       const encriptionKey = await wallet.smartWallet.signer.signMessage(
         this.encryptionKeyMessageToSign,
@@ -120,7 +120,6 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
 
         socket.emit('subscribe', {
           address: wallet.smartWalletAddress,
-          accessToken: fetcher?.accessToken,
         })
       })
 

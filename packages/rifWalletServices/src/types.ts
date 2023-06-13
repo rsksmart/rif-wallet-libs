@@ -98,15 +98,6 @@ export interface TransactionsServerResponse {
   prev: string | null | undefined
 }
 
-export interface AuthenticationChallengeType {
-  challenge: string
-}
-
-export interface AuthenticationTokensType {
-  accessToken: string
-  refreshToken: string
-}
-
 export type onSetInternetCredentials<Options, Return> = (
   server: string,
   username: string,
@@ -114,31 +105,7 @@ export type onSetInternetCredentials<Options, Return> = (
   options?: Options
 ) => Return
 
-export type onResetInternetCredentials<Options, Return> = (
-  server: string,
-  options?: Options
-) => Return
-
-export type onSaveSignUp = (value: { signup: boolean }) => void
-
-export type onHasSignUp = () => boolean
-
-export type onDeleteSignUp = () => void
-
-export type onGetSignUp = () => any
-
-export type RifWalletAuthServiceDependencies<Options, onSetInternetCredentialsReturn, onResetInternetCredentialsReturn> = {
-  onSetInternetCredentials: onSetInternetCredentials<Options, onSetInternetCredentialsReturn>,
-  onSaveSignUp: onSaveSignUp,
-  onHasSignUp: onHasSignUp,
-  onDeleteSignUp: onDeleteSignUp,
-  onGetSignUp: onGetSignUp,
-  onResetInternetCredentials: onResetInternetCredentials<Options, onResetInternetCredentialsReturn>,
-  authClient: string
-}
-
-export type RifWalletFetcherDependencies<Options, onSetInternetCredentialsReturn> = {
-  onSetInternetCredentials: onSetInternetCredentials<Options, onSetInternetCredentialsReturn>,
+export type RifWalletFetcherDependencies = {
   defaultChainId: string
   resultsLimit?: number
 }
@@ -196,10 +163,10 @@ export interface IServiceInitEvent {
   balances: ITokenWithBalance[]
 }
 
-export interface IRifWalletServicesSocket<Options, onSetInternetCredentialsReturn> extends EventEmitter {
+export interface IRifWalletServicesSocket extends EventEmitter {
   connect: (
     wallet: RIFWallet,
-    fetcher: RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn>,
+    fetcher: RifWalletServicesFetcher,
   ) => Promise<void>
 
   disconnect(): void
