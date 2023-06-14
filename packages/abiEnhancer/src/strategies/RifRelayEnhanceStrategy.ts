@@ -47,19 +47,21 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
 
     const { request: { tokenContract, tokenAmount, data, to }, relayData: { callForwarder } } = tx.relayRequest as ForwardRequest
 
-    const tokenFounded = await findToken(signer, tokenContract)
-    if (!tokenFounded) {
+    const feeTokenFounded = await findToken(signer, tokenContract)
+    const tokenFounded = await findToken(signer, to)
+    if (!feeTokenFounded) {
       return null
     }
-    const tokenDecimals = await tokenFounded.decimals()
-    const currentBalance = await tokenFounded.balance()
+    const feeTokenDecimals = await feeTokenFounded.decimals()
+    const tokenFoundedDecimals = tokenFounded ? await tokenFounded.decimals() : 18
+    const currentBalance = tokenFounded ? await tokenFounded.balance() : BigNumber.from(0)
     let result
     for (const strategy of this.strategies) {
       result = await strategy.parse(signer, {
         from: transactionRequest.from,
         data,
         value: transactionRequest.value,
-        to: tokenContract
+        to
       })
       if (result) {
         break
@@ -68,11 +70,11 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     return {
       to: result?.to || to,
       from: callForwarder,
-      symbol: tokenFounded.symbol,
+      symbol: tokenFounded ? tokenFounded.symbol : feeTokenFounded.symbol,
       value: result?.value || 0,
-      balance: formatBigNumber(currentBalance, tokenDecimals),
-      feeSymbol: tokenFounded.symbol,
-      feeValue: formatBigNumber(BigNumber.from(tokenAmount), tokenDecimals)
+      balance: formatBigNumber(currentBalance, tokenFoundedDecimals),
+      feeSymbol: feeTokenFounded.symbol,
+      feeValue: formatBigNumber(BigNumber.from(tokenAmount), feeTokenDecimals)
     }
   }
 }
