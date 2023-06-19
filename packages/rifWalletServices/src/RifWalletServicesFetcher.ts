@@ -1,44 +1,24 @@
 import {
   IRegisteredDappsGroup,
   ITokenWithBalance, IXPubBalanceData,
-  onSetInternetCredentials, RifWalletFetcherDependencies, RIFWalletServicesFetcherInterface,
+  RifWalletFetcherDependencies, RIFWalletServicesFetcherInterface,
   TransactionsServerResponse,
 } from './types'
 import { BitcoinTransactionContainerType, UnspentTransactionType } from '@rsksmart/rif-wallet-bitcoin'
-import axios, { AxiosInstance } from 'axios'
-import createAuthRefreshInterceptor from 'axios-auth-refresh'
+import { AxiosInstance } from 'axios'
 
-export class RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn> implements RIFWalletServicesFetcherInterface {
+export class RifWalletServicesFetcher implements RIFWalletServicesFetcherInterface {
   axiosInstance: AxiosInstance
-  accessToken = ''
-  refreshToken = ''
-  onSetInternetCredentials: onSetInternetCredentials<Options, onSetInternetCredentialsReturn>
   defaultChainId: string
   resultsLimit: number
   constructor(
     axiosInstance: AxiosInstance,
-    accessToken: string,
-    refreshToken: string,
-    dependencies: RifWalletFetcherDependencies<Options, onSetInternetCredentialsReturn>
+    dependencies: RifWalletFetcherDependencies
   ) {
     this.axiosInstance = axiosInstance
-    this.accessToken = accessToken
-    this.refreshToken = refreshToken
     // Dependencies injection
-    this.onSetInternetCredentials = dependencies.onSetInternetCredentials
     this.defaultChainId = dependencies.defaultChainId
     this.resultsLimit = dependencies.resultsLimit || 10
-    this.axiosInstance.interceptors.request.use(
-      config => {
-        if (!config.headers?.Authorization) {
-          config.headers!.Authorization = `DIDAuth ${this.getAccessToken()}`
-        }
-        return config
-      },
-      error => {
-        return Promise.reject(error)
-      },
-    )
 
     this.axiosInstance.interceptors.request.use(
       config => {
@@ -49,54 +29,6 @@ export class RifWalletServicesFetcher<Options, onSetInternetCredentialsReturn> i
         return Promise.reject(error)
       },
     )
-
-    const refreshAuthLogic = async (failedRequest: any) => {
-      const data = {
-        refreshToken: this.getRefreshToken(),
-      }
-      const options = {
-        method: 'POST',
-        data,
-        url: `${this.axiosInstance.getUri()}/refresh-token`,
-      }
-
-      try {
-        const {
-          data: {
-            accessToken: currentAccessToken,
-            refreshToken: currentRefreshToken,
-          },
-        } = await axios(options)
-        failedRequest.response.config.headers.Authorization =
-          'DIDAuth ' + currentAccessToken
-
-        await this.onSetInternetCredentials(
-          'jwt',
-          'token',
-          JSON.stringify({
-            accessToken: currentAccessToken,
-            refreshToken: currentRefreshToken,
-          }),
-        )
-        this.accessToken = currentAccessToken
-        this.refreshToken = currentRefreshToken
-        return await Promise.resolve()
-      } catch (e) {}
-    }
-
-    createAuthRefreshInterceptor(this.axiosInstance, refreshAuthLogic, {
-      shouldRefresh: error => {
-        return error.response?.status === 401
-      },
-    })
-  }
-
-  private getAccessToken = () => {
-    return this.accessToken
-  }
-
-  private getRefreshToken = () => {
-    return this.refreshToken
   }
 
   protected async fetchAvailableTokens() {

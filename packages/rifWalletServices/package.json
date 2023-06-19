@@ -32,7 +32,6 @@
     "@rsksmart/rif-wallet-core": "*",
     "@rsksmart/rif-wallet-bitcoin": "*",
     "@ethersproject/contracts": "^5.7.0",
-    "axios-auth-refresh": "^3.3.4",
     "socket.io-client": "^4.4.1",
     "events": "^1.1.1",
     "@rsksmart/rif-wallet-abi-enhancer": "*"
