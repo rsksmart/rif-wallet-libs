@@ -6,7 +6,7 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { BytesLike } from '@ethersproject/bytes'
 import { formatBigNumber } from '../formatBigNumber'
 import { findToken } from './ERC20EnhanceStrategy'
-import { MAINNET_CHAINID } from '@rsksmart/rif-wallet-token'
+import { ERC20__factory, MAINNET_CHAINID } from '@rsksmart/rif-wallet-token'
 
 interface ForwardRequestStruct {
   relayHub: string
@@ -49,15 +49,23 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     const { request: { tokenContract, tokenAmount, data, to, value }, relayData: { callForwarder } } = tx.relayRequest as ForwardRequest
 
     const feeTokenFounded = await findToken(signer, tokenContract)
-    const tokenFounded = await findToken(signer, to)
+    const chainId = await signer.getChainId()
+    const rbtcSymbol = chainId === MAINNET_CHAINID ? 'RBTC' : 'TRBTC'
+    let tokenSymbol = rbtcSymbol
+    let tokenDecimals = 18
+    let tokenBalance = BigNumber.from(0)
+    try {
+      const tokenFounded = ERC20__factory.connect(to, signer)
+      tokenSymbol = await tokenFounded.symbol()
+      tokenDecimals = await tokenFounded.decimals()
+      tokenBalance = await tokenFounded.balanceOf(await signer.getAddress())
+    } catch (e) {
+
+    }
     if (!feeTokenFounded) {
       return null
     }
-    const chainId = await signer.getChainId()
-    const rbtcSymbol = chainId === MAINNET_CHAINID ? 'RBTC' : 'TRBTC'
     const feeTokenDecimals = await feeTokenFounded.decimals()
-    const tokenFoundedDecimals = tokenFounded ? await tokenFounded.decimals() : 18
-    const currentBalance = tokenFounded ? await tokenFounded.balance() : BigNumber.from(0)
     let result
     for (const strategy of this.strategies) {
       result = await strategy.parse(signer, {
@@ -73,9 +81,9 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     return {
       to: result?.to || to,
       from: callForwarder,
-      symbol: tokenFounded ? tokenFounded.symbol : rbtcSymbol,
-      value: result?.value || formatBigNumber(BigNumber.from(value ?? 0), tokenFoundedDecimals) || 0,
-      balance: formatBigNumber(currentBalance, tokenFoundedDecimals),
+      symbol: tokenSymbol,
+      value: result?.value || formatBigNumber(BigNumber.from(value ?? 0), tokenDecimals) || 0,
+      balance: formatBigNumber(tokenBalance, tokenDecimals),
       feeSymbol: feeTokenFounded.symbol,
       feeValue: formatBigNumber(BigNumber.from(tokenAmount), feeTokenDecimals)
     }
