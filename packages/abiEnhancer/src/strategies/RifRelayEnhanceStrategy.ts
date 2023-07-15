@@ -1,12 +1,13 @@
 import { relayHubInterface } from '@rsksmart/rif-relay-light-sdk'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
-import { Signer } from '@ethersproject/abstract-signer'
 import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { BytesLike } from '@ethersproject/bytes'
 import { formatBigNumber } from '../formatBigNumber'
 import { findToken } from './ERC20EnhanceStrategy'
-import { ERC20__factory, MAINNET_CHAINID } from '@rsksmart/rif-wallet-token'
+import { ERC20__factory } from '@rsksmart/rif-wallet-token'
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { getDefaultNodeUrl, getRbtcSymbol } from '../utils'
 
 interface ForwardRequestStruct {
   relayHub: string
@@ -35,7 +36,7 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     this.strategies = strategies
   }
 
-  public async parse(signer: Signer, transactionRequest: TransactionRequest) : Promise<EnhancedResult | null> {
+  public async parse(chainId: number, transactionRequest: TransactionRequest, nodeUrl?: string) : Promise<EnhancedResult | null> {
     if (!transactionRequest.data) {
       return null
     }
@@ -48,17 +49,16 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
 
     const { request: { tokenContract, tokenAmount, data, to, value }, relayData: { callForwarder } } = tx.relayRequest as ForwardRequest
 
-    const feeTokenFounded = await findToken(signer, tokenContract)
-    const chainId = await signer.getChainId()
-    const rbtcSymbol = chainId === MAINNET_CHAINID ? 'RBTC' : 'TRBTC'
+    const url = nodeUrl || getDefaultNodeUrl(chainId)
+    const provider = new JsonRpcProvider(url)
+    const feeTokenFounded = await findToken(provider, tokenContract)
+    const rbtcSymbol = getRbtcSymbol(chainId)
     let tokenSymbol = rbtcSymbol
     let tokenDecimals = 18
-    let tokenBalance = BigNumber.from(0)
     try {
-      const tokenFounded = ERC20__factory.connect(to, signer)
+      const tokenFounded = ERC20__factory.connect(to, provider)
       tokenSymbol = await tokenFounded.symbol()
       tokenDecimals = await tokenFounded.decimals()
-      tokenBalance = await tokenFounded.balanceOf(await signer.getAddress())
     } catch (e) {
 
     }
@@ -68,12 +68,12 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     const feeTokenDecimals = await feeTokenFounded.decimals()
     let result
     for (const strategy of this.strategies) {
-      result = await strategy.parse(signer, {
+      result = await strategy.parse(chainId, {
         from: transactionRequest.from,
         data,
         value: transactionRequest.value,
         to
-      })
+      }, nodeUrl)
       if (result) {
         break
       }
@@ -83,7 +83,6 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
       from: callForwarder,
       symbol: tokenSymbol,
       value: result?.value || formatBigNumber(BigNumber.from(value ?? 0), tokenDecimals) || 0,
-      balance: formatBigNumber(tokenBalance, tokenDecimals),
       feeSymbol: feeTokenFounded.symbol,
       feeValue: formatBigNumber(BigNumber.from(tokenAmount), feeTokenDecimals)
     }
