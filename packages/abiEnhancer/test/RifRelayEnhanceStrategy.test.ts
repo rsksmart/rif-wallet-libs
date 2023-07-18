@@ -1,103 +1,68 @@
-import { Signer } from '@ethersproject/abstract-signer'
-import { deployTestTokens, getSigner } from './utils'
+import { TESTNET_CHAIN_ID } from './utils'
 import { ERC20EnhanceStrategy, OtherEnhanceStrategy, RifRelayEnhanceStrategy } from '../src'
-import { BigNumber } from '@ethersproject/bignumber'
-import { getAllTokens, makeRBTCToken } from '@rsksmart/rif-wallet-token'
-
-// Mock entire module
-jest.mock('@rsksmart/rif-wallet-token', () => {
-  // @ts-ignore
-  const original = jest.requireActual('@rsksmart/rif-wallet-token')
-  return {
-    ...original,
-    getAllTokens: jest.fn(),
-    makeRBTCToken: jest.fn()
-  }
-})
 
 describe('Rif Relay Enhance Strategy', () => {
   const transactionRequest = {
-    from: '0x2750de12a98AD6BA53bE8d0DbE4a595d63Fdf985',
-    to: '0x1D4F6A5FE927f0E0e4497B91CebfBcF64dA1c934',
-    data: '0x528ab2ad00000000000000000000000000000000000000000000000000000000000000' +
-    '4000000000000000000000000000000000000000000000000000000000000002c0000000000000' +
-    '00000000000000000000000000000000000000000000000000a000000000000000000000000000' +
-    '00000000000000000000000000000003ec44580000000000000000000000000967fe4fad8c9cdf' +
-    '61c89f31c1d1f44770854ede0000000000000000000000007148df28f79a3a17304bd68cf123aa' +
-    '1db0fcdfe7000000000000000000000000b86c972ff212838c4c396199b27a0dbe45560df80000' +
-    '00000000000000000000ad525463961399793f8716b0d85133ff7503a7c2000000000000000000' +
-    '00000043c65cd37c11cf4b96f6c37155300d435ee42b930000000000000000000000001cFCDaa1' +
-    'B093d2c77A7D06A95B3A1Be2b87330750000000000000000000000001cFCDaa1B093d2c77A7D06' +
-    'A95B3A1Be2b8733075000000000000000000000000000000000000000000000000000000000000' +
-    '000000000000000000000000000000000000000000000000000000000000000042a20000000000' +
-    '000000000000000000000000000000000000000000000000000000000000000000000000000000' +
-    '0000000000000000000000001bc16d674ec8000000000000000000000000000000000000000000' +
-    '00000000000000000000005d7c0000000000000000000000000000000000000000000000000000' +
-    '0000642725b8000000000000000000000000000000000000000000000000000000000000016000' +
-    '00000000000000000000000000000000000000000000000000000000000044a9059cbb00000000' +
-    '0000000000000000c0c9280c10e4d968394371d5b60ac5fcd1ae62e10000000000000000000000' +
-    '0000000000000000000000000029a2241af62c0000000000000000000000000000000000000000' +
-    '000000000000000000000000000000000000000000000000000000000000000000000000000000' +
-    '000041b341ce1df1a01a3950327438f367800a3135e77d9bb63fec7b1155e89f78b063438a598e' +
-    '271757cfa73e20f9f788eff8c0af25863082ea4716715a20fd61d5891c00000000000000000000' +
-    '000000000000000000000000000000000000000000',
+    from: '0xFc8fE6F9088fFE52936B1DcD250C613c6B0c488a',
+    to: '0xad525463961399793F8716B0D85133fF7503a7C2',
+    data: '0x528ab2ad00000000000000000000000000000000000000000000000000' +
+    '000000000000400000000000000000000000000000000000000000000000000000' +
+    '0000000002c0000000000000000000000000000000000000000000000000000000' +
+    '00000000a000000000000000000000000000000000000000000000000000000000' +
+    '03e252e0000000000000000000000000fc8fe6f9088ffe52936b1dcd250c613c6b' +
+    '0c488a000000000000000000000000baa17055f0dd15c54cf3b5f1cb678738f7b7' +
+    'acf3000000000000000000000000b86c972ff212838c4c396199b27a0dbe45560d' +
+    'f8000000000000000000000000ad525463961399793f8716b0d85133ff7503a7c2' +
+    '000000000000000000000000c0c9280c10e4d968394371d5b60ac5fcd1ae62e100' +
+    '000000000000000000000019f64674d8a5b4e652319f5e239efd3bc969a1fe0000' +
+    '0000000000000000000019f64674d8a5b4e652319f5e239efd3bc969a1fe000000' +
+    '000000000000000000000000000000000000000000000000000000000000000000' +
+    '000000000000000000000000000000000000000000000000000041f90000000000' +
+    '00000000000000000000000000000000000000000000000000000c000000000000' +
+    '0000000000000000000000000000000000001b4c629d14d42a3e00000000000000' +
+    '000000000000000000000000000000000000000000000042790000000000000000' +
+    '0000000000000000000000000000000000000000649c5f2e000000000000000000' +
+    '000000000000000000000000000000000000000000016000000000000000000000' +
+    '00000000000000000000000000000000000000000044a9059cbb00000000000000' +
+    '00000000005e72cd228d7b7a80a4860f735f54c183d0e609410000000000000000' +
+    '000000000000000000000000000000000a217b21de090000000000000000000000' +
+    '000000000000000000000000000000000000000000000000000000000000000000' +
+    '0000000000000000000000000000000000417486e11a60ddf2718178026e01fb09' +
+    '59f58e16f802d69c4ab850eb2c9639e1e27318b8a7d3d7efe9ad07cb18adf33951' +
+    'bdba1c89a1a2d849c6a999eb87d7b48b1c00000000000000000000000000000000' +
+    '000000000000000000000000000000',
   }
-  let accountSigner: Signer | null = null
 
-  beforeEach(async () => {
-    accountSigner = getSigner()
-
-    const { firstErc20Token, secondErc20Token, rbtcToken } =
-      await deployTestTokens(accountSigner)
-    const decimals:() => Promise<number> = () => Promise.resolve(18)
-    const balance:() => Promise<BigNumber> = () => Promise.resolve(BigNumber.from(0))
-    // @ts-ignore
-    getAllTokens.mockImplementation(async () => Promise.resolve([firstErc20Token, secondErc20Token, {
-      decimals,
-      balance,
-      address: '0x1cFCDaa1B093d2c77A7D06A95B3A1Be2b8733075',
-      symbol: 'RIF'
-    }]))
-    // @ts-ignore
-    makeRBTCToken.mockImplementation(() => rbtcToken)
-  })
   it('should return transaction info enhanced', async () => {
     const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
-    if (accountSigner) {
-      const result = await strategy.parse(accountSigner, transactionRequest)
+    const result = await strategy.parse(TESTNET_CHAIN_ID, transactionRequest)
 
-      expect(result).not.toBeNull()
-      expect(result?.from).toBe('0x7148Df28F79A3a17304bd68cf123aa1db0fCdfe7')
-      expect(result?.to).toBe('0xC0C9280C10E4D968394371d5b60aC5fCD1ae62e1')
-      expect(result?.balance).toBe(BigNumber.from(0).toString())
-      expect(result?.value).toBe('3')
-      expect(result?.feeSymbol).toBe('RIF')
-      expect(result?.feeValue).toBe('2')
-    }
-  })
+    expect(result).not.toBeNull()
+    expect(result?.from).toBe('0xBAA17055f0dD15C54CF3b5f1cb678738F7B7acf3')
+    expect(result?.to).toBe('0x5E72CD228d7B7A80a4860F735f54c183D0e60941')
+    expect(result?.value).toBe('0.73')
+    expect(result?.feeSymbol).toBe('tRIF')
+    expect(result?.feeValue).toBe('1.96705556')
+  }, 30000)
 
   it('should return null if data is empty', async () => {
     const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
-    if (accountSigner) {
-      const result = await strategy.parse(accountSigner, {
-        ...transactionRequest,
-        data: undefined,
-      })
+    const result = await strategy.parse(TESTNET_CHAIN_ID, {
+      ...transactionRequest,
+      data: undefined,
+    })
 
-      expect(result).toBeNull()
-    }
+    expect(result).toBeNull()
   })
 
   it('should return null if can not decode data', async () => {
     const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
 
-    if (accountSigner) {
-      const result = await strategy.parse(accountSigner, {
-        ...transactionRequest,
-        data: '0xNotExist',
-      })
+    const result = await strategy.parse(TESTNET_CHAIN_ID, {
+      ...transactionRequest,
+      data: '0xNotExist',
+    })
 
-      expect(result).toBeNull()
-    }
+    expect(result).toBeNull()
   })
 })

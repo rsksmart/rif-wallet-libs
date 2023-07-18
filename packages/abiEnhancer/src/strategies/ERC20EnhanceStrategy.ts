@@ -1,4 +1,4 @@
-import { ERC20__factory, ERC20Token } from '@rsksmart/rif-wallet-token'
+import { ERC20__factory, ERC20 } from '@rsksmart/rif-wallet-token'
 import { Provider, TransactionRequest } from '@ethersproject/abstract-provider'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { formatBigNumber } from '../formatBigNumber'
@@ -6,7 +6,7 @@ import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { getDefaultNodeUrl } from '../utils'
 
-export const findToken = async (provider: Provider, tokenAddress: string | undefined) : Promise<ERC20Token> => {
+export const findToken = async (provider: Provider, tokenAddress: string | undefined) : Promise<ERC20> => {
   return tokenAddress ? ERC20__factory.connect(tokenAddress, provider) : null
 }
 
@@ -38,18 +38,17 @@ export class ERC20EnhanceStrategy implements EnhanceStrategy {
       )
       resultTo = decodedTo
       resultValue = decodedValue
+      const tokenDecimals = await tokenFounded.decimals()
+      const tokenSymbol = await tokenFounded.symbol()
+
+      return {
+        ...transactionRequest,
+        to: resultTo,
+        symbol: tokenSymbol,
+        value: formatBigNumber(BigNumber.from(resultValue ?? 0), tokenDecimals)
+      }
     } catch (error) {
       return null
-    }
-
-    const tokenDecimals = await tokenFounded.decimals()
-    const tokenSymbol = tokenFounded.symbol
-
-    return {
-      ...transactionRequest,
-      to: resultTo,
-      symbol: tokenSymbol,
-      value: formatBigNumber(BigNumber.from(resultValue ?? 0), tokenDecimals)
     }
   }
 }

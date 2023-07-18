@@ -92,13 +92,14 @@ const handleFaucet = async (
     const value = await faucetContract.dispenseValue()
     const token = await findToken(provider, tokenContract)
     const tokenDecimals = await token.decimals()
+    const tokenSymbol = await token.symbol()
     const feeSymbol = getRbtcSymbol(chainId)
     return {
       ...transactionRequest,
       from: transactionRequest.to,
       to,
       value: formatBigNumber(BigNumber.from(value ?? 0), tokenDecimals),
-      symbol: token.symbol,
+      symbol: tokenSymbol,
       feeSymbol
     }
   }
@@ -146,7 +147,6 @@ export class OtherEnhanceStrategy implements EnhanceStrategy {
         value: formatBigNumber(BigNumber.from(decodedValue ?? 0), 18)
       }
     }
-
     let signaturesFounded: string[] | null = []
     try {
       signaturesFounded = await getFunctionSignatures(hexSig)

@@ -1,89 +1,193 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Signer } from '@ethersproject/abstract-signer'
-import { getAllTokens, makeRBTCToken } from '@rsksmart/rif-wallet-token'
 
 import { AbiEnhancer } from '../src'
-import { deployTestTokens, getSigner } from './utils'
-
-// Mock entire module
-jest.mock('@rsksmart/rif-wallet-token', () => {
-  // @ts-ignore
-  const original = jest.requireActual('@rsksmart/rif-wallet-token')
-  return {
-    ...original,
-    getAllTokens: jest.fn(),
-    makeRBTCToken: jest.fn()
-  }
-})
+import { TESTNET_CHAIN_ID } from './utils'
 
 describe('Abi Enhancer', () => {
-  let transactionRequest = {
-    from: '0x2750de12a98AD6BA53bE8d0DbE4a595d63Fdf985',
-    to: '0x1D4F6A5FE927f0E0e4497B91CebfBcF64dA1c934',
-    value: BigNumber.from(1000000000000000), // 0.001 in decimals
-    data: '0xa9059cbb0000000000000000000000001d4f6a5fe927f0e0e4497b91cebfbcf64da1c93400000000000000000000000000000000000000000000000000038d7ea4c68000',
-  }
-  let accountSigner: Signer | null = null
-
-  beforeEach(async () => {
-    accountSigner = getSigner()
-
-    const { firstErc20Token, secondErc20Token, rbtcToken } =
-      await deployTestTokens(accountSigner)
-
-    // @ts-ignore
-    getAllTokens.mockImplementation(async () => Promise.resolve([firstErc20Token, secondErc20Token]))
-    // @ts-ignore
-    makeRBTCToken.mockImplementation(() => rbtcToken)
-
-    transactionRequest = { ...transactionRequest, to: firstErc20Token.address }
-  })
-
-  it('should return erc20 token info enhanced', async () => {
-    const enhancer = new AbiEnhancer()
-    if (accountSigner) {
-      const result = await enhancer.enhance(accountSigner, transactionRequest)
-
+  const enhancer = new AbiEnhancer()
+  describe('Using EOA Account', () => {
+    it('Should return a known ERC20 token(tRIF) info enhanced', async () => {
+      const transactionRequest = {
+        from: '0xC0c9280C10e4d968394371d5B60Ac5FcD1AE62E1',
+        to: '0x19f64674d8a5b4e652319f5e239efd3bc969a1fe',
+        value: BigNumber.from(0),
+        data: '0xa9059cbb0000000000000000000000005e72cd228d7b7a80a4860f735f54c183d0e6094100000000000000000000000000000000000000000000000022002604f3b50000',
+      }
+      const result = await enhancer.enhance(TESTNET_CHAIN_ID, transactionRequest)
       expect(result).not.toBeNull()
       expect(result?.from).toBe(transactionRequest.from)
-      expect(result?.to).toBe('0x1D4F6A5FE927f0E0e4497B91CebfBcF64dA1c934')
-      expect(result?.balance).toBe(BigNumber.from(200).toString())
+      expect(result?.to).toBe('0x5E72CD228d7B7A80a4860F735f54c183D0e60941')
+      expect(result?.value).toBe('2.45')
+      expect(result?.symbol).toBe('tRIF')
+    })
+
+    it('Should return an unknown ERC20 token(JESSE) info enhanced', async () => {
+      const transactionRequest = {
+        from: '0x3dD03d7d6c3137f1Eb7582bA5957B8a2E26f304A',
+        to: '0xec64c6ab68d4d17864fc2caee8768a54b1dc73c0',
+        value: BigNumber.from(0),
+        data: '0xa9059cbb000000000000000000000000fcca8a451857bde6b26994534a0ac6ab4fb47a4e00000000000000000000000000000000000000000000000000000000000005dc',
+      }
+      const result = await enhancer.enhance(TESTNET_CHAIN_ID, transactionRequest)
+      expect(result).not.toBeNull()
+      expect(result?.from).toBe(transactionRequest.from)
+      expect(result?.to).toBe('0xFCcA8a451857bdE6b26994534A0AC6aB4fB47A4e')
+      expect(result?.value).toBe('15')
+      expect(result?.symbol).toBe('JESSE')
+    })
+
+    it('Should return RBTC cryptocurrency info enhanced', async () => {
+      const transactionRequest = {
+        from: '0x88250F772101179a4EcfAA4b92a983676a3cE445',
+        to: '0xf12A425c988b95CC4647B69294D79979162A8B93',
+        value: BigNumber.from(1000000000000000), // 0.001 in decimals
+        data: '0x',
+      }
+      const result = await enhancer.enhance(TESTNET_CHAIN_ID, transactionRequest)
+      expect(result).not.toBeNull()
+      expect(result?.from).toBe(transactionRequest.from)
+      expect(result?.to).toBe(transactionRequest.to)
       expect(result?.value).toBe('0.001')
-    }
-  })
-
-  it('should return RBTC info enhanced if data is undefined', async () => {
-    const account = getSigner(7)
-
-    const enhancer = new AbiEnhancer()
-
-    const result = await enhancer.enhance(account, {
-      ...transactionRequest,
-      data: undefined,
+      expect(result?.symbol).toBe('TRBTC')
     })
 
-    expect(result).not.toBeNull()
-    expect(result?.from).toBe(transactionRequest.from)
-    expect(result?.to).toBe(transactionRequest.to)
-    expect(result?.balance).toBe('100')
-    expect(result?.value).toBe('0.001')
-  })
-
-  it('should return RBTC info enhanced if the token is not in the tokens metadata', async () => {
-    const account = getSigner(7)
-
-    const enhancer = new AbiEnhancer()
-
-    const result = await enhancer.enhance(account, {
-      ...transactionRequest,
-      data: undefined,
-      to: '0xNotExist',
+    it('Should return Faucet Transaction info enhanced', async () => {
+      const transactionRequest = {
+        from: '0xC0c9280C10e4d968394371d5B60Ac5FcD1AE62E1',
+        to: '0x248b320687ebf655f9ee7f62f0388c79fbb7b2f4',
+        value: BigNumber.from(0),
+        data: '0x5f746233000000000000000000000000582c42032d16b0fbc70ae9e3d95538974f061122'
+      }
+      const result = await enhancer.enhance(TESTNET_CHAIN_ID, transactionRequest)
+      expect(result).not.toBeNull()
+      expect(result?.from).toBe(transactionRequest.to)
+      expect(result?.to).toBe('0x582c42032D16b0fBC70aE9e3d95538974f061122')
+      expect(result?.value).toBe('100')
+      expect(result?.symbol).toBe('tRIF')
     })
+  })
+  describe('Using Smart Wallet', () => {
+    it('Sending tRIF and paying fees with tRIF', async () => {
+      // Tx Hash: 0xa6d4a91833088551277c864c45a5a4b840bd14d7087508afbcbf513c7dfd3b97
+      const transactionRequest = {
+        from: '0x0967fE4fAD8C9cDF61C89F31C1D1F44770854EDE',
+        to: '0xad525463961399793F8716B0D85133fF7503a7C2',
+        value: BigNumber.from(0),
+        data: `0x528ab2ad00000000000000000000000000000000000000000000000000000000000000
+        4000000000000000000000000000000000000000000000000000000000000002c0000000
+        00000000000000000000000000000000000000000000000000000000a000000000000000
+        00000000000000000000000000000000000000000003ec44580000000000000000000000
+        000967fe4fad8c9cdf61c89f31c1d1f44770854ede0000000000000000000000005e72cd
+        228d7b7a80a4860f735f54c183d0e609410000000000000000000000005897e842162206
+        63f306676458afc7bf2a6a3c52000000000000000000000000ad525463961399793f8716
+        b0d85133ff7503a7c200000000000000000000000043c65cd37c11cf4b96f6c37155300d
+        435ee42b9300000000000000000000000019f64674d8a5b4e652319f5e239efd3bc969a1
+        fe00000000000000000000000019f64674d8a5b4e652319f5e239efd3bc969a1fe000000
+        000000000000000000000000000000000000000000000000000000000000000000000000
+        000000000000000000000000000000000000000000000042610000000000000000000000
+        00000000000000000000000000000000000000000d000000000000000000000000000000
+        00000000000000000020a103edfa24327800000000000000000000000000000000000000
+        00000000000000000000005dfc0000000000000000000000000000000000000000000000
+        0000000000649851c3000000000000000000000000000000000000000000000000000000
+        000000016000000000000000000000000000000000000000000000000000000000000000
+        44a9059cbb000000000000000000000000c0c9280c10e4d968394371d5b60ac5fcd1ae62
+        e100000000000000000000000000000000000000000000000044004c09e76a0000000000
+        000000000000000000000000000000000000000000000000000000000000000000000000
+        00000000000000000000000000000000000000004132317051c75246fbefd2be49eb8fdd
+        3985f95b117929d91490be5430a8540b65774a6ce2d063499c22d24a3d9e1e8de6d1fb49
+        6aea5fbdd4785b100db4ed4f3c1b00000000000000000000000000000000000000000000
+        000000000000000000`.replace(/\n/g, '').replace(/\s/g, ''),
+      }
+      const result = await enhancer.enhance(TESTNET_CHAIN_ID, transactionRequest)
+      expect(result).not.toBeNull()
+      expect(result?.from).toBe('0x5E72CD228d7B7A80a4860F735f54c183D0e60941')
+      expect(result?.to).toBe('0xC0C9280C10E4D968394371d5b60aC5fCD1ae62e1')
+      expect(result?.value).toBe('4.9')
+      expect(result?.symbol).toBe('tRIF')
+      expect(result?.feeSymbol).toBe('tRIF')
+      expect(result?.feeValue).toBe('2.3511648')
+    }, 30000)
 
-    expect(result).not.toBeNull()
-    expect(result?.from).toBe(transactionRequest.from)
-    expect(result?.to).toBe('0xNotExist')
-    expect(result?.balance).toBe('100')
-    expect(result?.value).toBe('0.001')
+    it('Sending RBTC and paying fees with tRIF', async () => {
+      // Tx Hash: 0xbe78085f507f09b127cd839aecd0c3c13d01294eb3ed45b893eafc540eecc085
+      const transactionRequest = {
+        from: '0x0967fE4fAD8C9cDF61C89F31C1D1F44770854EDE',
+        to: '0xad525463961399793F8716B0D85133fF7503a7C2',
+        value: BigNumber.from(0),
+        data: `0x528ab2ad000000000000000000000000000000000000000000000
+        00000000000000000400000000000000000000000000000000000000000000
+        00000000000000000026000000000000000000000000000000000000000000
+        000000000000000000000a0000000000000000000000000000000000000000
+        0000000000000000003ec44580000000000000000000000000967fe4fad8c9
+        cdf61c89f31c1d1f44770854ede0000000000000000000000003d57c6970e8
+        0aa34e1f09c4280959cc0dec4c1470000000000000000000000005897e8421
+        6220663f306676458afc7bf2a6a3c52000000000000000000000000ad52546
+        3961399793f8716b0d85133ff7503a7c200000000000000000000000059537
+        bdca55fc5e4bd21c75ef52f61cd7a523574000000000000000000000000102
+        b171ca7a5a94b66a1784dd11ae54698abc6c60000000000000000000000001
+        9f64674d8a5b4e652319f5e239efd3bc969a1fe00000000000000000000000
+        00000000000000000000000000002d79883d20000000000000000000000000
+        00000000000000000000000000000000000000007250000000000000000000
+        00000000000000000000000000000000000000000000f00000000000000000
+        0000000000000000000000000000000202c5d1475af324e000000000000000
+        0000000000000000000000000000000000000000000005dfc0000000000000
+        0000000000000000000000000000000000000000000649314a600000000000
+        00000000000000000000000000000000000000000000000000160000000000
+        00000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000411255a
+        066f80ac45ccd5e24a45792a2b641582f3dde2ffcd26614fb77d1446124422
+        6eda4a210480bd471bb282119791a3826683ad93e0e7f63a1babadb468ca61
+        c00000000000000000000000000000000000000000000000000000000000000`
+          .replace(/\n/g, '').replace(/\s/g, '')
+      }
+      const result = await enhancer.enhance(TESTNET_CHAIN_ID, transactionRequest)
+      expect(result).not.toBeNull()
+      expect(result?.from).toBe('0x3D57c6970e80Aa34E1f09c4280959cC0DeC4c147')
+      expect(result?.to).toBe('0x102B171Ca7a5a94b66a1784dD11Ae54698aBc6c6')
+      expect(result?.value).toBe('0.0008')
+      expect(result?.symbol).toBe('TRBTC')
+      expect(result?.feeSymbol).toBe('tRIF')
+      expect(result?.feeValue).toBe('2.31833025')
+    }, 30000)
+
+    it('Sending RDOC and paying fees with tRIF', async () => {
+      // Tx Hash: 0xbe78085f507f09b127cd839aecd0c3c13d01294eb3ed45b893eafc540eecc085
+      const transactionRequest = {
+        from: '0x3d57C6970e80AA34e1f09c4280959CC0Dec4C147',
+        to: '0x102b171Ca7a5A94b66a1784DD11Ae54698aBc6C6',
+        value: BigNumber.from(0),
+        data: `0x528ab2ad00000000000000000000000000000000000000000000000000000000000000
+        4000000000000000000000000000000000000000000000000000000000000002c00000000000000
+        0000000000000000000000000000000000000000000000000a00000000000000000000000000000
+        000000000000000000000000000003ec44580000000000000000000000000967fe4fad8c9cdf61c
+        89f31c1d1f44770854ede0000000000000000000000003d57c6970e80aa34e1f09c4280959cc0de
+        c4c1470000000000000000000000005897e84216220663f306676458afc7bf2a6a3c52000000000
+        000000000000000ad525463961399793f8716b0d85133ff7503a7c2000000000000000000000000
+        59537bdca55fc5e4bd21c75ef52f61cd7a523574000000000000000000000000c3de9f38581f83e
+        281f260d0ddbaac0e102ff9f800000000000000000000000019f64674d8a5b4e652319f5e239efd
+        3bc969a1fe000000000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000437f00000000000000000000
+        0000000000000000000000000000000000000000000900000000000000000000000000000000000
+        000000000000021d151d2c427d20e00000000000000000000000000000000000000000000000000
+        00000000005dfc00000000000000000000000000000000000000000000000000000000648b3f750
+        0000000000000000000000000000000000000000000000000000000000001600000000000000000
+        000000000000000000000000000000000000000000000044a9059cbb00000000000000000000000
+        0102b171ca7a5a94b66a1784dd11ae54698abc6c600000000000000000000000000000000000000
+        00000000001bc16d674ec8000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000041300fe29bfa0f
+        5fe3b7e530dd59723f7c89f7bb686926007e141dd2d7e48a37020ec960625b8eed7c09706ac8a34
+        db7d4686203c388a28c1b4dbafcc079c0ce971b0000000000000000000000000000000000000000
+        0000000000000000000000`
+          .replace(/\n/g, '').replace(/\s/g, '')
+      }
+      const result = await enhancer.enhance(TESTNET_CHAIN_ID, transactionRequest)
+      expect(result).not.toBeNull()
+      expect(result?.from).toBe('0x3D57c6970e80Aa34E1f09c4280959cC0DeC4c147')
+      expect(result?.to).toBe('0x102B171Ca7a5a94b66a1784dD11Ae54698aBc6c6')
+      expect(result?.value).toBe('2')
+      expect(result?.symbol).toBe('rDOC')
+      expect(result?.feeSymbol).toBe('tRIF')
+      expect(result?.feeValue).toBe('2.43681883')
+    }, 30000)
   })
 })

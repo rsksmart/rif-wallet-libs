@@ -4,6 +4,8 @@ import { TEST_TOKEN_DECIMALS } from '@rsksmart/rif-wallet-token/test/utils'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 
+export const TESTNET_CHAIN_ID = 31
+
 export const testJsonRpcProvider = new JsonRpcProvider('http://localhost:8545')
 
 export const getSigner = (index = 0) => {

@@ -66,6 +66,7 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
       return null
     }
     const feeTokenDecimals = await feeTokenFounded.decimals()
+    const feeTokenSymbol = await feeTokenFounded.symbol()
     let result
     for (const strategy of this.strategies) {
       result = await strategy.parse(chainId, {
@@ -83,7 +84,7 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
       from: callForwarder,
       symbol: tokenSymbol,
       value: result?.value || formatBigNumber(BigNumber.from(value ?? 0), tokenDecimals) || 0,
-      feeSymbol: feeTokenFounded.symbol,
+      feeSymbol: feeTokenSymbol,
       feeValue: formatBigNumber(BigNumber.from(tokenAmount), feeTokenDecimals)
     }
   }
