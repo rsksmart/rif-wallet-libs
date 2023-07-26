@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-core",
-  "version": "1.0.3-beta.1",
+  "version": "1.0.3",
   "description": "RIF Wallet Core",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
