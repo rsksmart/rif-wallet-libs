@@ -19,7 +19,7 @@ export class SmartWalletFactory implements ISmartWalletFactory {
   smartAddress: string
   smartWalletFactoryContract: Contract
 
-  private constructor (smartAddress: string, smartWalletFactoryContract: Contract) {
+  constructor (smartAddress: string, smartWalletFactoryContract: Contract) {
     this.smartAddress = smartAddress
     this.smartWalletFactoryContract = smartWalletFactoryContract
   }
