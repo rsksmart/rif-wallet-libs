@@ -10,7 +10,7 @@ import { formatBigNumber } from '../formatBigNumber'
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { findToken } from './ERC20EnhanceStrategy'
-import { getDefaultNodeUrl, getRbtcSymbol } from '../utils'
+import { getDefaultNodeUrl, getNativeCryptoCurrencySymbol } from '../utils'
 
 const ethList4BytesServiceUrl =
   'https://raw.githubusercontent.com/ethereum-lists/4bytes/master/signatures'
@@ -93,7 +93,7 @@ const handleFaucet = async (
     const token = await findToken(provider, tokenContract)
     const tokenDecimals = await token.decimals()
     const tokenSymbol = await token.symbol()
-    const feeSymbol = getRbtcSymbol(chainId)
+    const feeSymbol = getNativeCryptoCurrencySymbol(chainId)
     return {
       ...transactionRequest,
       from: transactionRequest.to,

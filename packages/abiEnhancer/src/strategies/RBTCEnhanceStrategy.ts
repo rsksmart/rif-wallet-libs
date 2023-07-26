@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { formatBigNumber } from '../formatBigNumber'
 import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
-import { getRbtcSymbol } from '../utils'
+import { getNativeCryptoCurrencySymbol } from '../utils'
 
 export class RBTCEnhanceStrategy implements EnhanceStrategy {
   public async parse (
@@ -11,7 +11,7 @@ export class RBTCEnhanceStrategy implements EnhanceStrategy {
     nodeUrl?: string
   ): Promise<EnhancedResult | null> {
     const tokenDecimals = 18
-    const symbol = getRbtcSymbol(chainId)
+    const symbol = getNativeCryptoCurrencySymbol(chainId)
 
     return {
       ...transactionRequest,

@@ -7,7 +7,7 @@ import { formatBigNumber } from '../formatBigNumber'
 import { findToken } from './ERC20EnhanceStrategy'
 import { ERC20__factory } from '@rsksmart/rif-wallet-token'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { getDefaultNodeUrl, getRbtcSymbol } from '../utils'
+import { getDefaultNodeUrl, getNativeCryptoCurrencySymbol } from '../utils'
 
 interface ForwardRequestStruct {
   relayHub: string
@@ -52,7 +52,7 @@ export class RifRelayEnhanceStrategy implements EnhanceStrategy {
     const url = nodeUrl || getDefaultNodeUrl(chainId)
     const provider = new JsonRpcProvider(url)
     const feeTokenFounded = await findToken(provider, tokenContract)
-    const rbtcSymbol = getRbtcSymbol(chainId)
+    const rbtcSymbol = getNativeCryptoCurrencySymbol(chainId)
     let tokenSymbol = rbtcSymbol
     let tokenDecimals = 18
     try {

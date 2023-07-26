@@ -1,9 +1,22 @@
-import { MAINNET_CHAINID } from '@rsksmart/rif-wallet-token'
 
 export function getDefaultNodeUrl(chainId: number) : string {
-  return (chainId === MAINNET_CHAINID ? 'https://public-node.rsk.co/' : 'https://public-node.testnet.rsk.co/')
+  switch (chainId) {
+    case 30:
+      return 'https://public-node.rsk.co/'
+    case 31:
+      return 'https://public-node.testnet.rsk.co/'
+    default:
+      throw new Error('Unsupported network')
+  }
 }
 
-export function getRbtcSymbol(chainId: number) : string {
-  return chainId === MAINNET_CHAINID ? 'RBTC' : 'TRBTC'
+export function getNativeCryptoCurrencySymbol(chainId: number) : string {
+  switch (chainId) {
+    case 30:
+      return 'RBTC'
+    case 31:
+      return 'TRBTC'
+    default:
+      throw new Error('Unsupported network')
+  }
 }
