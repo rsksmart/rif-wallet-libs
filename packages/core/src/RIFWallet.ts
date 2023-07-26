@@ -4,7 +4,7 @@ import { defineReadOnly, resolveProperties } from '@ethersproject/properties'
 import { BigNumber } from '@ethersproject/bignumber'
 import { BytesLike } from '@ethersproject/bytes'
 
-import { RIFRelaySDK, RelayPayment, SmartWalletFactory, SmartWallet } from '@rsksmart/rif-relay-light-sdk'
+import { RIFRelaySDK, RelayPayment, RifRelayConfig, SmartWalletFactory, SmartWallet } from '@rsksmart/rif-relay-light-sdk'
 
 import { filterTxOptions } from './filterTxOptions'
 import { OverriddableTransactionOptions, Request, OnRequest, SignTypedDataArgs } from './types'
@@ -46,6 +46,12 @@ export class RIFWallet extends Signer implements TypedDataSigner {
 
   get smartWalletAddress (): string {
     return this.smartWallet.smartWalletAddress
+  }
+
+  static async create (signer: Signer, onRequest: OnRequest, rifRelayConfig: RifRelayConfig) {
+    const sdk = await RIFRelaySDK.create(signer, rifRelayConfig)
+
+    return new RIFWallet(sdk, onRequest)
   }
 
   getAddress = (): Promise<string> => Promise.resolve(this.smartWallet.smartWalletAddress)
