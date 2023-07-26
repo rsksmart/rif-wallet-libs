@@ -17,7 +17,7 @@ export class SmartWallet {
     return this.smartWalletContract.address
   }
 
-  private constructor (address: string, smartWalletContract: Contract) {
+  constructor (address: string, smartWalletContract: Contract) {
     this.address = address
     this.smartWalletContract = smartWalletContract
   }
