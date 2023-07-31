@@ -107,7 +107,8 @@ export class RIFWallet extends Signer implements TypedDataSigner {
 
       return this.smartWallet.directExecute(transactionRequest.to!, transactionRequest.data ?? HashZero, txOptions)
     }) as CreateDoRequestOnConfirm
-  ) as (transactionRequest: TransactionRequest) => Promise<TransactionResponse>
+  ) as (transactionRequest: TransactionRequest,
+    overriddenOptions? : Partial<OverriddableTransactionOptions>) => Promise<TransactionResponse>
 
   signMessage = this.createDoRequest(
     'signMessage',
