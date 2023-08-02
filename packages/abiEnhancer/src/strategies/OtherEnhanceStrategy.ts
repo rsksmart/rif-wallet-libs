@@ -1,5 +1,4 @@
-import { TransactionRequest } from '@ethersproject/abstract-provider'
-import { Signer } from '@ethersproject/abstract-signer'
+import { Provider, TransactionRequest } from '@ethersproject/abstract-provider'
 import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
 import axios from 'axios'
 import { hexDataSlice, BytesLike } from '@ethersproject/bytes'
@@ -7,9 +6,11 @@ import { defaultAbiCoder } from '@ethersproject/abi/lib'
 import { Interface } from '@ethersproject/abi'
 import { Contract } from '@ethersproject/contracts'
 import FaucetAbi from './FaucetABI.json'
-import { ERC20Token, getAllTokens } from '@rsksmart/rif-wallet-token'
 import { formatBigNumber } from '../formatBigNumber'
 import { BigNumber } from '@ethersproject/bignumber'
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { findToken } from './ERC20EnhanceStrategy'
+import { getDefaultNodeUrl, getNativeCryptoCurrencySymbol } from '../utils'
 
 const ethList4BytesServiceUrl =
   'https://raw.githubusercontent.com/ethereum-lists/4bytes/master/signatures'
@@ -81,29 +82,24 @@ const parseSignatureWithParametersNames = (
 const handleFaucet = async (
   hexSig: string,
   transactionRequest: TransactionRequest,
-  signer: Signer) => {
+  provider: Provider, chainId: number) => {
   const faucetMethod = ['function dispense(address to)']
   const faucetInterface = new Interface(faucetMethod)
   if (faucetInterface.getSighash('dispense') === `0x${hexSig}`) {
-    const faucetContract = new Contract(transactionRequest.to!, FaucetAbi, signer)
+    const faucetContract = new Contract(transactionRequest.to!, FaucetAbi, provider)
     const [to] = faucetInterface.decodeFunctionData('dispense', transactionRequest.data!)
     const tokenContract = await faucetContract.tokenContract()
     const value = await faucetContract.dispenseValue()
-    const tokens = await getAllTokens(signer)
-    const tokenFounded = tokens.find(
-      x => x.address.toLowerCase() === tokenContract.toLowerCase()
-    ) as ERC20Token
-    if (!tokenFounded) {
-      return null
-    }
-    const tokenDecimals = await tokenFounded.decimals()
-    const feeSymbol = (await signer.getChainId()) === 31 ? 'TRBTC' : 'RBTC'
+    const token = await findToken(provider, tokenContract)
+    const tokenDecimals = await token.decimals()
+    const tokenSymbol = await token.symbol()
+    const feeSymbol = getNativeCryptoCurrencySymbol(chainId)
     return {
       ...transactionRequest,
       from: transactionRequest.to,
       to,
       value: formatBigNumber(BigNumber.from(value ?? 0), tokenDecimals),
-      symbol: tokenFounded.symbol,
+      symbol: tokenSymbol,
       feeSymbol
     }
   }
@@ -112,15 +108,18 @@ const handleFaucet = async (
 
 export class OtherEnhanceStrategy implements EnhanceStrategy {
   public async parse (
-    signer: Signer,
-    transactionRequest: TransactionRequest
+    chainId: number,
+    transactionRequest: TransactionRequest,
+    nodeUrl?: string
   ): Promise<EnhancedResult | null> {
     if (!transactionRequest.data) {
       return null
     }
 
     const hexSig = getHexSig(transactionRequest.data)
-    const faucet = await handleFaucet(hexSig, transactionRequest, signer)
+    const url = nodeUrl || getDefaultNodeUrl(chainId)
+    const provider = new JsonRpcProvider(url)
+    const faucet = await handleFaucet(hexSig, transactionRequest, provider, chainId)
     if (faucet) {
       return faucet
     }
@@ -148,7 +147,6 @@ export class OtherEnhanceStrategy implements EnhanceStrategy {
         value: formatBigNumber(BigNumber.from(decodedValue ?? 0), 18)
       }
     }
-
     let signaturesFounded: string[] | null = []
     try {
       signaturesFounded = await getFunctionSignatures(hexSig)

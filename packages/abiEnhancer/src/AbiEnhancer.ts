@@ -1,5 +1,4 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
-import { Signer } from '@ethersproject/abstract-signer'
 import {
   ERC20EnhanceStrategy, OtherEnhanceStrategy,
   RBTCEnhanceStrategy, RifRelayEnhanceStrategy
@@ -27,15 +26,17 @@ export interface EnhancedResult {
 
 export interface EnhanceStrategy {
   parse: (
-    signer: Signer,
+    chainId: number,
     transactionRequest: TransactionRequest,
+    nodeUrl?: string
   ) => Promise<EnhancedResult | null>
 }
 
 export interface IAbiEnhancer {
   enhance(
-    signer: Signer,
+    chainId: number,
     transactionRequest: TransactionRequest,
+    nodeUrl?: string
   ): Promise<EnhancedResult | null>
 }
 
@@ -55,11 +56,12 @@ export class AbiEnhancer implements IAbiEnhancer {
   }
 
   public async enhance (
-    signer: Signer,
-    transactionRequest: TransactionRequest
+    chainId: number,
+    transactionRequest: TransactionRequest,
+    nodeUrl?: string
   ): Promise<EnhancedResult | null> {
     for (const strategy of this.strategies) {
-      const result = await strategy.parse(signer, transactionRequest)
+      const result = await strategy.parse(chainId, transactionRequest, nodeUrl)
 
       if (result) {
         return result

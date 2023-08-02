@@ -1,27 +1,21 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Signer } from '@ethersproject/abstract-signer'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { formatBigNumber } from '../formatBigNumber'
 import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
-import { makeRBTCToken } from '@rsksmart/rif-wallet-token'
+import { getNativeCryptoCurrencySymbol } from '../utils'
 
 export class RBTCEnhanceStrategy implements EnhanceStrategy {
   public async parse (
-    signer: Signer,
-    transactionRequest: TransactionRequest
+    chainId: number,
+    transactionRequest: TransactionRequest,
+    nodeUrl?: string
   ): Promise<EnhancedResult | null> {
-    const chainId = await signer.getChainId()
-
-    const rbtc = makeRBTCToken(signer, chainId)
-
-    const currentBalance = await rbtc.balance()
-    const tokenDecimals = await rbtc.decimals()
-    const symbol = rbtc.symbol
+    const tokenDecimals = 18
+    const symbol = getNativeCryptoCurrencySymbol(chainId)
 
     return {
       ...transactionRequest,
       symbol,
-      balance: formatBigNumber(currentBalance, tokenDecimals),
       value: formatBigNumber(
         BigNumber.from(transactionRequest.value),
         tokenDecimals
