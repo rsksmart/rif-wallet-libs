@@ -24,6 +24,7 @@ export interface ITransferOptions {
   gasPrice: BigNumberish
   gasLimit: BigNumberish
   nonce: BigNumberish
+  feeContract?: string
 }
 
 export interface IToken {
