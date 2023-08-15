@@ -22,13 +22,15 @@ export class BIPPaymentFacade {
     amountToPay,
     addressToPay,
     unspentTransactions,
-    miningFee
+    miningFee,
+    addressToReturnRemainingAmount,
   }: PaymentType) {
     return this.payment.generatePayment(
       amountToPay,
       addressToPay,
       unspentTransactions,
-      miningFee
+      miningFee,
+      addressToReturnRemainingAmount
     )
   }
 
@@ -53,13 +55,15 @@ export class BIPPaymentFacade {
   async estimateMiningFee ({
     amountToPay,
     addressToPay,
-    unspentTransactions
+    unspentTransactions,
+    addressToReturnRemainingAmount,
   }: EstimateFeeType) {
     const payment: Psbt = await this.generatePayment({
       amountToPay,
       addressToPay,
       unspentTransactions,
-      miningFee: 0
+      miningFee: 0,
+      addressToReturnRemainingAmount,
     })
     const signedPayment: Psbt = this.signPayment(payment)
     return signedPayment.extractTransaction().virtualSize()

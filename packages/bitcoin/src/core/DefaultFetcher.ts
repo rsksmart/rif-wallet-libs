@@ -19,7 +19,7 @@ export class DefaultFetcher implements BIPFetcher {
   }
 
   async fetchXpubNextUnusedIndex () {
-    return 0 as unknown as number
+    return { index: 0, availableIndexes: [0, 1, 2, 3, 4] } as unknown as { index: number, availableIndexes: number[] }
   }
 
   async fetchUtxos () {

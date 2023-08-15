@@ -21,7 +21,8 @@ export class BIP84Payment implements IPayment {
     amountToPay: number,
     addressToPay: string,
     unspentTransactions: Array<UnspentTransactionType>,
-    miningFee: number
+    miningFee: number,
+    addressToReturnRemainingAmount?: string
   ) {
     let amount: number = amountToPay + miningFee
     const psbt = new Psbt({ network: this.networkInfo as Network })
@@ -34,9 +35,9 @@ export class BIP84Payment implements IPayment {
       }
     }
     if (amount < 0) {
-      // Send back to the first address
+      // Send back to the selected address OR first address
       psbt.addOutput({
-        address: unspentTransactions[0].address,
+        address: addressToReturnRemainingAmount ?? unspentTransactions[0].address,
         value: amount * -1
       })
     }
