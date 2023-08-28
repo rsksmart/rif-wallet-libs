@@ -103,13 +103,13 @@ export class RifWalletServicesFetcher implements RIFWalletServicesFetcherInterfa
     xpub: string,
     changeIndex = 0,
     knownLastUsedIndex = 0,
-  ): Promise<number> =>
+    maxIndexesToFetch = 5,
+  ): Promise<{ index: number, availableIndexes: number[] }> =>
     this.axiosInstance
       .get(
-        `/bitcoin/getNextUnusedIndex/${xpub}?changeIndex=${changeIndex}&knownLastUsedIndex=${knownLastUsedIndex}`,
+        `/bitcoin/getNextUnusedIndex/${xpub}?changeIndex=${changeIndex}&knownLastUsedIndex=${knownLastUsedIndex}&maxIndexesToFetch=${maxIndexesToFetch}`,
       )
       .then(response => response.data)
-      .then(json => json.index)
 
   fetchXpubTransactions = (
     xpub: string,

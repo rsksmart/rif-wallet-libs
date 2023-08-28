@@ -46,6 +46,7 @@ export interface PaymentType {
   addressToPay: string
   unspentTransactions: Array<UnspentTransactionType>
   miningFee: number
+  addressToReturnRemainingAmount?: string
 }
 
 export type PaymentTypeWithBalance = PaymentType & { balance: number }
@@ -63,6 +64,7 @@ export interface IPayment {
     addressToPay: string,
     unspentTransactions: UnspentTransactionType[],
     miningFee: number,
+    addressToReturnRemainingAmount?: string
   ) => Psbt
   signPayment: (psbt: Psbt) => Psbt
   convertPaymentToHexString: (psbt: Psbt) => string
@@ -97,6 +99,7 @@ export interface VinType {
   addresses: string[]
   isAddress: boolean
   value: string
+  isOwn: boolean
 }
 
 export interface VoutType {
@@ -105,6 +108,7 @@ export interface VoutType {
   hex: string
   addresses: string[]
   isAddress: boolean
+  isOwn: boolean
 }
 
 export interface BitcoinTransactionType {
@@ -146,7 +150,10 @@ export interface ISendTransactionJsonReturnData {
 export interface BIPFetcher {
   fetchXpubBalance: (xpub: string) => Promise<XPubBalanceData>
   fetchUtxos: (xpub: string) => Promise<UnspentTransactionType[]>
-  fetchXpubNextUnusedIndex: (xpub: string) => Promise<number>
+  fetchXpubNextUnusedIndex: (xpub: string,
+                             changeIndex?: number,
+                             knownLastUsedIndex?: number,
+                             maxIndexesToFetch?: number,) => Promise<{ index: number, availableIndexes: number[] }>
   fetchXpubTransactions: (
     xpub: string,
     pageSize: number | undefined,

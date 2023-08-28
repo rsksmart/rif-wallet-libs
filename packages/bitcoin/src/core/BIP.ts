@@ -114,11 +114,24 @@ export class BIP {
   }
 
   async fetchExternalAvailableAddress () {
-    const index =
+    const { index } =
       await this.fetcher.fetchXpubNextUnusedIndex(
         this.accountPublicKey
       )
     return this.getAddress(index)
+  }
+
+  async fetchExternalAvailableAddresses ({ changeIndex = 0, knownLastUsedIndex = 0, maxIndexesToFetch = 5 }) {
+    const { availableIndexes } = await this.fetcher.fetchXpubNextUnusedIndex(
+      this.accountPublicKey,
+      changeIndex,
+      knownLastUsedIndex,
+      maxIndexesToFetch,
+    )
+    return availableIndexes.reduce<string[]>((prev, curr) => {
+      prev.push(this.getAddress(curr))
+      return prev
+    }, [])
   }
 
   async fetchTransactions (pageSize = 10, pageNumber = 1) {

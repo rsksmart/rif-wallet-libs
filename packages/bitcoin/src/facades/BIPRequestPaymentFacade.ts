@@ -16,6 +16,7 @@ export class BIPRequestPaymentFacade {
   addressToPay!: string
   utxos!: UnspentTransactionType[]
   balance!: number
+  addressToReturnRemainingAmount?: string
   resolve!: (value: ISendTransactionJsonReturnData) => void
   constructor (request: BitcoinRequestFunction, payment: BIPPaymentFacade) {
     this.request = request
@@ -27,13 +28,15 @@ export class BIPRequestPaymentFacade {
     addressToPay,
     unspentTransactions,
     miningFee,
-    balance
+    balance,
+    addressToReturnRemainingAmount,
   }: PaymentTypeWithBalance) {
     this.amountToPay = amountToPay
     this.addressToPay = addressToPay
     this.utxos = unspentTransactions
     this.miningFee = miningFee
     this.balance = balance
+    this.addressToReturnRemainingAmount = addressToReturnRemainingAmount
   }
 
   getPaymentArguments (): PaymentTypeWithBalance {
@@ -42,7 +45,8 @@ export class BIPRequestPaymentFacade {
       addressToPay: this.addressToPay,
       unspentTransactions: this.utxos,
       miningFee: this.miningFee,
-      balance: this.balance
+      balance: this.balance,
+      addressToReturnRemainingAmount: this.addressToReturnRemainingAmount,
     }
   }
 
@@ -57,12 +61,13 @@ export class BIPRequestPaymentFacade {
   }
 
   async getEstimatedMiningFee (): Promise<number> {
-    const { addressToPay, amountToPay, unspentTransactions, balance } =
+    const { addressToPay, amountToPay, unspentTransactions, balance, addressToReturnRemainingAmount } =
       this.getPaymentArguments()
     const miningFee = await this.payment.estimateMiningFee({
       addressToPay,
       amountToPay,
-      unspentTransactions
+      unspentTransactions,
+      addressToReturnRemainingAmount
     })
     if (amountToPay + miningFee > balance) {
       return balance - amountToPay
