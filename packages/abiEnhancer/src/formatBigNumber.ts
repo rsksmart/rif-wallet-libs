@@ -9,13 +9,14 @@ export const formatBigNumber = (amount: BigNumber, decimals: number) => {
 
   const quotient = amount.div(divisor)
   const rest = amount.mod(divisor)
+  const decimalsPart = rest
+    .toString()
+    .padStart(decimals, '0')
+    .slice(0, 8)
+    .replace(/0+$/, '')
 
   // https://stackoverflow.com/questions/5774246/remove-trailing-characters-from-string-in-javascript
   return (
-    quotient.toString() +
-    (rest.isZero()
-      ? ''
-      : '.' +
-        rest.toString().padStart(decimals, '0').slice(0, 8).replace(/0+$/, ''))
+    quotient.toString() + (rest.isZero() || !decimalsPart ? '' : '.' + decimalsPart)
   )
 }
