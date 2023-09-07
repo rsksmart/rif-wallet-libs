@@ -87,7 +87,10 @@ export class RIFRelaySDK {
       .then(
         (response: AxiosResponse<ServerConfig>) =>
           (this.serverConfig = response.data)
-      )
+      ).catch(err => {
+        console.log({ relayServer, err })
+        throw new Error('Could not connect to RIF Relay Server.')
+      })
   }
 
   private checkTransactionGasPrice = (gasPrice?: BigNumberish):string => {
