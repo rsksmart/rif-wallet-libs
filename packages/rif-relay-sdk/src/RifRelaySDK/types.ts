@@ -113,6 +113,7 @@ export interface RifRelayConfig {
   relayVerifierAddress: Address
   deployVerifierAddress: Address
   relayServer: string
+  relayVersion?: number
 }
 
 /**

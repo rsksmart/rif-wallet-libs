@@ -78,13 +78,17 @@ export class RIFRelaySDK {
     )
   }
 
-  private getServerConfig = (): Promise<ServerConfig> =>
-    axios
-      .get(`${this.sdkConfig.relayServer}/getaddr`)
+  private getServerConfig = (): Promise<ServerConfig> => {
+    const { relayVersion, relayServer } = this.sdkConfig
+    const configEndpoint = relayVersion === 2 ? 'chain-info' : 'getaddr'
+
+    return axios
+      .get(`${relayServer}/${configEndpoint}`)
       .then(
         (response: AxiosResponse<ServerConfig>) =>
           (this.serverConfig = response.data)
       )
+  }
 
   private checkTransactionGasPrice = (gasPrice?: BigNumberish):string => {
     if (!gasPrice) {
