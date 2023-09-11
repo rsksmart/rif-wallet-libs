@@ -93,7 +93,7 @@ describe('formatBigNumber', () => {
     const result = formatBigNumber(amount, decimals)
     expect(result).toEqual('1000.200002')
   })
-  it('handles 0', ()=> {
+  it('handles 0', () => {
     const amount = BigNumber.from('0')
     const result = formatBigNumber(amount, 8)
     expect(result).toEqual('0')
