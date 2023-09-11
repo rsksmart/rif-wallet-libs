@@ -44,6 +44,8 @@ export class RIFRelaySDK {
     eoaAddress: string,
     sdkConfig: RifRelayConfig
   ) {
+    console.log({ sdkConfig })
+
     // this should not happen but is more for typescript:
     if (!smartWallet.signer.provider) {
       throw new Error('unexpected signer/provider is null')
@@ -88,7 +90,7 @@ export class RIFRelaySDK {
         (response: AxiosResponse<ServerConfig>) =>
           (this.serverConfig = response.data)
       ).catch(err => {
-        console.log({ relayServer, err })
+        console.log({ relayServer, relayVersion, err })
         throw new Error('Could not connect to RIF Relay Server.')
       })
   }
