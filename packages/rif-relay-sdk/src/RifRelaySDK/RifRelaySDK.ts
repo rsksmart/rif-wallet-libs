@@ -81,16 +81,15 @@ export class RIFRelaySDK {
   }
 
   private getServerConfig = (): Promise<ServerConfig> => {
-    const { relayVersion, relayServer } = this.sdkConfig
-    const configEndpoint = relayVersion === 2 ? 'chain-info' : 'getaddr'
+    const { relayServer } = this.sdkConfig
 
     return axios
-      .get(`${relayServer}/${configEndpoint}`)
+      .get(`${relayServer}/chain-info`)
       .then(
         (response: AxiosResponse<ServerConfig>) =>
           (this.serverConfig = response.data)
       ).catch(err => {
-        console.log({ relayServer, relayVersion, err })
+        console.log({ config: this.sdkConfig, err })
         throw new Error('Could not connect to RIF Relay Server.')
       })
   }
