@@ -4,7 +4,7 @@ import {
   TransactionRequest
 } from '@ethersproject/abstract-provider'
 import axios, { AxiosResponse } from 'axios'
-import { BigNumber, BigNumberish, ethers } from 'ethers'
+import { BigNumber, BigNumberish, constants, ethers } from 'ethers'
 
 import { SmartWallet } from '../SmartWallet'
 import {
@@ -137,7 +137,7 @@ export class RIFRelaySDK {
         tokenContract: payment.tokenContract,
         tokenAmount: payment.tokenAmount.toString(),
         tokenGas,
-        validUntilTime: validUntilTime().toString()
+        validUntilTime: validUntilTime()
       },
       relayData: {
         gasPrice,
@@ -214,7 +214,7 @@ export class RIFRelaySDK {
         tokenGas,
         recoverer: ZERO_ADDRESS,
         index: 0,
-        validUntilTime: validUntilTime().toString()
+        validUntilTime: validUntilTime()
       },
       relayData: {
         gasPrice: this.serverConfig!.minGasPrice,
@@ -259,7 +259,7 @@ export class RIFRelaySDK {
           ...request,
           request: {
             ...request.request,
-            validUntilTime: request.request.validUntilTime.toString()
+            validUntilTime: request.request.validUntilTime
           }
         }
 
