@@ -213,7 +213,7 @@ export class RIFRelaySDK {
         tokenAmount: payment.tokenAmount.toString(),
         tokenGas,
         recoverer: ZERO_ADDRESS,
-        index: '0',
+        index: 0,
         validUntilTime: validUntilTime().toString()
       },
       relayData: {

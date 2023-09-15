@@ -93,7 +93,7 @@ export interface DeployRequestStruct {
   nonce: IntString
   tokenAmount: IntString
   tokenGas: IntString
-  index: IntString
+  index: number
   data: PrefixedHexString
   validUntilTime: IntString
 }
