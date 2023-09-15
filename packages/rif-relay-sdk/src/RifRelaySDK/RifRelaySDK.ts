@@ -84,7 +84,9 @@ export class RIFRelaySDK {
       .then(
         (response: AxiosResponse<ServerConfig>) =>
           (this.serverConfig = response.data)
-      )
+      ).catch(err => {
+        throw new Error(err)
+      })
 
   private checkTransactionGasPrice = (gasPrice?: BigNumberish):string => {
     if (!gasPrice) {
