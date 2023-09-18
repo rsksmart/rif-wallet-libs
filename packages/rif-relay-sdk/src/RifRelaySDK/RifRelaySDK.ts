@@ -4,7 +4,7 @@ import {
   TransactionRequest
 } from '@ethersproject/abstract-provider'
 import axios, { AxiosResponse } from 'axios'
-import { BigNumber, BigNumberish, constants, ethers } from 'ethers'
+import { BigNumber, BigNumberish, ethers } from 'ethers'
 
 import { SmartWallet } from '../SmartWallet'
 import {
@@ -280,7 +280,7 @@ export class RIFRelaySDK {
             }
 
             // if okay...
-            return resolve(response.data.transactionHash)
+            return resolve(response.data.txHash)
           })
           .catch(reject)
       )
