@@ -22,9 +22,18 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
   onFilterOutRepeatedTransactions: FilterOutRepeatedTransactionsFunction
   onEnhanceTransaction: EnhanceTransactionFunction
   cache: CacheInterface
+  cacheTexts = {
+    cacheBlockNumberText: 'blockNumber',
+    cacheTxsText: 'cachedTxs'
+  }
+
   onBeforeInit: OnBeforeInitFunction<Options, onSetInternetCredentialsReturn>
   encryptionKeyMessageToSign: string
-  constructor(rifWalletServicesUrl: string, abiEnhancer: IAbiEnhancer, dependencies: RifWalletSocketDependencies<Options, onSetInternetCredentialsReturn>) {
+  constructor(rifWalletServicesUrl: string, abiEnhancer: IAbiEnhancer, dependencies: RifWalletSocketDependencies<Options, onSetInternetCredentialsReturn>, cacheTextOptions?: {
+                cacheBlockNumberText: string
+                cacheTxsText: string
+              }
+  ) {
     super()
 
     this.abiEnhancer = abiEnhancer
@@ -34,6 +43,8 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
     this.onBeforeInit = dependencies.onBeforeInit
     this.onEnhanceTransaction = dependencies.onEnhanceTransaction
     this.encryptionKeyMessageToSign = dependencies.encryptionKeyMessageToSign
+    this.cacheTexts.cacheTxsText = cacheTextOptions?.cacheTxsText || this.cacheTexts.cacheTxsText
+    this.cacheTexts.cacheBlockNumberText = cacheTextOptions?.cacheBlockNumberText || this.cacheTexts.cacheBlockNumberText
   }
 
   private async init(
@@ -42,9 +53,10 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
     fetcher: RifWalletServicesFetcher,
   ) {
     this.onBeforeInit(encryptionKey, this)
+    const { cacheBlockNumberText, cacheTxsText } = this.cacheTexts
 
-    const blockNumber = this.cache.get('blockNumber') || '0'
-    const catchedTxs = this.cache.get('cachedTxs') || []
+    const blockNumber = this.cache.get(cacheBlockNumberText) || '0'
+    const catchedTxs = this.cache.get(cacheTxsText) || []
 
     const fetchedTransactions = await fetcher.fetchTransactionsByAddress(
       wallet.smartWalletAddress,
@@ -84,8 +96,8 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
       .concat(activityTransactions)
       .filter(this.onFilterOutRepeatedTransactions)
 
-    this.cache.set('cachedTxs', transactions)
-    this.cache.set('blockNumber', lastBlockNumber.toString())
+    this.cache.set(cacheTxsText, transactions)
+    this.cache.set(cacheBlockNumberText, lastBlockNumber.toString())
 
     const fetchedTokens = await fetcher?.fetchTokensByAddress(
       wallet.smartWalletAddress,

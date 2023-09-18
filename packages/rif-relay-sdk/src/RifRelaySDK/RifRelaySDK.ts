@@ -90,7 +90,7 @@ export class RIFRelaySDK {
           (this.serverConfig = response.data)
       ).catch(err => {
         console.log({ config: this.sdkConfig, err })
-        throw new Error('Could not connect to RIF Relay Server.')
+        throw new Error(err)
       })
   }
 
