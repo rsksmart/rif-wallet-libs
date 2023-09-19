@@ -44,8 +44,6 @@ export class RIFRelaySDK {
     eoaAddress: string,
     sdkConfig: RifRelayConfig
   ) {
-    console.log({ sdkConfig })
-
     // this should not happen but is more for typescript:
     if (!smartWallet.signer.provider) {
       throw new Error('unexpected signer/provider is null')
@@ -113,10 +111,13 @@ export class RIFRelaySDK {
   ): Promise<RelayRequest> => {
     const gasPrice = this.checkTransactionGasPrice(tx.gasPrice)
     const nonce = await this.smartWallet.nonce()
+    /*
     const tokenGas = await this.estimateTokenTransferCost(
       payment.tokenContract,
       payment.tokenAmount
     )
+    // const tokenGas = Math.round(tokenGasEstimate.toNumber() * 1.1)
+    */
 
     const estimated = await this.provider.estimateGas({ ...tx, gasPrice })
     const correction =
@@ -134,14 +135,15 @@ export class RIFRelaySDK {
         value: tx.value?.toString() || '0',
         gas: internalCallCost.toString(),
         nonce: nonce.toString(),
-        tokenContract: payment.tokenContract,
+        tokenContract: payment.tokenContract.toLowerCase(),
         tokenAmount: payment.tokenAmount.toString(),
-        tokenGas: tokenGas.toString(),
+        // tokenGas needs to be set much higher than the estimate for v2 to work
+        tokenGas: '30000',
         validUntilTime: validUntilTime()
       },
       relayData: {
         gasPrice,
-        feesReceiver: this.serverConfig!.feesReceiver,
+        feesReceiver: this.serverConfig!.feesReceiver.toLowerCase(),
         callForwarder: this.smartWalletAddress,
         callVerifier: this.sdkConfig.relayVerifierAddress
       }
@@ -290,11 +292,9 @@ export class RIFRelaySDK {
     tx: TransactionRequest,
     tokenContract: Address
   ): Promise<BigNumber> => {
-    console.log('SDK estimateTransactionCost')
     if (Object.is(this.serverConfig, null)) {
       await this.getServerConfig()
     }
-    console.log('SDK', { config: this.serverConfig })
 
     const payment = {
       tokenContract,
@@ -311,14 +311,11 @@ export class RIFRelaySDK {
       throw err
     }
 
-    console.log('SDK: estimating transaction...')
-
     return await axios
       .post(`${this.sdkConfig.relayServer}/estimate`, request)
-      .then((response: AxiosResponse<ServerEstimate>) => {
-        console.log('SDK: from server returned', response.data)
-        return BigNumber.from(response.data.requiredTokenAmount)
-      })
+      .then((response: AxiosResponse<ServerEstimate>) =>
+        BigNumber.from(response.data.requiredTokenAmount)
+      )
       .catch((err) => {
         throw new Error(err)
       })
