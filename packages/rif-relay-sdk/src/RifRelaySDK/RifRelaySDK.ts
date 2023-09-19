@@ -136,7 +136,7 @@ export class RIFRelaySDK {
         nonce: nonce.toString(),
         tokenContract: payment.tokenContract,
         tokenAmount: payment.tokenAmount.toString(),
-        tokenGas,
+        tokenGas: tokenGas.toString(),
         validUntilTime: validUntilTime()
       },
       relayData: {
@@ -211,7 +211,7 @@ export class RIFRelaySDK {
         data: '0x',
         tokenContract: payment.tokenContract,
         tokenAmount: payment.tokenAmount.toString(),
-        tokenGas,
+        tokenGas: tokenGas.toString(),
         recoverer: ZERO_ADDRESS,
         index: 0,
         validUntilTime: validUntilTime()
@@ -290,30 +290,45 @@ export class RIFRelaySDK {
     tx: TransactionRequest,
     tokenContract: Address
   ): Promise<BigNumber> => {
+    console.log('SDK estimateTransactionCost')
     if (Object.is(this.serverConfig, null)) {
       await this.getServerConfig()
     }
+    console.log('SDK', { config: this.serverConfig })
 
     const payment = {
       tokenContract,
       tokenAmount: BigNumber.from(0)
     }
-    const relayRequest = await this.createRelayRequest(tx, payment)
-    const signature = await this.signRelayRequest(relayRequest, false)
-    const request = await this.prepareDataForServer(relayRequest, signature)
+
+    let request
+    try {
+      const relayRequest = await this.createRelayRequest(tx, payment)
+      const signature = await this.signRelayRequest(relayRequest, false)
+      request = await this.prepareDataForServer(relayRequest, signature)
+    } catch (err) {
+      console.log('SDK Error estimating fee:', err)
+      throw err
+    }
+
+    console.log('SDK: estimating transaction...')
 
     return await axios
       .post(`${this.sdkConfig.relayServer}/estimate`, request)
-      .then((response: AxiosResponse<ServerEstimate>) =>
-        BigNumber.from(response.data.requiredTokenAmount)
-      )
+      .then((response: AxiosResponse<ServerEstimate>) => {
+        console.log('SDK: from server returned', response.data)
+        return BigNumber.from(response.data.requiredTokenAmount)
+      })
+      .catch((err) => {
+        throw new Error(err)
+      })
   }
 
   // the cost to send the token payment from the smartwallet to the fee collector:
   private estimateTokenTransferCost = async (
     tokenAddress: Address,
     feeAmount: BigNumber
-  ): Promise<string> => {
+  ): Promise<BigNumber> => {
     const erc20 = new ethers.Contract(
       tokenAddress,
       ERC20Abi,
@@ -322,6 +337,5 @@ export class RIFRelaySDK {
 
     return erc20.estimateGas
       .transfer(this.serverConfig!.feesReceiver, feeAmount)
-      .then((est: BigNumber) => est.toString())
   }
 }
