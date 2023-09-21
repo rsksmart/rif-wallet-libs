@@ -1,3 +1,4 @@
+import { BytesLike, hexDataSlice } from '@ethersproject/bytes'
 
 export function getDefaultNodeUrl(chainId: number) : string {
   switch (chainId) {
@@ -19,4 +20,11 @@ export function getNativeCryptoCurrencySymbol(chainId: number) : string {
     default:
       throw new Error('Unsupported network')
   }
+}
+
+export const getHexSig = (data: BytesLike) => {
+  const firstFourBytes = hexDataSlice(data, 0, 4)
+  const functionHexWithout0x = firstFourBytes.substring(2)
+
+  return functionHexWithout0x
 }

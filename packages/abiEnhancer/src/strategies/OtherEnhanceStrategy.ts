@@ -1,7 +1,7 @@
 import { Provider, TransactionRequest } from '@ethersproject/abstract-provider'
 import { EnhancedResult, EnhanceStrategy } from '../AbiEnhancer'
 import axios from 'axios'
-import { hexDataSlice, BytesLike } from '@ethersproject/bytes'
+import { hexDataSlice } from '@ethersproject/bytes'
 import { defaultAbiCoder } from '@ethersproject/abi/lib'
 import { Interface } from '@ethersproject/abi'
 import { Contract } from '@ethersproject/contracts'
@@ -10,7 +10,7 @@ import { formatBigNumber } from '../formatBigNumber'
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { findToken } from './ERC20EnhanceStrategy'
-import { getDefaultNodeUrl, getNativeCryptoCurrencySymbol } from '../utils'
+import { getDefaultNodeUrl, getHexSig, getNativeCryptoCurrencySymbol } from '../utils'
 
 const ethList4BytesServiceUrl =
   'https://raw.githubusercontent.com/ethereum-lists/4bytes/master/signatures'
@@ -29,13 +29,6 @@ const getFunctionSignatures = async (fnHexSig: string) => {
     functionSignaturePromise,
     functionSignatureWithNamesPromise
   ])
-}
-
-const getHexSig = (data: BytesLike) => {
-  const firstFourBytes = hexDataSlice(data, 0, 4)
-  const functionHexWithout0x = firstFourBytes.substring(2)
-
-  return functionHexWithout0x
 }
 
 const parseSignature = (signatures: string) => {
