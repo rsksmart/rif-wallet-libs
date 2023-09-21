@@ -8,6 +8,7 @@ import { RifWalletServicesFetcher } from './RifWalletServicesFetcher'
 import {
   CacheInterface, EnhanceTransactionFunction,
   FilterOutRepeatedTransactionsFunction,
+  Header,
   IApiTransaction,
   IRifWalletServicesSocket, IServiceChangeEvent, OnBeforeInitFunction,
   RifWalletSocketDependencies
@@ -109,7 +110,7 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
     })
   }
 
-  async connect(wallet: RIFWallet, fetcher: RifWalletServicesFetcher) {
+  async connect(wallet: RIFWallet, fetcher: RifWalletServicesFetcher, headers: Header) {
     try {
       const encriptionKey = await wallet.smartWallet.signer.signMessage(
         this.encryptionKeyMessageToSign,
@@ -122,6 +123,7 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
         reconnectionAttempts: 3,
         timeout: 2000,
         autoConnect: true,
+        extraHeaders: headers,
         transports: ['websocket'], // you need to explicitly tell it to use websocket
       })
 

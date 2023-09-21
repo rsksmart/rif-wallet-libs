@@ -163,10 +163,15 @@ export interface IServiceInitEvent {
   balances: ITokenWithBalance[]
 }
 
+export interface Header {
+  [key: string] : string
+}
+
 export interface IRifWalletServicesSocket extends EventEmitter {
   connect: (
     wallet: RIFWallet,
     fetcher: RifWalletServicesFetcher,
+    headers: Header
   ) => Promise<void>
 
   disconnect(): void
