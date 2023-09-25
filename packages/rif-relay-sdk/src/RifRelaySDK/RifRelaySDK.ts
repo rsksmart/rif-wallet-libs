@@ -138,7 +138,8 @@ export class RIFRelaySDK {
         tokenContract: payment.tokenContract.toLowerCase(),
         tokenAmount: payment.tokenAmount.toString(),
         // tokenGas needs to be set much higher than the estimate for v2 to work
-        tokenGas: '30000',
+        // Francis: returned back old .toString logic as it's working
+        tokenGas: tokenGas.toString(),
         validUntilTime: validUntilTime()
       },
       relayData: {
