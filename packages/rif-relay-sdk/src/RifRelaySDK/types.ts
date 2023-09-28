@@ -4,21 +4,6 @@ export type Address = string
 export type IntString = string
 export type PrefixedHexString = string
 
-export const DeployRequestDataType = [
-  { name: 'relayHub', type: 'address' },
-  { name: 'from', type: 'address' },
-  { name: 'to', type: 'address' },
-  { name: 'tokenContract', type: 'address' },
-  { name: 'recoverer', type: 'address' },
-  { name: 'value', type: 'uint256' },
-  { name: 'nonce', type: 'uint256' },
-  { name: 'tokenAmount', type: 'uint256' },
-  { name: 'tokenGas', type: 'uint256' },
-  { name: 'validUntilTime', type: 'uint256' },
-  { name: 'index', type: 'uint256' },
-  { name: 'data', type: 'bytes' }
-]
-
 export const RelayDataType = [
   { name: 'gasPrice', type: 'uint256' },
   { name: 'feesReceiver', type: 'address' },
@@ -41,8 +26,19 @@ export const ForwardRequestType = [
 ]
 
 export const DeployRequestType = [
-  ...DeployRequestDataType,
-  { name: 'relayData', type: 'RelayData' }
+  { name: 'relayHub', type: 'address' },
+  { name: 'from', type: 'address' },
+  { name: 'to', type: 'address' },
+  { name: 'tokenContract', type: 'address' },
+  { name: 'recoverer', type: 'address' },
+  { name: 'value', type: 'uint256' },
+  { name: 'nonce', type: 'uint256' },
+  { name: 'tokenAmount', type: 'uint256' },
+  { name: 'tokenGas', type: 'uint256' },
+  { name: 'validUntilTime', type: 'uint256' },
+  { name: 'index', type: 'uint256' },
+  { name: 'data', type: 'bytes' },
+  { name: 'relayData', type: 'RelayData' },
 ]
 
 export const RelayRequestType = [
@@ -75,7 +71,7 @@ export interface ForwardRequest {
   tokenAmount: IntString
   tokenGas: IntString
   data: PrefixedHexString
-  validUntilTime: IntString
+  validUntilTime: number
 }
 
 export interface RelayRequest {
@@ -89,13 +85,13 @@ export interface DeployRequestStruct {
   to: Address
   tokenContract: Address
   recoverer: Address
-  value: IntString
+  value: string
   nonce: IntString
   tokenAmount: IntString
   tokenGas: IntString
-  index: IntString
+  index: number
   data: PrefixedHexString
-  validUntilTime: IntString
+  validUntilTime: number
 }
 
 export interface DeployRequest {

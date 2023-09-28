@@ -31,8 +31,7 @@ export function getDomainSeparator (
   }
 }
 
-export const validUntilTime = () =>
-  BigNumber.from(Math.floor(Date.now() / 1000) + TWO_DAYS)
+export const validUntilTime = () => Math.floor(Date.now() / 1000) + TWO_DAYS
 
 export const MAX_RELAY_NONCE_GAP = 3
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
