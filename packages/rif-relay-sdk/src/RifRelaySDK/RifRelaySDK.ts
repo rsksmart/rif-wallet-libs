@@ -111,13 +111,10 @@ export class RIFRelaySDK {
   ): Promise<RelayRequest> => {
     const gasPrice = this.checkTransactionGasPrice(tx.gasPrice)
     const nonce = await this.smartWallet.nonce()
-    /*
     const tokenGas = await this.estimateTokenTransferCost(
       payment.tokenContract,
       payment.tokenAmount
     )
-    // const tokenGas = Math.round(tokenGasEstimate.toNumber() * 1.1)
-    */
 
     const estimated = await this.provider.estimateGas({ ...tx, gasPrice })
     const correction =
@@ -137,8 +134,6 @@ export class RIFRelaySDK {
         nonce: nonce.toString(),
         tokenContract: payment.tokenContract.toLowerCase(),
         tokenAmount: payment.tokenAmount.toString(),
-        // tokenGas needs to be set much higher than the estimate for v2 to work
-        // Francis: returned back old .toString logic as it's working
         tokenGas: tokenGas.toString(),
         validUntilTime: validUntilTime()
       },
