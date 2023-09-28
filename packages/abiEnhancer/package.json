@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-abi-enhancer",
-  "version": "1.0.7",
+  "version": "1.0.6",
   "description": "ABI Enhancer Library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
