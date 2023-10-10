@@ -1,5 +1,5 @@
 import { TESTNET_CHAIN_ID } from './utils'
-import { ERC20EnhanceStrategy, OtherEnhanceStrategy, RifRelayEnhanceStrategy } from '../src'
+import { RifRelayEnhanceStrategy } from '../src'
 
 describe('Rif Relay Enhance Strategy', () => {
   const transactionRequest = {
@@ -34,7 +34,7 @@ describe('Rif Relay Enhance Strategy', () => {
   }
 
   it('should return transaction info enhanced', async () => {
-    const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
+    const strategy = new RifRelayEnhanceStrategy()
     const result = await strategy.parse(TESTNET_CHAIN_ID, transactionRequest)
 
     expect(result).not.toBeNull()
@@ -46,7 +46,7 @@ describe('Rif Relay Enhance Strategy', () => {
   }, 30000)
 
   it('should return null if data is empty', async () => {
-    const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
+    const strategy = new RifRelayEnhanceStrategy()
     const result = await strategy.parse(TESTNET_CHAIN_ID, {
       ...transactionRequest,
       data: undefined,
@@ -56,7 +56,7 @@ describe('Rif Relay Enhance Strategy', () => {
   })
 
   it('should return null if can not decode data', async () => {
-    const strategy = new RifRelayEnhanceStrategy([new ERC20EnhanceStrategy(), new OtherEnhanceStrategy()])
+    const strategy = new RifRelayEnhanceStrategy()
 
     const result = await strategy.parse(TESTNET_CHAIN_ID, {
       ...transactionRequest,

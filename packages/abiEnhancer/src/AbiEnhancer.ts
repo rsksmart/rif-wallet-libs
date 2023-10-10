@@ -40,17 +40,14 @@ export interface IAbiEnhancer {
   ): Promise<EnhancedResult | null>
 }
 
-const erc20EnhanceStrategy = new ERC20EnhanceStrategy()
-const otherEnhanceStrategy = new OtherEnhanceStrategy()
-
 export class AbiEnhancer implements IAbiEnhancer {
   public strategies: EnhanceStrategy[]
 
   constructor () {
     this.strategies = [
-      new RifRelayEnhanceStrategy([erc20EnhanceStrategy, otherEnhanceStrategy]),
-      erc20EnhanceStrategy,
-      otherEnhanceStrategy,
+      new RifRelayEnhanceStrategy(),
+      new ERC20EnhanceStrategy(),
+      new OtherEnhanceStrategy(),
       new RBTCEnhanceStrategy()
     ]
   }
