@@ -99,6 +99,11 @@ export class RifWalletServicesFetcher implements RIFWalletServicesFetcherInterfa
       .get(`/bitcoin/sendTransaction/${hexdata}`)
       .then(res => res.data)
 
+  sendTransactionHexDataPost = (hexdata: string): Promise<any> =>
+    this.axiosInstance
+      .post('/bitcoin/sendTransaction', { txhexdata: hexdata })
+      .then(res => res.data)
+
   fetchXpubNextUnusedIndex = (
     xpub: string,
     changeIndex = 0,
