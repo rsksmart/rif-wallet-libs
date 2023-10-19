@@ -7,9 +7,7 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/rsksmart"
-  },
+  
   "scripts": {
     "test": "npx jest --collect-coverage --verbose",
     "build": "tsc"

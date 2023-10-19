@@ -15,9 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/rsksmart"
-  },
+  
   "keywords": [
     "rsk",
     "rif"
