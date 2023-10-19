@@ -10,7 +10,9 @@
   "scripts": {
     "build": "tsc"
   },
-  
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
