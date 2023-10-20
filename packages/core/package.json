@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/rsksmart"
+    "access": "public"
   },
   "repository": {
     "type": "git",

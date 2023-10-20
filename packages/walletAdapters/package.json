@@ -8,7 +8,7 @@
     "dist"
   ],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/rsksmart"
+    "access": "public"
   },
   "scripts": {
     "build": "tsc",
