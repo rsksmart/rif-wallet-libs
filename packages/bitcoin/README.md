@@ -83,6 +83,9 @@ Short explanation:
 - **Title:** Derivation scheme for P2WPKH based accounts
 - **Description:** Focuses on deriving SegWit addresses (which start with `bc1` for Bitcoin) from HD wallets. This BIP ensures compatibility and standardization for wallets wanting to use the newer, more efficient SegWit address format.
 
+### Sequence Diagram
+
+![SequenceDiagram](https://private-user-images.githubusercontent.com/39339295/277719697-de35ce71-4679-4f8a-8f23-0b74323cd8b3.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE2OTgxNjIxOTQsIm5iZiI6MTY5ODE2MTg5NCwicGF0aCI6Ii8zOTMzOTI5NS8yNzc3MTk2OTctZGUzNWNlNzEtNDY3OS00ZjhhLThmMjMtMGI3NDMyM2NkOGIzLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzEwMjQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMxMDI0VDE1MzgxNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWRmY2ZiNTk1NGZlNjhiOGMxNDI0YjlkOTFmMzdlYmJmNDI5NWVlNTA1NGQzMGIzYTdiNzMxMjRlODAwMWZiMTEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.YfeD6J3RMDfVPOjlkVQfKlEQq2B-a1XJmcy9jVVKtzo)
 
 ## Tests:
 
