@@ -1,6 +1,7 @@
 import {
   BIPFetcher,
   BitcoinTransactionContainerType,
+  FetchBitcoinMiningFeeRatesReturnType,
   ISendTransactionJsonReturnData,
   UnspentTransactionType,
   XPubBalanceData
@@ -28,5 +29,10 @@ export class DefaultFetcher implements BIPFetcher {
 
   async sendTransactionHexData () {
     return {} as unknown as ISendTransactionJsonReturnData
+  }
+
+  async fetchBitcoinMiningFeeRates<T extends 'blockbook' | 'cypher'>(
+  ): Promise<FetchBitcoinMiningFeeRatesReturnType<T>> {
+    return {} as FetchBitcoinMiningFeeRatesReturnType<T>
   }
 }
