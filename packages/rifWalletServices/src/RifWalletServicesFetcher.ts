@@ -4,7 +4,11 @@ import {
   RifWalletFetcherDependencies, RIFWalletServicesFetcherInterface,
   TransactionsServerResponse,
 } from './types'
-import { BitcoinTransactionContainerType, UnspentTransactionType } from '@rsksmart/rif-wallet-bitcoin'
+import {
+  BitcoinTransactionContainerType,
+  FetchBitcoinMiningFeeRatesReturnType,
+  UnspentTransactionType
+} from '@rsksmart/rif-wallet-bitcoin'
 import { AxiosInstance } from 'axios'
 
 export class RifWalletServicesFetcher implements RIFWalletServicesFetcherInterface {
@@ -125,5 +129,10 @@ export class RifWalletServicesFetcher implements RIFWalletServicesFetcherInterfa
       .get<BitcoinTransactionContainerType>(
         `/bitcoin/getXpubTransactions/${xpub}?pageSize=${pageSize}&page=${pageNumber}`,
       )
+      .then(response => response.data)
+
+  fetchBitcoinMiningFeeRates = <T extends 'blockbook' | 'cypher'>(apiSource: T = 'blockbook' as T, numberOfBlocks = 6): Promise<FetchBitcoinMiningFeeRatesReturnType<T>> =>
+    this.axiosInstance
+      .get<FetchBitcoinMiningFeeRatesReturnType<T>>(`/bitcoin/estimateFee?apiSource=${apiSource}&numberOfBlocks=${numberOfBlocks}`)
       .then(response => response.data)
 }
