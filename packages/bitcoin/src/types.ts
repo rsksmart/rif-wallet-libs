@@ -99,7 +99,7 @@ export interface VinType {
   addresses: string[]
   isAddress: boolean
   value: string
-  isOwn: boolean
+  isOwn?: boolean
 }
 
 export interface VoutType {
@@ -108,7 +108,7 @@ export interface VoutType {
   hex: string
   addresses: string[]
   isAddress: boolean
-  isOwn: boolean
+  isOwn?: boolean
 }
 
 export interface BitcoinTransactionType {
@@ -147,6 +147,28 @@ export interface ISendTransactionJsonReturnData {
   result?: string
 }
 
+export type FetchBitcoinMiningFeeRatesReturnType<T extends string> =
+  T extends 'blockbook' ? { result: string } :
+    T extends 'cypher' ? {
+        name: string
+        height: number
+        hash: string
+        time: string
+        latest_url: string
+        previous_hash: string
+        previous_url: string
+        peer_count: number
+        unconfirmed_count: number
+        high_fee_per_kb: number
+        medium_fee_per_kb: number
+        low_fee_per_kb: number
+        last_fork_height: number
+        last_fork_hash: string
+        timeCached: number
+      }
+      :
+      never
+
 export interface BIPFetcher {
   fetchXpubBalance: (xpub: string) => Promise<XPubBalanceData>
   fetchUtxos: (xpub: string) => Promise<UnspentTransactionType[]>
@@ -160,6 +182,10 @@ export interface BIPFetcher {
     pageNumber: number,
   ) => Promise<BitcoinTransactionContainerType>
   sendTransactionHexData: (hexdata: string) => Promise<ISendTransactionJsonReturnData>
+  fetchBitcoinMiningFeeRates: <T extends 'blockbook' | 'cypher'>(
+    apiSource?: T,
+    numberOfBlocks?: number
+  ) => Promise<FetchBitcoinMiningFeeRatesReturnType<T>>;
 }
 
 export interface SendBitcoinRequest {
