@@ -1,6 +1,7 @@
 export interface IResolver {
   methodName: string
   resolve: (params: any[] | any) => Promise<any> // TODO: this is not correct?
+  validate?: (...params: any[]) => void
   // There are many different types this param can be
 }
 
@@ -20,5 +21,9 @@ export class RPCAdapter {
     }
 
     return resolver.resolve(params)
+  }
+
+  getResolvers() {
+    return this.resolvers
   }
 }
