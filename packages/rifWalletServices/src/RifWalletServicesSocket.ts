@@ -2,7 +2,6 @@ import EventEmitter from 'events'
 import { io, Socket } from 'socket.io-client'
 
 import { IAbiEnhancer } from '@rsksmart/rif-wallet-abi-enhancer'
-import { RIFWallet } from '@rsksmart/rif-wallet-core'
 import { RifWalletServicesFetcher } from './RifWalletServicesFetcher'
 
 import {
@@ -14,7 +13,7 @@ import {
   RifWalletSocketDependencies
 } from './types'
 
-export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
+export class RifWalletServicesSocket
   extends EventEmitter
   implements IRifWalletServicesSocket {
   private rifWalletServicesUrl: string
@@ -28,9 +27,8 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
     cacheTxsText: 'cachedTxs'
   }
 
-  onBeforeInit: OnBeforeInitFunction<Options, onSetInternetCredentialsReturn>
-  encryptionKeyMessageToSign: string
-  constructor(rifWalletServicesUrl: string, abiEnhancer: IAbiEnhancer, dependencies: RifWalletSocketDependencies<Options, onSetInternetCredentialsReturn>, cacheTextOptions?: {
+  onBeforeInit: OnBeforeInitFunction
+  constructor(rifWalletServicesUrl: string, abiEnhancer: IAbiEnhancer, dependencies: RifWalletSocketDependencies, cacheTextOptions?: {
                 cacheBlockNumberText: string
                 cacheTxsText: string
               }
@@ -43,24 +41,23 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
     this.cache = dependencies.cache
     this.onBeforeInit = dependencies.onBeforeInit
     this.onEnhanceTransaction = dependencies.onEnhanceTransaction
-    this.encryptionKeyMessageToSign = dependencies.encryptionKeyMessageToSign
     this.cacheTexts.cacheTxsText = cacheTextOptions?.cacheTxsText || this.cacheTexts.cacheTxsText
     this.cacheTexts.cacheBlockNumberText = cacheTextOptions?.cacheBlockNumberText || this.cacheTexts.cacheBlockNumberText
   }
 
   private async init(
-    wallet: RIFWallet,
-    encryptionKey: string,
+    address: string,
+    chainId: number,
     fetcher: RifWalletServicesFetcher,
   ) {
-    this.onBeforeInit(encryptionKey, this)
+    this.onBeforeInit(this)
     const { cacheBlockNumberText, cacheTxsText } = this.cacheTexts
 
     const blockNumber = this.cache.get(cacheBlockNumberText) || '0'
     const catchedTxs = this.cache.get(cacheTxsText) || []
 
     const fetchedTransactions = await fetcher.fetchTransactionsByAddress(
-      wallet.smartWalletAddress,
+      address,
       null,
       null,
       blockNumber,
@@ -78,7 +75,7 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
             enhancedTransaction: this.cache.get(tx.hash),
           }
         }
-        const enhancedTransaction = await this.onEnhanceTransaction(tx, wallet)
+        const enhancedTransaction = await this.onEnhanceTransaction(tx, chainId)
         if (enhancedTransaction) {
           this.cache.set(tx.hash, enhancedTransaction)
           return {
@@ -101,7 +98,7 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
     this.cache.set(cacheBlockNumberText, lastBlockNumber.toString())
 
     const fetchedTokens = await fetcher?.fetchTokensByAddress(
-      wallet.smartWalletAddress,
+      address,
     )
 
     this.emit('init', {
@@ -110,12 +107,10 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
     })
   }
 
-  async connect(wallet: RIFWallet, fetcher: RifWalletServicesFetcher, headers: Header) {
+  async connect(address: string, chainId: number,
+    fetcher: RifWalletServicesFetcher, headers: Header) {
     try {
-      const encriptionKey = await wallet.smartWallet.signer.signMessage(
-        this.encryptionKeyMessageToSign,
-      )
-      await this.init(wallet, encriptionKey, fetcher)
+      await this.init(address, chainId, fetcher)
 
       const socket = io(this.rifWalletServicesUrl, {
         path: '/ws',
@@ -133,7 +128,7 @@ export class RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>
         })
 
         socket.emit('subscribe', {
-          address: wallet.smartWalletAddress,
+          address,
         })
       })
 

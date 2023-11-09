@@ -1,6 +1,5 @@
 import { ContractReceipt } from '@ethersproject/contracts'
 import EventEmitter from 'events'
-import { RIFWallet } from '@rsksmart/rif-wallet-core'
 import { RifWalletServicesFetcher } from './RifWalletServicesFetcher'
 import { EnhancedResult } from '@rsksmart/rif-wallet-abi-enhancer'
 import { RifWalletServicesSocket } from './RifWalletServicesSocket'
@@ -169,7 +168,8 @@ export interface Header {
 
 export interface IRifWalletServicesSocket extends EventEmitter {
   connect: (
-    wallet: RIFWallet,
+    address: string,
+    chainId: number,
     fetcher: RifWalletServicesFetcher,
     headers: Header
   ) => Promise<void>
@@ -192,14 +192,13 @@ export interface CacheInterface {
   has: (key: string) => boolean
 }
 
-export type OnBeforeInitFunction<Options, onSetInternetCredentialsReturn> = (encryptionKey: string, currentInstance: RifWalletServicesSocket<Options, onSetInternetCredentialsReturn>) => void
+export type OnBeforeInitFunction = (currentInstance: RifWalletServicesSocket) => void
 
-export type EnhanceTransactionFunction = (transaction: IApiTransaction, wallet: RIFWallet) => Promise<EnhancedResult | null>
+export type EnhanceTransactionFunction = (transaction: IApiTransaction, chainId: number) => Promise<EnhancedResult | null>
 
-export type RifWalletSocketDependencies<Options, onSetInternetCredentialsReturn> = {
+export type RifWalletSocketDependencies = {
   onFilterOutRepeatedTransactions: FilterOutRepeatedTransactionsFunction
   cache: CacheInterface
-  onBeforeInit: OnBeforeInitFunction<Options, onSetInternetCredentialsReturn>
+  onBeforeInit: OnBeforeInitFunction
   onEnhanceTransaction: EnhanceTransactionFunction
-  encryptionKeyMessageToSign: string
 }
