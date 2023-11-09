@@ -102,6 +102,8 @@ export interface DeployRequest {
 export interface RelayPayment {
   tokenContract: Address
   tokenAmount: BigNumber
+  // optional parameter for the gas to send the payment:
+  tokenGasAmount?: BigNumber
 }
 
 export interface RifRelayConfig {
