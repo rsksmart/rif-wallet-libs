@@ -112,11 +112,12 @@ export class RIFRelaySDK {
     const gasPrice = this.checkTransactionGasPrice(tx.gasPrice)
     const nonce = await this.smartWallet.nonce()
 
-    const { tokenContract, tokenAmount, tokenGasAmount } = payment
-    const tokenGas = tokenGasAmount || await this.estimateTokenTransferCost(
+    const { tokenContract, tokenAmount, tokenGasIncrease } = payment
+    const estTokenGas = await this.estimateTokenTransferCost(
       tokenContract,
       tokenAmount
     )
+    const tokenGas = tokenGasIncrease ? estTokenGas.mul(tokenGasIncrease) : estTokenGas
 
     const estimated = await this.provider.estimateGas({ ...tx, gasPrice })
     const correction =
