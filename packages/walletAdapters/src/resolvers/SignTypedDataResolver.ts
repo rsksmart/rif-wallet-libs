@@ -4,9 +4,11 @@ import { IResolver } from '../RPCAdapter'
 export class SignTypedDataResolver implements IResolver {
   private signer: RIFWallet
   public methodName = 'eth_signTypedData'
+  public validate: ({ domain, message, types }: { domain: any, message: any, types: any }) => void
 
   constructor(signer: RIFWallet) {
     this.signer = signer
+    this.validate = () => {}
   }
 
   async resolve(params: any[]) {
@@ -17,7 +19,7 @@ export class SignTypedDataResolver implements IResolver {
     if (types.EIP712Domain) {
       delete types.EIP712Domain
     }
-
+    this.validate({ domain, message, types })
     return this.signer._signTypedData(domain, types, message)
   }
 }
