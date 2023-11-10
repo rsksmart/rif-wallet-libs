@@ -117,7 +117,9 @@ export class RIFRelaySDK {
       tokenContract,
       tokenAmount
     )
-    const tokenGas = tokenGasIncrease ? estTokenGas.mul(tokenGasIncrease) : estTokenGas
+    const tokenGas = tokenGasIncrease
+      ? estTokenGas.toNumber() * tokenGasIncrease
+      : estTokenGas
 
     const estimated = await this.provider.estimateGas({ ...tx, gasPrice })
     const correction =
