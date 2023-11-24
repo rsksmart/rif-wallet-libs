@@ -1,4 +1,6 @@
 import {
+  FetchBalancesTransactionsPricesByAddressFunction,
+  FetchBalancesTransactionsPricesByAddressFunctionResult,
   IRegisteredDappsGroup,
   ITokenWithBalance, IXPubBalanceData,
   RifWalletFetcherDependencies, RIFWalletServicesFetcherInterface,
@@ -79,6 +81,14 @@ export class RifWalletServicesFetcher implements RIFWalletServicesFetcherInterfa
 
   fetchTokensByAddress = async (address: string): Promise<ITokenWithBalance[]> => {
     const promise = this.axiosInstance.get<ITokenWithBalance[]>(`/address/${address.toLowerCase()}/tokens`)
+    const response = await this.retryPromise(promise, 2)
+    return response.data
+  }
+
+  fetchBalancesTransactionsPricesByAddress = async ({ address, prev, next, blockNumber = '0', limit }: FetchBalancesTransactionsPricesByAddressFunction) => {
+    const addressLowerCase = address.toLowerCase()
+    const url = `/address/${addressLowerCase}/all`
+    const promise = this.axiosInstance.get<FetchBalancesTransactionsPricesByAddressFunctionResult>(url, { params: { prev, next, blockNumber, limit } })
     const response = await this.retryPromise(promise, 2)
     return response.data
   }

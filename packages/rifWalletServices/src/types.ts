@@ -202,3 +202,17 @@ export type RifWalletSocketDependencies = {
   onBeforeInit: OnBeforeInitFunction
   onEnhanceTransaction: EnhanceTransactionFunction
 }
+
+export interface FetchBalancesTransactionsPricesByAddressFunction {
+  address: string
+  blockNumber?: string
+  prev?: string
+  next?: string
+  limit?: string
+}
+
+export interface FetchBalancesTransactionsPricesByAddressFunctionResult {
+  tokens: ITokenWithBalance[]
+  prices: Record<string, { price: number, lastUpdated: string }>
+  transactions: TransactionsServerResponse
+}

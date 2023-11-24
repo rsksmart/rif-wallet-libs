@@ -56,15 +56,7 @@ export class RifWalletServicesSocket
     const blockNumber = this.cache.get(cacheBlockNumberText) || '0'
     const catchedTxs = this.cache.get(cacheTxsText) || []
 
-    const [fetchedTokens, fetchedTransactions] = await Promise.all([
-      fetcher.fetchTokensByAddress(address),
-      fetcher.fetchTransactionsByAddress(
-        address,
-        null,
-        null,
-        blockNumber,
-      )
-    ])
+    const { prices, tokens: fetchedTokens, transactions: fetchedTransactions } = await fetcher.fetchBalancesTransactionsPricesByAddress({ address, blockNumber })
 
     let lastBlockNumber = blockNumber
     const activityTransactions = await Promise.all(
@@ -103,6 +95,7 @@ export class RifWalletServicesSocket
     this.emit('init', {
       transactions: transactions,
       balances: fetchedTokens,
+      prices,
     })
   }
 
