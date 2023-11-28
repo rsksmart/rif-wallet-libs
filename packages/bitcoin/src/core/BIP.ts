@@ -91,9 +91,9 @@ export class BIP {
     this.AddressFactory = new AddressFactory(this.bipNumber, this.networkInfo)
   }
 
-  getAddress (index = 0): string {
+  getAddress (index = 0, changeIndex = 0): string {
     const bip32Instance = this.bip32Root.derivePath(
-      this.PathDerivator.getAddressDerivation(index)
+      this.PathDerivator.getAddressDerivation(index, changeIndex)
     )
     return this.AddressFactory.getAddress(bip32Instance.publicKey)
   }
@@ -113,12 +113,13 @@ export class BIP {
     )
   }
 
-  async fetchExternalAvailableAddress () {
+  async fetchExternalAvailableAddress ({ changeIndex = 0 }) {
     const { index } =
       await this.fetcher.fetchXpubNextUnusedIndex(
-        this.accountPublicKey
+        this.accountPublicKey,
+        changeIndex,
       )
-    return this.getAddress(index)
+    return this.getAddress(index, changeIndex)
   }
 
   async fetchExternalAvailableAddresses ({ changeIndex = 0, knownLastUsedIndex = 0, maxIndexesToFetch = 5 }) {
@@ -129,7 +130,7 @@ export class BIP {
       maxIndexesToFetch,
     )
     return availableIndexes.reduce<string[]>((prev, curr) => {
-      prev.push(this.getAddress(curr))
+      prev.push(this.getAddress(curr, changeIndex))
       return prev
     }, [])
   }
