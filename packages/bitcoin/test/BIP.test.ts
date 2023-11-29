@@ -13,7 +13,7 @@ describe('BIP Class tests', () => {
     const bip84 = bitcoinNetworkInstance.bipNames.BIP84
 
     mnemonicAddresses.forEach(mnemonicAddress => {
-      it(`Should generate the address ${mnemonicAddress.bip84_address} of path ${mnemonicAddress.path} correctly`, () => {
+      it(`Should generate the address ${mnemonicAddress.bip84_address} of path ${mnemonicAddress.path_84} correctly`, () => {
         const address = bip84.getAddress(mnemonicAddress.index, mnemonicAddress.change)
         expect(address).toBe(mnemonicAddress.bip84_address)
       })
@@ -29,7 +29,7 @@ describe('BIP Class tests', () => {
     const bip44 = bitcoinNetworkInstance.bipNames.BIP44
 
     mnemonicAddresses.forEach(mnemonicAddress => {
-      it(`Should generate the address ${mnemonicAddress.bip44_address} of path ${mnemonicAddress.path} correctly`, () => {
+      it(`Should generate the address ${mnemonicAddress.bip44_address} of path ${mnemonicAddress.path_44} correctly`, () => {
         const address = bip44.getAddress(mnemonicAddress.index, mnemonicAddress.change)
         expect(address).toBe(mnemonicAddress.bip44_address)
       })
