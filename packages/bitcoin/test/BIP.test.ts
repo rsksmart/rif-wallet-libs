@@ -1,43 +1,48 @@
 import { BitcoinNetwork } from '../src'
-import { mnemonic, mnemonicAddresses } from './testSharedConfig'
+import { mnemonic, mnemonicAddressesMainnet, mnemonicAddressesTestnet } from './testSharedConfig'
 import * as constants from '../src/constants'
 
+/**
+ * Helper function to run many bip tests easily
+ * @param bipType
+ * @param bipField
+ * @param pathField
+ * @param networkInstance
+ * @param mnemonicAddresses
+ * @param NETWORK
+ */
+function runBipTests(bipType: 'BIP84' | 'BIP44', bipField: 'bip84_address' | 'bip44_address', pathField: 'path_84' | 'path_44', networkInstance: BitcoinNetwork, mnemonicAddresses: typeof mnemonicAddressesTestnet, NETWORK: string) {
+  describe(`NETWORK ${NETWORK} ${bipType} tests with mnemonic ${mnemonic}`, () => {
+    const bip = networkInstance.bipNames[bipType]
+
+    mnemonicAddresses.forEach(mnemonicAddress => {
+      it(`Should generate the address ${mnemonicAddress[bipField]} of path ${mnemonicAddress[pathField]} correctly`, () => {
+        const address = bip.getAddress(mnemonicAddress.index, mnemonicAddress.change)
+        expect(address).toBe(mnemonicAddress[bipField])
+      })
+    })
+
+    it('Should try to get the xpub balance and set it to 0 (fetcher is mocked)', async () => {
+      const balance = await bip.fetchBalance()
+      expect(balance).toBe(0)
+    })
+  })
+}
+
 describe('BIP Class tests', () => {
-  const bitcoinNetworkInstance = new BitcoinNetwork(
+  const bitcoinNetworkInstanceTestnet = new BitcoinNetwork(
     constants.NETWORK_ID.BITCOIN_TESTNET,
     [constants.BIP_ID.BIP84, constants.BIP_ID.BIP44],
     mnemonic
   )
+  const bitcoinNetworkInstanceMainnet = new BitcoinNetwork(
+    constants.NETWORK_ID.BITCOIN,
+    [constants.BIP_ID.BIP84, constants.BIP_ID.BIP44],
+    mnemonic
+  )
 
-  describe(`BIP84 tests with mnemonic ${mnemonic}`, () => {
-    const bip84 = bitcoinNetworkInstance.bipNames.BIP84
-
-    mnemonicAddresses.forEach(mnemonicAddress => {
-      it(`Should generate the address ${mnemonicAddress.bip84_address} of path ${mnemonicAddress.path_84} correctly`, () => {
-        const address = bip84.getAddress(mnemonicAddress.index, mnemonicAddress.change)
-        expect(address).toBe(mnemonicAddress.bip84_address)
-      })
-    })
-
-    it('Should try to get the xpub balance and set it to 0 (fetcher is mocked)', async () => {
-      const balance = await bip84.fetchBalance()
-      expect(balance).toBe(0)
-    })
-  })
-
-  describe(`BIP44 tests with mnemonic ${mnemonic}`, () => {
-    const bip44 = bitcoinNetworkInstance.bipNames.BIP44
-
-    mnemonicAddresses.forEach(mnemonicAddress => {
-      it(`Should generate the address ${mnemonicAddress.bip44_address} of path ${mnemonicAddress.path_44} correctly`, () => {
-        const address = bip44.getAddress(mnemonicAddress.index, mnemonicAddress.change)
-        expect(address).toBe(mnemonicAddress.bip44_address)
-      })
-    })
-
-    it('Should try to get the xpub balance and set it to 0 (fetcher is mocked)', async () => {
-      const balance = await bip44.fetchBalance()
-      expect(balance).toBe(0)
-    })
-  })
+  runBipTests('BIP84', 'bip84_address', 'path_84', bitcoinNetworkInstanceMainnet, mnemonicAddressesMainnet, constants.NETWORK_ID.BITCOIN)
+  runBipTests('BIP44', 'bip44_address', 'path_44', bitcoinNetworkInstanceMainnet, mnemonicAddressesMainnet, constants.NETWORK_ID.BITCOIN)
+  runBipTests('BIP84', 'bip84_address', 'path_84', bitcoinNetworkInstanceTestnet, mnemonicAddressesTestnet, constants.NETWORK_ID.BITCOIN_TESTNET)
+  runBipTests('BIP44', 'bip44_address', 'path_44', bitcoinNetworkInstanceTestnet, mnemonicAddressesTestnet, constants.NETWORK_ID.BITCOIN_TESTNET)
 })
