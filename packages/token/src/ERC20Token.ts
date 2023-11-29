@@ -9,7 +9,7 @@ export class ERC20Token extends BaseToken implements IToken {
 
   public address: string
 
-  constructor(address: string, signer: Signer, symbol: string, logo: string) {
+  constructor(address: string, signer: Signer, symbol: string, logo?: string) {
     super(signer, symbol, logo)
     this.tokenContract = ERC20__factory.connect(address, signer)
     this.address = address

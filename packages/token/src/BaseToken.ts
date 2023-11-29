@@ -7,9 +7,9 @@ export type TokenType = 'erc20' | 'rbtc'
 export class BaseToken {
   public signer: Signer
   public symbol: string
-  public logo: string
+  public logo: string | undefined
 
-  constructor(signer: Signer, symbol: string, logo: string) {
+  constructor(signer: Signer, symbol: string, logo?: string) {
     this.signer = signer
     this.symbol = symbol
     this.logo = logo
@@ -35,7 +35,7 @@ export interface IToken {
     amount: BigNumberish,
     options?: ITransferOptions,
   ) => Promise<ContractTransaction>
-  logo: string
+  logo: string | undefined
   symbol: string
   address: string
 }

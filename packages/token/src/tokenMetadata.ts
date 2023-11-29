@@ -54,7 +54,7 @@ export const convertToERC20Token = (
   signer: Signer,
 ) => {
   const addressWithoutChecksum = token.contractAddress.toLowerCase()
-  return new ERC20Token(addressWithoutChecksum, signer, token.symbol, '')
+  return new ERC20Token(addressWithoutChecksum, signer, token.symbol)
 }
 
 export const makeRBTCToken = (signer: Signer, chainId: number): RBTCToken => {
