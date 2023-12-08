@@ -18,6 +18,7 @@ jobs:
       with:
         node-version: 16.x
 
+    - run: export NODE_OPTIONS="--max_old_space_size=4096"
     - run: npm i
     - run: npm run setup
     - run: npm run build
