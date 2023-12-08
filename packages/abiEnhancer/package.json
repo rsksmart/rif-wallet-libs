@@ -33,8 +33,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@rsksmart/rif-wallet-token": "*",
-    "@rsksmart/rif-relay-light-sdk": "*",
-    "axios": "^0.27.2"
+    "@rsksmart/rif-relay-light-sdk": "*"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.7.0",
