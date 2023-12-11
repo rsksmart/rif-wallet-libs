@@ -18,12 +18,15 @@ jobs:
       with:
         node-version: 16.x
 
-    - run: export NODE_OPTIONS="--max_old_space_size=4096"
-    - run: npm i
-    - run: npm run setup
-    - run: npm run build
+    - name: Build and run tests
+      run: |
+        export NODE_OPTIONS="--max_old_space_size=4096"
+        npm i
+        npm run setup
+        npm run build
 
-    - run: npx ganache-cli &
-    - run: npm test
+        npx ganache-cli &
+        npm test
 
-    - run: npm run lint
+    - name: Lint
+      run: npm run lint
