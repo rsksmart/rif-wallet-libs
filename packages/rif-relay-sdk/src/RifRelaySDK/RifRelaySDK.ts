@@ -107,7 +107,8 @@ export class RIFRelaySDK {
 
   private createRelayRequest = async (
     tx: TransactionRequest,
-    payment: RelayPayment
+    payment: RelayPayment,
+    pendingTxsCount = 0
   ): Promise<RelayRequest> => {
     const gasPrice = this.checkTransactionGasPrice(tx.gasPrice)
     const nonce = await this.smartWallet.nonce()
@@ -127,6 +128,7 @@ export class RIFRelaySDK {
         ? estimated.sub(INTERNAL_TRANSACTION_ESTIMATE_CORRECTION)
         : estimated
     const internalCallCost = Math.round(correction.toNumber() * 1.01)
+    const updatedNonceWithPendingTxs = nonce.add(pendingTxsCount)
 
     const relayRequest: RelayRequest = {
       request: {
@@ -136,7 +138,7 @@ export class RIFRelaySDK {
         data: tx.data?.toString() || '0x',
         value: tx.value?.toString() || '0',
         gas: internalCallCost.toString(),
-        nonce: nonce.toString(),
+        nonce: updatedNonceWithPendingTxs.toString(),
         tokenContract: tokenContract.toLowerCase(),
         tokenAmount: tokenAmount.toString(),
         tokenGas: tokenGas.toString(),
@@ -180,13 +182,14 @@ export class RIFRelaySDK {
 
   sendRelayTransaction = async (
     tx: TransactionRequest,
-    payment: RelayPayment
+    payment: RelayPayment,
+    pendingTxsCount = 0
   ): Promise<TransactionResponse> => {
     if (Object.is(this.serverConfig, null)) {
       await this.getServerConfig()
     }
 
-    const request = await this.createRelayRequest(tx, payment)
+    const request = await this.createRelayRequest(tx, payment, pendingTxsCount)
     const signature = await this.signRelayRequest(request, false)
 
     return this.sendRequestToRelay(request, signature).then((hash: string) =>
@@ -291,7 +294,8 @@ export class RIFRelaySDK {
 
   estimateTransactionCost = async (
     tx: TransactionRequest,
-    tokenContract: Address
+    tokenContract: Address,
+    pendingTxsCount = 0
   ): Promise<BigNumber> => {
     if (Object.is(this.serverConfig, null)) {
       await this.getServerConfig()
@@ -304,7 +308,7 @@ export class RIFRelaySDK {
 
     let request
     try {
-      const relayRequest = await this.createRelayRequest(tx, payment)
+      const relayRequest = await this.createRelayRequest(tx, payment, pendingTxsCount)
       const signature = await this.signRelayRequest(relayRequest, false)
       request = await this.prepareDataForServer(relayRequest, signature)
     } catch (err) {
