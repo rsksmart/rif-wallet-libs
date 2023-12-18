@@ -24,7 +24,7 @@ export class PathDerivator {
     return `m/${this.purpose}'/${this.coinTypeNumber}'/${this.account}'/0`
   }
 
-  getAddressDerivation (index: number | string) {
-    return `m/${this.purpose}'/${this.coinTypeNumber}'/${this.account}'/${this.changeIndex}/${index}`
+  getAddressDerivation (index: number | string, changeIndex?: number | string) {
+    return `m/${this.purpose}'/${this.coinTypeNumber}'/${this.account}'/${changeIndex ?? this.changeIndex}/${index}`
   }
 }

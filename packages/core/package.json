@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-core",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "RIF Wallet Core",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
     "rif"
   ],
   "author": "Jesse Clark @ IOV Labs",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/rsksmart/rif-wallet-libs/packages/core#readme",
   "bugs": {
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"

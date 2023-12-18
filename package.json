@@ -1,5 +1,6 @@
 {
   "name": "rif-wallet",
+  "license": "MIT",
   "scripts": {
     "setup": "npx lerna bootstrap",
     "ganache": "npx ganache-cli",

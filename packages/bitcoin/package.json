@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-bitcoin",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "Bitcoin Library to send bitcoin, receive bitcoin by generating an address, and much more.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "rif"
   ],
   "author": "Freshenext @ IOV Labs S.A",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"

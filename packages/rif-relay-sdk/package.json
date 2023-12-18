@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-relay-light-sdk",
-  "version": "1.0.14",
+  "version": "1.0.17",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
     "EVM"
   ],
   "author": "Jesse Clark @ IOV Labs",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },

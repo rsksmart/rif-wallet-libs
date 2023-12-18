@@ -96,7 +96,9 @@ export class RIFWallet extends Signer implements TypedDataSigner {
           ...transactionRequest,
           gasPrice: overriddenOptions.gasPrice,
           gasLimit: overriddenOptions.gasLimit,
-        }, overriddenOptions.tokenPayment)
+        }, overriddenOptions.tokenPayment,
+        overriddenOptions.pendingTxsCount
+        )
       }
 
       // direct execute transaction paying gas with EOA wallet:

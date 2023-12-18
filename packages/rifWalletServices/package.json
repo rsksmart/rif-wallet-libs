@@ -18,7 +18,7 @@
     "rif"
   ],
   "author": "IOV Labs",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
@@ -28,7 +28,7 @@
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "@rsksmart/rif-wallet-core": "*",
     "@rsksmart/rif-wallet-bitcoin": "*",
     "@ethersproject/contracts": "^5.7.0",

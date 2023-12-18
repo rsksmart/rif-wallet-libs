@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-abi-enhancer",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "ABI Enhancer Library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "rif"
   ],
   "author": "IOV Labs S.A",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"
@@ -33,8 +33,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@rsksmart/rif-wallet-token": "*",
-    "@rsksmart/rif-relay-light-sdk": "*",
-    "axios": "^0.27.2"
+    "@rsksmart/rif-relay-light-sdk": "*"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.7.0",

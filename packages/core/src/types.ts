@@ -16,6 +16,7 @@ export type OverriddableTransactionOptions = {
   gasLimit: BigNumberish,
   gasPrice: BigNumberish,
   tokenPayment?: RelayPayment
+  pendingTxsCount?: number
 }
 
 export type SendTransactionRequest = IncomingRequest<

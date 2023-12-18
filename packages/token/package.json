@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-token",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "RIF Wallet Token",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +23,7 @@
     "rif"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
