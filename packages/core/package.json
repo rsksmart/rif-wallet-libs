@@ -22,7 +22,7 @@
     "rif"
   ],
   "author": "Jesse Clark @ IOV Labs",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/rsksmart/rif-wallet-libs/packages/core#readme",
   "bugs": {
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"

@@ -19,7 +19,7 @@
     "rif"
   ],
   "author": "Freshenext @ IOV Labs S.A",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rsksmart/rif-wallet-libs.git"

@@ -24,7 +24,7 @@
     "EVM"
   ],
   "author": "Jesse Clark @ IOV Labs",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/rsksmart/rif-wallet-libs/issues"
   },
