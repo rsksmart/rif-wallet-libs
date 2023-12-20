@@ -29,6 +29,6 @@ export class SendTransactionResolver implements IResolver {
 
     return this.signer
       .sendTransaction(formattedPayload)
-      .then((tx: TransactionResponse) => tx.hash)
+      .then((tx: TransactionResponse) => tx)
   }
 }
