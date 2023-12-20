@@ -1,6 +1,5 @@
 import { ContractReceipt } from '@ethersproject/contracts'
 import EventEmitter from 'events'
-import { RifWalletServicesFetcher } from './RifWalletServicesFetcher'
 import { EnhancedResult } from '@rsksmart/rif-wallet-abi-enhancer'
 import { RifWalletServicesSocket } from './RifWalletServicesSocket'
 
@@ -170,9 +169,8 @@ export interface IRifWalletServicesSocket extends EventEmitter {
   connect: (
     address: string,
     chainId: number,
-    fetcher: RifWalletServicesFetcher,
     headers: Header
-  ) => Promise<void>
+  ) => void
 
   disconnect(): void
   isConnected(): boolean
@@ -203,7 +201,7 @@ export type RifWalletSocketDependencies = {
   onEnhanceTransaction: EnhanceTransactionFunction
 }
 
-export interface FetchBalancesTransactionsPricesByAddressFunction {
+export interface SearchAddressDetailsFunction {
   address: string
   blockNumber?: string
   prev?: string
@@ -211,7 +209,7 @@ export interface FetchBalancesTransactionsPricesByAddressFunction {
   limit?: string
 }
 
-export interface FetchBalancesTransactionsPricesByAddressFunctionResult {
+export interface AddressDetailsResponse {
   tokens: ITokenWithBalance[]
   prices: Record<string, { price: number, lastUpdated: string }>
   transactions: TransactionsServerResponse
