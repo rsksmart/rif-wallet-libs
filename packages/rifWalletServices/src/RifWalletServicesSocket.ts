@@ -18,7 +18,7 @@ export class RifWalletServicesSocket
     this.rifWalletServicesUrl = rifWalletServicesUrl
   }
 
-  connect(address: string, chainId: number, headers: Header) {
+  connect(address: string, chainId: number, headers: Header, blockNumber: string = '0') {
     try {
       const socket = io(this.rifWalletServicesUrl, {
         path: '/ws',
@@ -41,7 +41,8 @@ export class RifWalletServicesSocket
 
         socket.emit('subscribe', {
           address,
-          chainId
+          chainId,
+          blockNumber
         })
       })
 
