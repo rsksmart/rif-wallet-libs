@@ -19,7 +19,6 @@ import {
 import {
   dataTypeFields,
   getDomainSeparator,
-  INTERNAL_TRANSACTION_ESTIMATE_CORRECTION,
   MAX_RELAY_NONCE_GAP,
   validUntilTime,
   ZERO_ADDRESS
@@ -123,11 +122,7 @@ export class RIFRelaySDK {
       : estTokenGas
 
     const estimated = await this.provider.estimateGas({ ...tx, gasPrice })
-    const correction =
-      estimated.toNumber() > INTERNAL_TRANSACTION_ESTIMATE_CORRECTION
-        ? estimated.sub(INTERNAL_TRANSACTION_ESTIMATE_CORRECTION)
-        : estimated
-    const internalCallCost = Math.round(correction.toNumber() * 1.01)
+    const internalCallCost = Math.round(estimated.toNumber() * 1.01)
     const updatedNonceWithPendingTxs = nonce.add(pendingTxsCount)
 
     const relayRequest: RelayRequest = {
