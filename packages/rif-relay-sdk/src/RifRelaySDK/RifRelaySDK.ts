@@ -132,10 +132,6 @@ export class RIFRelaySDK {
         filterTxOptions(tx),
       )
 
-    const internalCallCost = estimated.gt(INTERNAL_TRANSACTION_ESTIMATE_CORRECTION)
-      ? estimated.sub(INTERNAL_TRANSACTION_ESTIMATE_CORRECTION)
-      : estimated
-
     const updatedNonceWithPendingTxs = nonce.add(pendingTxsCount)
 
     const relayRequest: RelayRequest = {
@@ -145,7 +141,7 @@ export class RIFRelaySDK {
         to: tx.to || ZERO_ADDRESS,
         data: tx.data?.toString() || '0x',
         value: tx.value?.toString() || '0',
-        gas: internalCallCost.toString(),
+        gas: estimated.toString(),
         nonce: updatedNonceWithPendingTxs.toString(),
         tokenContract: tokenContract.toLowerCase(),
         tokenAmount: tokenAmount.toString(),
