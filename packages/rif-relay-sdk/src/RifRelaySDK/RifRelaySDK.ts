@@ -18,10 +18,13 @@ import {
 } from './types'
 import {
   dataTypeFields,
+  filterTxOptions,
   getDomainSeparator,
+  INTERNAL_TRANSACTION_ESTIMATE_CORRECTION,
   MAX_RELAY_NONCE_GAP,
   validUntilTime,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
+  ZERO_HASH
 } from './helpers'
 import ERC20Abi from './erc20abi.json'
 
@@ -121,8 +124,18 @@ export class RIFRelaySDK {
       ? estTokenGas.toNumber() * tokenGasIncrease
       : estTokenGas
 
-    const estimated = await this.provider.estimateGas({ ...tx, gasPrice })
-    const internalCallCost = Math.round(estimated.toNumber() * 1.01)
+    // estimate the gas of the transaction:
+    const estimated = await this.smartWallet
+      .estimateDirectExecute(
+        tx.to || ZERO_ADDRESS,
+        tx.data || ZERO_HASH,
+        filterTxOptions(tx),
+      )
+
+    const internalCallCost = estimated.gt(INTERNAL_TRANSACTION_ESTIMATE_CORRECTION)
+      ? estimated.sub(INTERNAL_TRANSACTION_ESTIMATE_CORRECTION)
+      : estimated
+
     const updatedNonceWithPendingTxs = nonce.add(pendingTxsCount)
 
     const relayRequest: RelayRequest = {
