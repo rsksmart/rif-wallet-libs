@@ -20,7 +20,6 @@ import {
   dataTypeFields,
   filterTxOptions,
   getDomainSeparator,
-  INTERNAL_TRANSACTION_ESTIMATE_CORRECTION,
   MAX_RELAY_NONCE_GAP,
   validUntilTime,
   ZERO_ADDRESS,
