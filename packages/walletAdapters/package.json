@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/rif-wallet-adapters",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Wallet Adapters for everyday use",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
