@@ -1,10 +1,10 @@
-import { BigNumber } from 'ethers'
 import {
   DeployRequestType,
   DomainSeparatorType,
   RelayDataType,
   RelayRequestType
 } from './types'
+import { TransactionRequest } from '@ethersproject/abstract-provider'
 
 export interface EIP712Domain {
   name?: string | undefined
@@ -31,12 +31,17 @@ export function getDomainSeparator (
   }
 }
 
+export const filterTxOptions = (transactionRequest: TransactionRequest) =>
+  Object.keys(transactionRequest)
+    .filter(key => !['from', 'to', 'data'].includes(key))
+    .reduce((obj: any, key: any) => {
+      obj[key] = (transactionRequest as any)[key]
+      return obj
+    }, {})
+
 export const validUntilTime = () => Math.floor(Date.now() / 1000) + TWO_DAYS
 
 export const MAX_RELAY_NONCE_GAP = 3
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const INTERNAL_TRANSACTION_ESTIMATE_CORRECTION = 20000
-export const RIF_TOKEN_ADDRESS_TESTNET =
-  '0x19F64674D8A5B4E652319F5e239eFd3bc969A1fE'
-export const TWO_RIF = BigNumber.from('2000000000000000000')
+export const ZERO_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000'
 export const TWO_DAYS = 172800
