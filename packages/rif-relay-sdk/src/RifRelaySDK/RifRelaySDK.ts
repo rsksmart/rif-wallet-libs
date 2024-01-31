@@ -18,7 +18,6 @@ import {
 } from './types'
 import {
   dataTypeFields,
-  filterTxOptions,
   getDomainSeparator,
   MAX_RELAY_NONCE_GAP,
   validUntilTime,
@@ -59,6 +58,7 @@ export class RIFRelaySDK {
     this.eoaAddress = eoaAddress
 
     this.serverConfig = null
+    this.debug('RIF Relay SDK', sdkConfig)
   }
 
   static async create (
@@ -77,6 +77,12 @@ export class RIFRelaySDK {
       eoaAddress,
       rifRelayConfig
     )
+  }
+
+  private debug = (...vars: (string | object)[]) => {
+    if (this.sdkConfig.debug) {
+      console.log('Relay SDK:', vars)
+    }
   }
 
   private getServerConfig = (): Promise<ServerConfig> => {
@@ -111,6 +117,7 @@ export class RIFRelaySDK {
     payment: RelayPayment,
     pendingTxsCount = 0
   ): Promise<RelayRequest> => {
+    this.debug('createRelayRequest:', tx)
     const gasPrice = this.checkTransactionGasPrice(tx.gasPrice)
     const nonce = await this.smartWallet.nonce()
 
@@ -128,8 +135,9 @@ export class RIFRelaySDK {
       .estimateDirectExecute(
         tx.to || ZERO_ADDRESS,
         tx.data || ZERO_HASH,
-        filterTxOptions(tx),
       )
+
+    this.debug('estimated tx', estimated.toString())
 
     const updatedNonceWithPendingTxs = nonce.add(pendingTxsCount)
 
